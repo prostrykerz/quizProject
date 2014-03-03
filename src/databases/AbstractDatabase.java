@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 
 import databases.MyDBInfo;
 
-public class Database extends AbstractTableModel {
+public abstract class AbstractDatabase extends AbstractTableModel {
 	
 	private static String account = MyDBInfo.MYSQL_USERNAME;
 	private static String password = MyDBInfo.MYSQL_PASSWORD; 
@@ -21,7 +21,7 @@ public class Database extends AbstractTableModel {
 	private static final int NUM_COLS = 4;
 	private Connection con;
 
-	public Database(){
+	public void createTable(String tableName, ArrayList<String>columnNames, ArrayList<String>columnTypes){
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
 			table[i] = new ArrayList<String>();
@@ -31,18 +31,13 @@ public class Database extends AbstractTableModel {
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM products");
-			while(rs.next()) {
-				String productid = rs.getString("productid");
-				String name = rs.getString("name");
-				String imagefile = rs.getString("imagefile");
-				String price = rs.getString("price");
-				table[0].add(productid);
-				table[1].add(name);
-				table[2].add(imagefile);
-				table[3].add(price);
+			String createQuery = "CREATE TABLE "+tableName+ " (";
+			for (int i=0; i<columnNames.size(); i++){
+				createQuery += columnNames.get(i) + " " + columnTypes.get(i);
+				if(i<columnNames.size()-1) createQuery +=", ";
 			}
+			createQuery+=")";
+			stmt.executeQuery(createQuery);
 			con.close();
 		}
 		catch (SQLException e) {

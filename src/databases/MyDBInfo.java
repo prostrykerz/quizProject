@@ -9,7 +9,7 @@ package databases;
 public class MyDBInfo {
 	
 	public static final String MYSQL_USERNAME = "ccs108tle16";
-	public static final String MYSQL_PASSWORD = "";
+	public static final String MYSQL_PASSWORD = "aghoonge";
 	public static final String MYSQL_DATABASE_SERVER = "mysql-user.stanford.edu";
 	public static final String MYSQL_DATABASE_NAME = "c_cs108_tle16";
 
