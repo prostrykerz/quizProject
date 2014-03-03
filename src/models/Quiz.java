@@ -1,8 +1,7 @@
 package models;
 
 import java.io.File;
-import java.util.Vector;
-
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -17,8 +16,8 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 public class Quiz {
 	
-	private Vector<Question> questionArr;
-	private Vector<String> answerArr;
+	private ArrayList<Question> questionArr;
+	private ArrayList<String> answerArr;
 	private String title;
 	private boolean isRandom;
 	private boolean isOnePage;
@@ -27,11 +26,11 @@ public class Quiz {
 	private int score;
 	private int completionTime;
 	
-	public Quiz(Vector<Question> questionArr, String title, 
+	public Quiz(ArrayList<Question> questionArr, String title, 
 			String description, boolean isRandom, 
 			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode) {
 		this.questionArr = questionArr;
-		this.answerArr = new Vector<String>(questionArr.size());
+		this.answerArr = new ArrayList<String>(questionArr.size());
 		this.title = title;
 		this.isRandom = isRandom;
 		this.isOnePage = isOnePage;
