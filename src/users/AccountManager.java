@@ -13,6 +13,13 @@ public class AccountManager {
 		users.add(user);
 	}
 	
+	public User getUserByUsername(String username) {
+		for(User user: users) {
+			if(user.getUsername().equals(username)) return user;
+		}
+		return null;
+	}
+	
 	public User getUserById(int id) {
 		for(User user : users) {
 			if(user.getId() == id) return user;

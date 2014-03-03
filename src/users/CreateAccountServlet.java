@@ -9,19 +9,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class CreateAccountServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/CreateAccountServlet")
+public class CreateAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public CreateAccountServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,22 +36,18 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-		
 		ServletContext context = getServletContext();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		if(manager.passwordMatches(username, password)) {
-			RequestDispatcher dispatch = request.getRequestDispatcher("user.jsp");
-			request.setAttribute("username", username);
-			session.setAttribute("user", manager.getUserByUsername(username));
+		if(manager.userExists(username)) {
+			RequestDispatcher dispatch = request.getRequestDispatcher("create_account.jsp");
+			request.setAttribute("error", "Username taken");
 			dispatch.forward(request, response);
 		}
 		else {
-			RequestDispatcher dispatch = request.getRequestDispatcher("login.jsp");
-			request.setAttribute("error", "Incorrect username/password");
+			RequestDispatcher dispatch = request.getRequestDispatcher("user.jsp");
+			request.setAttribute("username", username);
 			dispatch.forward(request, response);
 		}
 	}
