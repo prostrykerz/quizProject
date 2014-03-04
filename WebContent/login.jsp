@@ -4,14 +4,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Welcome <%= request.getAttribute("username") %></title>
-<link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
+<title>Insert title here</title><link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp">
 	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
-	Welcome <%= request.getAttribute("username") %>
+	<%
+		String error = (String) request.getAttribute("error");
+		if(error != null) {
+			out.println("<div>" + error +  "</div>");
+		}
+	%>
+	<form action="LoginServlet" method="post">
+		User Name: <input type="text" name="username" />
+		<br />
+		Password: <input type="password" name="password" />
+		<br />
+		<button type="submit">Login</button>
+	</form>
 </body>
 </html>

@@ -4,18 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<link rel="stylesheet" href="/quizProject/css/foundation.css" type="text/css">
+<title>Welcome to Quiztopia</title>
 <link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
-	<form action="LoginServlet" method="post">
-		User Name: <input type="text" name="username" />
-		<br />
-		Password: <input type="password" name="password" />
-		<br />
-		<button type="submit">Login</button>
-	</form>
+	<jsp:include page="header.jsp">
+	    <jsp:param value="active" name="index.jsp"></jsp:param> 
+	</jsp:include>
+	HOME PAGE
 	<a href="create_account.jsp">Create New Account</a>
+
 </body>
 </html>
