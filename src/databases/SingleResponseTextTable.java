@@ -13,6 +13,9 @@ import databases.MyDBInfo;
 
 public class SingleResponseTextTable extends Database {
 	
+	private static int NUM_COLS = 7;
+	private static String tableName = "singleresponsetextquestion";
+	
 	public SingleResponseTextTable(){
 		NUM_COLS = 7;
 		tableName = "singleresponsetextquestion";
@@ -85,7 +88,27 @@ public class SingleResponseTextTable extends Database {
 		}
 	}
 	
-	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
+	public static void addToDatabase(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			String query = buildAddQuery(q_id, q_text, a_id, a_text, position, quiz_id);
+			stmt.executeUpdate(query);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private static String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
 		String query = " INSERT INTO "+tableName;
 		query += " (q_id, q_text, a_id, a_text, position, quiz_id)";
 		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+position+","+quiz_id+");";

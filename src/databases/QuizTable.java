@@ -13,9 +13,10 @@ import databases.MyDBInfo;
 
 public class QuizTable extends Database {
 
+	private static int NUM_COLS = 9;
+	private static String tableName = "quizzes";
+	
 	public QuizTable(){
-		NUM_COLS = 9;
-		tableName = "quizzes";
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
 			if (i==0 || i==6 || i==7) table[i] = new ArrayList<Integer>();
@@ -91,7 +92,26 @@ public class QuizTable extends Database {
 		return null;
 	}
 	
-	private String buildAddQuery(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+	public static void addToDatabase(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			String query = buildAddQuery(name, random, onePage, immediateFeedback, practiceMode, score, time, creator);
+			stmt.executeUpdate(query);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private static String buildAddQuery(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
 		String query = " INSERT INTO "+tableName;
 		query += " (name, random, onePage, immediateFeedback, practiceMode, score, time, creator)";
 		query += " VALUES(\""+name+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\");";

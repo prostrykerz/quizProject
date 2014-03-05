@@ -12,11 +12,11 @@ import javax.swing.table.AbstractTableModel;
 import databases.MyDBInfo;
 
 public class SingleResponsePicTable extends Database {
-
+	
+	private static int NUM_COLS = 8;
+	private static String tableName = "singleresponsepicquestion";
 
 	public SingleResponsePicTable(){
-		NUM_COLS = 8;
-		tableName = "singleresponsepicquestion";
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
 			if (i==0 || i==1 || i==4 || i==6) table[i] = new ArrayList<Integer>();
@@ -89,7 +89,26 @@ public class SingleResponsePicTable extends Database {
 		}
 	}
 	
-	private String buildAddQuery(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
+	public static void addToDatabase(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, position, quiz_id);
+			stmt.executeUpdate(query);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
+	private static String buildAddQuery(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
 		String query = " INSERT INTO "+tableName;
 		query += " (q_id, q_text, q_url, a_id, a_text, position, quiz_id)";
 		query += " VALUES("+q_id+",\""+q_text+"\",\""+q_url+"\","+a_id+",\""+a_text+"\","+position+"," + quiz_id+");";
