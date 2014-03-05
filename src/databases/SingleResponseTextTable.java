@@ -14,7 +14,7 @@ import databases.MyDBInfo;
 public class SingleResponseTextTable extends Database {
 	
 	public SingleResponseTextTable(){
-		NUM_COLS = 6;
+		NUM_COLS = 7;
 		tableName = "singleresponsetextquestion";
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
@@ -35,6 +35,7 @@ public class SingleResponseTextTable extends Database {
 				Integer a_id = rs.getInt("a_id");
 				String a_text = rs.getString("a_text");
 				Integer position = rs.getInt("position");
+				Integer quiz_id = rs.getInt("quiz_id");
 
 				table[0].add(p_id);
 				table[1].add(q_id);
@@ -42,6 +43,7 @@ public class SingleResponseTextTable extends Database {
 				table[3].add(a_id);
 				table[4].add(a_text);
 				table[5].add(position);
+				table[6].add(quiz_id);
 
 			}
 			con.close();
@@ -54,13 +56,13 @@ public class SingleResponseTextTable extends Database {
 		}
 	}
 	
-	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Integer position){
+	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			String query = buildAddQuery(q_id, q_text, a_id, a_text, position);
+			String query = buildAddQuery(q_id, q_text, a_id, a_text, position, quiz_id);
 			stmt.executeUpdate(query);
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
@@ -71,6 +73,7 @@ public class SingleResponseTextTable extends Database {
 			table[3].add(a_id);
 			table[4].add(a_text);
 			table[5].add(position);
+			table[6].add(quiz_id);
 			con.close();
 		}
 		catch (SQLException e) {
@@ -82,10 +85,10 @@ public class SingleResponseTextTable extends Database {
 		}
 	}
 	
-	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Integer position){
+	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
 		String query = " INSERT INTO "+tableName;
-		query += " (q_id, q_text, a_id, a_text, position)";
-		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+position+");";
+		query += " (q_id, q_text, a_id, a_text, position, quiz_id)";
+		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+position+","+quiz_id+");";
 		return query;
 	}
 }

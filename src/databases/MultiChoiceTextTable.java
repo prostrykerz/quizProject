@@ -14,7 +14,7 @@ import databases.MyDBInfo;
 public class MultiChoiceTextTable extends Database {
 
 	public MultiChoiceTextTable(){
-		NUM_COLS = 7;
+		NUM_COLS = 8;
 		tableName = "multichoicetextquestion";
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
@@ -37,6 +37,7 @@ public class MultiChoiceTextTable extends Database {
 				String a_text = rs.getString("a_text");
 				Boolean a_correct = rs.getBoolean("a_correct");
 				Integer position = rs.getInt("position");
+				Integer quiz_id = rs.getInt("quiz_id");
 
 				table[0].add(p_id);
 				table[1].add(q_id);
@@ -45,7 +46,7 @@ public class MultiChoiceTextTable extends Database {
 				table[4].add(a_text);
 				table[5].add(a_correct);
 				table[6].add(position);
-
+				table[7].add(quiz_id);
 			}
 			con.close();
 		}
@@ -57,13 +58,13 @@ public class MultiChoiceTextTable extends Database {
 		}
 	}
 
-	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position){
+	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position, Integer quiz_id){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			String query = buildAddQuery(q_id, q_text, a_id, a_text, a_correct, position);
+			String query = buildAddQuery(q_id, q_text, a_id, a_text, a_correct, position, quiz_id);
 			stmt.executeUpdate(query);
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
@@ -75,6 +76,7 @@ public class MultiChoiceTextTable extends Database {
 			table[4].add(a_text);
 			table[5].add(a_correct);
 			table[6].add(position);
+			table[7].add(quiz_id);
 			con.close();
 		}
 		catch (SQLException e) {
@@ -86,10 +88,10 @@ public class MultiChoiceTextTable extends Database {
 		}
 	}
 	
-	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position){
+	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position, Integer quiz_id){
 		String query = " INSERT INTO "+tableName;
-		query += " (q_id, q_text, a_id, a_text, a_correct, position)";
-		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+a_correct+","+position+");";
+		query += " (q_id, q_text, a_id, a_text, a_correct, position, quiz_id)";
+		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+a_correct+","+position+","+quiz_id+");";
 		return query;
 	}
 }

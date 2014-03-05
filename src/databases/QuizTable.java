@@ -59,7 +59,7 @@ public class QuizTable extends Database {
 		}
 	}
 	
-	public void add(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+	public Integer add(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
@@ -80,6 +80,7 @@ public class QuizTable extends Database {
 			table[7].add(time);
 			table[8].add(creator);
 			con.close();
+			return i;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -87,6 +88,7 @@ public class QuizTable extends Database {
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	private String buildAddQuery(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){

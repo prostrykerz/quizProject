@@ -28,10 +28,12 @@ public class Quiz {
 	private int score;
 	private int completionTime;
 	private QuizTable quizDB;
+	private String creator;
+	private Integer quizID;
 	
 	public Quiz(ArrayList<Question> questionArr, String title, 
 			String description, boolean isRandom, 
-			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode) {
+			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode, String creator) {
 		this.questionArr = questionArr;
 		this.answerArr = new ArrayList<String>(questionArr.size());
 		this.title = title;
@@ -41,10 +43,13 @@ public class Quiz {
 		this.practiceMode = practiceMode;
 		this.score = 0;
 		this.completionTime = 0;
+		this.creator = creator;
 		this.quizDB = new QuizTable();
+		this.quizID = this.quizDB.add(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
 	}
 	
 	private void storeQuestions(){
+		
 		for (int i=0; i<this.questionArr.size(); i++){
 			if(this.questionArr.get(i) instanceof FillBlankQuestion){
 				
