@@ -13,6 +13,8 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
+import databases.QuizTable;
+
 
 public class Quiz {
 	
@@ -25,6 +27,7 @@ public class Quiz {
 	private boolean practiceMode;
 	private int score;
 	private int completionTime;
+	private QuizTable quizDB;
 	
 	public Quiz(ArrayList<Question> questionArr, String title, 
 			String description, boolean isRandom, 
@@ -38,7 +41,7 @@ public class Quiz {
 		this.practiceMode = practiceMode;
 		this.score = 0;
 		this.completionTime = 0;
-		
+		this.quizDB = new QuizTable();
 	}
 	
 	static public void loadXML(String path){
