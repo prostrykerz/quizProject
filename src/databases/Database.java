@@ -19,7 +19,8 @@ public class Database extends AbstractTableModel {
 	protected static String database = MyDBInfo.MYSQL_DATABASE_NAME;
 	protected ArrayList[] table;
 	protected static int NUM_COLS;
-	protected Connection con;
+	protected static Connection con;
+	protected String tableName;
 	
 	@Override
 	public int getRowCount() {
