@@ -11,20 +11,15 @@ import javax.swing.table.AbstractTableModel;
 
 import databases.MyDBInfo;
 
-public class QuizTable extends AbstractTableModel {
-	
-	private static String account = MyDBInfo.MYSQL_USERNAME;
-	private static String password = MyDBInfo.MYSQL_PASSWORD; 
-	private static String server = MyDBInfo.MYSQL_DATABASE_SERVER; 
-	private static String database = MyDBInfo.MYSQL_DATABASE_NAME;
-	private ArrayList[] table;
-	private static final int NUM_COLS = 4;
-	private Connection con;
+public class QuizTable extends Database {
 
 	public QuizTable(){
+		NUM_COLS = 9;
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
-			table[i] = new ArrayList<String>();
+			if (i==0 || i==6 || i==7) table[i] = new ArrayList<Integer>();
+			else if (i>=2 && i<=5) table[i] = new ArrayList<Boolean>();
+			else table[i] = new ArrayList<String>();
 		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -32,16 +27,26 @@ public class QuizTable extends AbstractTableModel {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM products");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes");
 			while(rs.next()) {
-				String productid = rs.getString("productid");
+				Integer p_id = rs.getInt("p_id");
 				String name = rs.getString("name");
-				String imagefile = rs.getString("imagefile");
-				String price = rs.getString("price");
-				table[0].add(productid);
+				Boolean random = rs.getBoolean("random");
+				Boolean onePage = rs.getBoolean("onePage");
+				Boolean immediateFeedback = rs.getBoolean("immediateFeedback");
+				Boolean practiceMode = rs.getBoolean("practiceMode");
+				Integer score = rs.getInt("score");
+				Integer time = rs.getInt("time");
+				String creator = rs.getString("creator");
+				table[0].add(p_id);
 				table[1].add(name);
-				table[2].add(imagefile);
-				table[3].add(price);
+				table[2].add(random);
+				table[3].add(onePage);
+				table[4].add(immediateFeedback);
+				table[5].add(practiceMode);
+				table[6].add(score);
+				table[7].add(time);
+				table[8].add(creator);
 			}
 			con.close();
 		}
@@ -52,24 +57,4 @@ public class QuizTable extends AbstractTableModel {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public int getRowCount() {
-		return table[0].size();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return NUM_COLS;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		return table[columnIndex].get(rowIndex);
-	}
-	
-	public ArrayList<String>[] getTable(){
-		return table;
-	}
-	
 }
