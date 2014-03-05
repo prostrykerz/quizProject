@@ -51,6 +51,7 @@ public class Quiz {
 		this.creator = creator;
 		this.quizDB = new QuizTable();
 		this.quizID = this.quizDB.add(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
+		this.storeQuestions();
 	}
 	
 	private void storeQuestions(){
