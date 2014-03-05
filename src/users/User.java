@@ -18,12 +18,14 @@ public class User {
 	private byte[] hash, salt;
 	ArrayList<Message> messages;
 	HashSet<User> friends;
+	ArrayList<Message> friendRequests;
 	private boolean admin;
 	
 	public User(String username, String password, boolean isAdmin) {
 		this.username = username;
 		this.admin = isAdmin;
 		this.messages = new ArrayList<Message>();
+		this.friendRequests = new ArrayList<Message>();
 		this.friends = new HashSet<User>();
 		this.id = IDGEN++;
 		try{
@@ -63,9 +65,37 @@ public class User {
 		}
 	}
 	
+	public boolean hasFriendRequestFrom(User u) {
+		for(Message fr : friendRequests) {
+			if(fr.getSender().equals(u)) return true;
+		}
+		return false;
+	}
+	
 	//Setters
 	public void addMessage(Message m) {
 		messages.add(m);
+	}
+	
+	public void addFriendRequest(Message m) {
+		friendRequests.add(m);
+	}
+	
+	public void addFriend(User u) {
+		if(!friends.contains(u)) {
+			friends.add(u);
+		}
+	}
+	
+	public void deleteFriendRequest(User requester) {
+		Message msg = null;
+		for(Message m : friendRequests) {
+			if(m.getSender().equals(requester)) {
+				msg = m;
+				break;
+			}
+		}
+		friendRequests.remove(msg);
 	}
 	
 	//Getters
@@ -87,6 +117,10 @@ public class User {
 	
 	public HashSet<User> getFriends() {
 		return friends;
+	}
+	
+	public ArrayList<Message> getFriendRequests() {
+		return friendRequests;
 	}
 	
 	//Misc

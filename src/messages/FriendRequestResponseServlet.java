@@ -2,7 +2,6 @@ package messages;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,16 +14,16 @@ import users.AccountManager;
 import users.User;
 
 /**
- * Servlet implementation class MessageServlet
+ * Servlet implementation class FriendRequestResponseServlet
  */
-@WebServlet("/MessageServlet")
-public class MessageServlet extends HttpServlet {
+@WebServlet("/FriendRequestResponseServlet")
+public class FriendRequestResponseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MessageServlet() {
+    public FriendRequestResponseServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,9 +43,9 @@ public class MessageServlet extends HttpServlet {
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		String receiverusername = request.getParameter("receiver");
-		String message = request.getParameter("message");
-		String error = validations(user, receiverusername, manager);
+		String requesterusername = request.getParameter("user");
+		String accept = request.getParameter("accept");
+		String error = validations(user, requesterusername, manager);
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		if(error != "") {
@@ -57,18 +56,31 @@ public class MessageServlet extends HttpServlet {
 			response.getWriter().write(sb.toString());
 		}
 		else {
-			User receiver = manager.getUserByUsername(receiverusername);
-			Message msg = new Message(user, receiver, message);
-			receiver.addMessage(msg);
-			String json = "{ \"msg\": \"Message Sent\"}";
+			User requester = manager.getUserByUsername(requesterusername);
+			String json = "";
+			if(accept.equals("true")) {
+				requester.addFriend(user);
+				user.addFriend(requester);
+				user.deleteFriendRequest(requester);
+				json = "{ \"msg\": \"Friend Request Accepted\"}";
+			}
+			else {
+				user.deleteFriendRequest(requester);
+				json = "{ \"msg\": \"Friend Request Denied\"}";
+			}
 			response.getWriter().write(json);
-			//create and send message then forward
 		}
 	}
-
-	private String validations(User user, String receiverusername, AccountManager manager) {
+	
+	private String validations(User user, String requesterusername, AccountManager manager) {
 		if(user == null) return "Please Login";
-		if(!manager.userExists(receiverusername)) return "No user found by name of: " + receiverusername;
+		if(!manager.userExists(requesterusername)) return "No user found by name of: " + requesterusername;
+		boolean requestExists = false;
+		for(Message fr : user.getFriendRequests()) {
+			if(fr.getSender().getUsername().equals(requesterusername)) requestExists = true;
+		}
+		if(!requestExists)return "No friend request found";
 		return "";
 	}
+
 }

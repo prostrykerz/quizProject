@@ -29,6 +29,9 @@
 		<%
 			for(User u : users) {
 				StringBuilder sb = new StringBuilder();
+				for(Message m : u.getFriendRequests()) {
+					sb.append("DONT ACTUALLY CLICK THESE: " + m.getMessage() + "<br />");
+				}
 				for(Message m : u.getMessages()) {
 					sb.append(m.getMessage() + "<br />");
 				}

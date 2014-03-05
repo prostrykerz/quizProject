@@ -2,10 +2,23 @@ package messages;
 
 import users.User;
 
-public abstract class Message {
-	User sender, receiver;
-	boolean read = false;
-	String message;
+public class Message {
+	private User sender, receiver;
+	private boolean read = false;
+	private String message;
+	private int id;
+	private static int ID_GEN = 0;
+	
+	public Message(User sender, User receiver, String message) {
+		this.sender = sender;
+		this.receiver = receiver;
+		this.message = message;
+		this.id = ID_GEN++;
+	}
+	
+	public void setReadStatus(boolean status) {
+		this.read = status;
+	}
 	
 	public User getSender() {
 		return sender;
@@ -16,5 +29,9 @@ public abstract class Message {
 	
 	public String getMessage() {
 		return message;
+	}
+	
+	public boolean getReadStatus() {
+		return read;
 	}
 }
