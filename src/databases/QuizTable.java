@@ -17,7 +17,7 @@ public class QuizTable extends AbstractTableModel {
 	private static String password = MyDBInfo.MYSQL_PASSWORD; 
 	private static String server = MyDBInfo.MYSQL_DATABASE_SERVER; 
 	private static String database = MyDBInfo.MYSQL_DATABASE_NAME;
-	private ArrayList<String>[] table;
+	private ArrayList[] table;
 	private static final int NUM_COLS = 4;
 	private Connection con;
 
