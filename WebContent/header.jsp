@@ -1,22 +1,31 @@
 <%@ page import="users.User" %>
 
+<% User user = (User) session.getAttribute("user"); %>
+
 <div id="navbar">
 	<ul>
-		<li><a href="index.jsp" class="navbar_link">Quiztopia</a></li>
+		<li><a href="/quizProject/index.jsp" class="navbar_link">Quiztopia</a></li>
 		<li class="divider"></li>
-		<li><a href="login.jsp" class="navbar_link">LOGIN</a></li>
-		<li class="divider"></li>
-		<li><a href="create_account.jsp" class="navbar_link">Sign Up</a></li>
-		<li class="divider"></li>
+		<% if(user == null) {
+			out.println("<li><a href='/quizProject/login.jsp' class='navbar_link'>LOGIN</a></li>");
+			out.println("<li class='divider'></li>");
+			out.println("<li><a href='/quizProject/create_account.jsp' class='navbar_link'>Sign Up</a></li>");
+			out.println("<li class='divider'></li>");
+		}
+		%>
 		<li><a href="#" class="navbar_link">Quizzes</a></li>
 		<li class="divider"></li>
-		<li><a href="#" class="navbar_link">Admin</a></li>
-		<li class="divider"></li>
-		<li><a href="user.jsp" class="navbar_link">
+		<% if(user != null) {
+			out.println("<li><a href='#' class='navbar_link'>Admin</a></li>");
+			out.println("<li class='divider'></li>");
+			out.println("<li><a href='/quizProject/messages.jsp' class='navbar_link'>Messages</a></li>");
+			out.println("<li class='divider'></li>");
+		}	
+		%>
+		<li><a href="/quizProject/user.jsp" class="navbar_link">
 			<% 
-				User user = (User) session.getAttribute("user");
 				if(user != null) out.println(user.getUsername());
-				else out.println("Not logged in");
+				else out.println("Status: Not logged in");
 			%>
 		</a></li>
 	</ul>

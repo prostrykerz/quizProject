@@ -4,17 +4,24 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import messages.Message;
 
 public class User {
 	private static int IDGEN = 0;
 	private String username;
 	private int id;
 	private byte[] hash, salt;
+	ArrayList<Message> messages;
+	private boolean admin;
 	
-	public User(String username, String password) {
+	public User(String username, String password, boolean isAdmin) {
 		this.username = username;
+		this.admin = isAdmin;
+		this.messages = new ArrayList<Message>();
 		this.id = IDGEN++;
 		try{
 			this.hash = hashPassword(password);
@@ -22,6 +29,10 @@ public class User {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public User(String username, String password) {
+		this(username, password, false);
 	}
 	
 	private byte[] hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -50,6 +61,9 @@ public class User {
 	}
 	
 	//Setters
+	public void addMessage(Message m) {
+		messages.add(m);
+	}
 	
 	//Getters
 	public int getId() {
@@ -58,5 +72,13 @@ public class User {
 	
 	public String getUsername() {
 		return username;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+	
+	public ArrayList<Message> getMessages() {
+		return messages;
 	}
 }

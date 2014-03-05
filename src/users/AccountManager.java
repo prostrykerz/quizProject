@@ -2,6 +2,8 @@ package users;
 
 import java.util.HashSet;
 
+import messages.Note;
+
 public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
@@ -54,5 +56,7 @@ public class AccountManager {
 		users.add(andrew);
 		users.add(travis);
 		users.add(adrian);
+		Note note = new Note(travis, andrew, "BROMANCE!");
+		andrew.addMessage(note);
 	}
 }
