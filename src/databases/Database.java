@@ -20,6 +20,7 @@ public class Database extends AbstractTableModel {
 	protected ArrayList[] table;
 	protected static int NUM_COLS;
 	protected Connection con;
+	protected String tableName;
 	
 	@Override
 	public int getRowCount() {

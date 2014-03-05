@@ -15,6 +15,7 @@ public class MultiChoiceTextTable extends Database {
 
 	public MultiChoiceTextTable(){
 		NUM_COLS = 7;
+		tableName = "multichoicetextquestion";
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
 			if (i==0 || i==1 || i==3 || i==6) table[i] = new ArrayList<Integer>();
@@ -27,7 +28,7 @@ public class MultiChoiceTextTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM multichoicetextquestion");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			while(rs.next()) {
 				Integer p_id = rs.getInt("p_id");
 				Integer q_id = rs.getInt("q_id");
@@ -56,4 +57,39 @@ public class MultiChoiceTextTable extends Database {
 		}
 	}
 
+	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			String query = buildAddQuery(q_id, q_text, a_id, a_text, a_correct, position);
+			stmt.executeUpdate(query);
+			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
+			Integer i=0;
+			if (rs.next())	i = rs.getInt("last_insert_id()");
+			table[0].add(i);
+			table[1].add(q_id);
+			table[2].add(q_text);
+			table[3].add(a_id);
+			table[4].add(a_text);
+			table[5].add(a_correct);
+			table[6].add(position);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private String buildAddQuery(Integer q_id, String q_text, Integer a_id, String a_text, Boolean a_correct, Integer position){
+		String query = " INSERT INTO "+tableName;
+		query += " (q_id, q_text, a_id, a_text, a_correct, position)";
+		query += " VALUES("+q_id+",\""+q_text+"\","+a_id+",\""+a_text+"\","+a_correct+","+position+");";
+		return query;
+	}
 }
