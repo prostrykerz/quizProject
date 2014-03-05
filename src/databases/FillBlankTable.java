@@ -11,21 +11,20 @@ import javax.swing.table.AbstractTableModel;
 
 import databases.MyDBInfo;
 
-public class QuizTable extends AbstractTableModel {
+public class FillBlankTable extends AbstractTableModel {
 	
 	private static String account = MyDBInfo.MYSQL_USERNAME;
 	private static String password = MyDBInfo.MYSQL_PASSWORD; 
 	private static String server = MyDBInfo.MYSQL_DATABASE_SERVER; 
 	private static String database = MyDBInfo.MYSQL_DATABASE_NAME;
 	private ArrayList[] table;
-	private static final int NUM_COLS = 9;
+	private static final int NUM_COLS = 6;
 	private Connection con;
 
-	public QuizTable(){
+	public FillBlankTable(){
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
-			if (i==0 || i==6 || i==7) table[i] = new ArrayList<Integer>();
-			else if (i>=2 && i<=5) table[i] = new ArrayList<Boolean>();
+			if (i==0 || i==1 || i==3 || i==5) table[i] = new ArrayList<Integer>();
 			else table[i] = new ArrayList<String>();
 		}
 		try {
@@ -34,26 +33,22 @@ public class QuizTable extends AbstractTableModel {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quizzes");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM fillblankquestion");
 			while(rs.next()) {
 				Integer p_id = rs.getInt("p_id");
-				String name = rs.getString("name");
-				Boolean random = rs.getBoolean("random");
-				Boolean onePage = rs.getBoolean("onePage");
-				Boolean immediateFeedback = rs.getBoolean("immediateFeedback");
-				Boolean practiceMode = rs.getBoolean("practiceMode");
-				Integer score = rs.getInt("score");
-				Integer time = rs.getInt("time");
-				String creator = rs.getString("creator");
+				Integer q_id = rs.getInt("q_id");
+				String q_text = rs.getString("q_text");
+				Integer a_id = rs.getInt("a_id");
+				String a_text = rs.getString("a_text");
+				Integer position = rs.getInt("position");
+
 				table[0].add(p_id);
-				table[1].add(name);
-				table[2].add(random);
-				table[3].add(onePage);
-				table[4].add(immediateFeedback);
-				table[5].add(practiceMode);
-				table[6].add(score);
-				table[7].add(time);
-				table[8].add(creator);
+				table[1].add(q_id);
+				table[2].add(q_text);
+				table[3].add(a_id);
+				table[4].add(a_text);
+				table[5].add(position);
+
 			}
 			con.close();
 		}
