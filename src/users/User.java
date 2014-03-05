@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
 
 import messages.Message;
@@ -16,12 +17,14 @@ public class User {
 	private int id;
 	private byte[] hash, salt;
 	ArrayList<Message> messages;
+	HashSet<User> friends;
 	private boolean admin;
 	
 	public User(String username, String password, boolean isAdmin) {
 		this.username = username;
 		this.admin = isAdmin;
 		this.messages = new ArrayList<Message>();
+		this.friends = new HashSet<User>();
 		this.id = IDGEN++;
 		try{
 			this.hash = hashPassword(password);
@@ -80,5 +83,15 @@ public class User {
 	
 	public ArrayList<Message> getMessages() {
 		return messages;
+	}
+	
+	public HashSet<User> getFriends() {
+		return friends;
+	}
+	
+	//Misc
+	public boolean equals(User other) {
+		if(this.username.equals(other.getUsername())) return true;
+		return false;
 	}
 }

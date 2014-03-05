@@ -22,10 +22,10 @@ public class SessionListener implements HttpSessionListener {
 	/**
      * @see HttpSessionListener#sessionCreated(HttpSessionEvent)
      */
-    public void sessionCreated(HttpSessionEvent arg0) {
-//    	ShoppingCart cart = new ShoppingCart();
-//        HttpSession session = event.getSession();
-//        session.setAttribute("cart", cart);
+    public void sessionCreated(HttpSessionEvent event) {
+    	HttpSession session = event.getSession();
+    	AccountManager manager = new AccountManager();
+    	session.setAttribute("manager", manager);
     }
 
 	/**

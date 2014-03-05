@@ -47,10 +47,21 @@ public class MessageServlet extends HttpServlet {
 		String receiverusername = request.getParameter("receiver");
 		String message = request.getParameter("message");
 		String error = validations(user, receiverusername, manager);
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
 		if(error != "") {
-			//send back to message form
+			StringBuilder sb = new StringBuilder();
+			sb.append("{");
+			sb.append("\"error\": \"" + error + "\"");
+			sb.append("}");
+			response.getWriter().write(sb.toString());
 		}
 		else {
+			User receiver = manager.getUserByUsername(receiverusername);
+			Note note = new Note(user, receiver, message);
+			receiver.addMessage(note);
+			String json = "{ \"msg\": \"Message Sent\"}";
+			response.getWriter().write(json);
 			//create and send message then forward
 		}
 //		if(manager.userExists(username)) {

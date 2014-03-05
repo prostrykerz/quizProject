@@ -46,6 +46,12 @@ body {
 			width: 0;
 		}
 		
+.table {	
+}
+	.table td {
+		border: 1px solid white;
+	}
+		
 		
 		
 		

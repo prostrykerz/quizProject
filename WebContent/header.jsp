@@ -22,12 +22,12 @@
 			out.println("<li class='divider'></li>");
 		}	
 		%>
-		<li><a href="/quizProject/user.jsp" class="navbar_link">
+		<li>
 			<% 
-				if(user != null) out.println(user.getUsername());
+				if(user != null) out.println("<a href='/quizProject/user.jsp?username=" + user.getUsername() + "' class='navbar_link'>" + user.getUsername() + "</a>");
 				else out.println("Status: Not logged in");
 			%>
-		</a></li>
+		</li>
 	</ul>
 </div>
 

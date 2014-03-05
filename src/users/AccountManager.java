@@ -31,7 +31,7 @@ public class AccountManager {
 	
 	public boolean userExists(String username) {
 		for(User user : users) {
-			if(user.getUsername() == username) return true;
+			if(user.getUsername().equals(username)) return true;
 		}
 		return false;
 	}
