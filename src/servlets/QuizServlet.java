@@ -56,8 +56,7 @@ public class QuizServlet extends HttpServlet {
 		int counter = 1;
 		while(true) {
 			String question_type = request.getParameter("mydropdown" + counter);
-			//update later
-//			String answers = request.getParameter("answers" + counter);
+			
 			if(question_type == null) break;
 			if(question_type.equals("Text Question-Response")) {
 				ArrayList<String> answers = new ArrayList<String>();
