@@ -14,11 +14,15 @@ import java.util.ArrayList;
 	}
 	
 	public String getQuestion() {
-		return questionText;
+		return this.questionText;
+	}
+	
+	public ArrayList<String> getCorrectAnswers(){
+		return this.correctAnswers;
 	}
 	
 	public int getPostion() {
-		return position;
+		return this.position;
 	}
 	
 	public boolean checkAnswer(String prospAnswer) {

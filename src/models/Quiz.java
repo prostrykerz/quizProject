@@ -13,7 +13,12 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
+import databases.FillBlankTable;
+import databases.MultiChoicePicTable;
+import databases.MultiChoiceTextTable;
 import databases.QuizTable;
+import databases.SingleResponsePicTable;
+import databases.SingleResponseTextTable;
 
 
 public class Quiz {
@@ -28,10 +33,12 @@ public class Quiz {
 	private int score;
 	private int completionTime;
 	private QuizTable quizDB;
+	private String creator;
+	private Integer quizID;
 	
 	public Quiz(ArrayList<Question> questionArr, String title, 
 			String description, boolean isRandom, 
-			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode) {
+			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode, String creator) {
 		this.questionArr = questionArr;
 		this.answerArr = new ArrayList<String>(questionArr.size());
 		this.title = title;
@@ -41,25 +48,62 @@ public class Quiz {
 		this.practiceMode = practiceMode;
 		this.score = 0;
 		this.completionTime = 0;
+		this.creator = creator;
 		this.quizDB = new QuizTable();
+		this.quizID = this.quizDB.add(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
+		this.storeQuestions();
 	}
 	
 	private void storeQuestions(){
+		
 		for (int i=0; i<this.questionArr.size(); i++){
+			Question q = this.questionArr.get(i);
 			if(this.questionArr.get(i) instanceof FillBlankQuestion){
-				
+				FillBlankQuestion quest = (FillBlankQuestion) q;
+				ArrayList<String> answers = quest.getCorrectAnswers();
+				for (int j=0; j<answers.size(); j++){
+					FillBlankTable.addToDatabase(i+1, quest.getQuestion(), j+1, answers.get(j), i+1, this.quizID);
+				}
 			}
 			else if(this.questionArr.get(i) instanceof SingleResponseTextQuestion){
-				
+				SingleResponseTextQuestion quest = (SingleResponseTextQuestion) q;
+				ArrayList<String> answers = quest.getCorrectAnswers();
+				for (int j=0; j<answers.size(); j++){
+					SingleResponseTextTable.addToDatabase(i+1, quest.getQuestion(), j+1, answers.get(j), i+1, this.quizID);
+				}
 			}
 			else if(this.questionArr.get(i) instanceof SingleResponsePicQuestion){
-				
+				SingleResponsePicQuestion quest = (SingleResponsePicQuestion) q;
+				ArrayList<String> answers = quest.getCorrectAnswers();
+				for (int j=0; j<answers.size(); j++){
+					SingleResponsePicTable.addToDatabase(i+1, quest.getQuestion(), quest.getPicture(), j+1, answers.get(j), i+1, this.quizID);
+				}
 			}
 			else if(this.questionArr.get(i) instanceof MultiChoiceTextQuestion){
-				
+				MultiChoiceTextQuestion quest = (MultiChoiceTextQuestion) q;
+				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
+				ArrayList<String> possibleAnswers = quest.getChoices();
+				for (int j=0; j<possibleAnswers.size(); j++){
+					Boolean correct = false;
+					for (int k=0; k<correctAnswers.size(); k++){
+						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
+					}
+					MultiChoiceTextTable.addToDatabase(i+1, quest.getQuestion(), j+1, possibleAnswers.get(j), 
+							correct, i+1, this.quizID);
+				}
 			}
 			else if(this.questionArr.get(i) instanceof MultiChoicePicQuestion){
-				
+				MultiChoicePicQuestion quest = (MultiChoicePicQuestion) q;
+				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
+				ArrayList<String> possibleAnswers = quest.getChoices();
+				for (int j=0; j<possibleAnswers.size(); j++){
+					Boolean correct = false;
+					for (int k=0; k<correctAnswers.size(); k++){
+						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
+					}
+					MultiChoicePicTable.addToDatabase(i+1, quest.getQuestion(), quest.getPicture(), j+1, 
+							possibleAnswers.get(j), correct, i+1, this.quizID);
+				}
 			}
 		}
 	}
