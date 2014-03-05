@@ -44,6 +44,26 @@ public class Quiz {
 		this.quizDB = new QuizTable();
 	}
 	
+	private void storeQuestions(){
+		for (int i=0; i<this.questionArr.size(); i++){
+			if(this.questionArr.get(i) instanceof FillBlankQuestion){
+				
+			}
+			else if(this.questionArr.get(i) instanceof SingleResponseTextQuestion){
+				
+			}
+			else if(this.questionArr.get(i) instanceof SingleResponsePicQuestion){
+				
+			}
+			else if(this.questionArr.get(i) instanceof MultiChoiceTextQuestion){
+				
+			}
+			else if(this.questionArr.get(i) instanceof MultiChoicePicQuestion){
+				
+			}
+		}
+	}
+	
 	static public void loadXML(String path){
 		try {
 			File fXmlFile = new File("Resources/cities.xml");

@@ -11,17 +11,11 @@ import javax.swing.table.AbstractTableModel;
 
 import databases.MyDBInfo;
 
-public class MultiChoicePicTable extends AbstractTableModel {
+public class MultiChoicePicTable extends Database {
 	
-	private static String account = MyDBInfo.MYSQL_USERNAME;
-	private static String password = MyDBInfo.MYSQL_PASSWORD; 
-	private static String server = MyDBInfo.MYSQL_DATABASE_SERVER; 
-	private static String database = MyDBInfo.MYSQL_DATABASE_NAME;
-	private ArrayList[] table;
-	private static final int NUM_COLS = 8;
-	private Connection con;
 
 	public MultiChoicePicTable(){
+		NUM_COLS = 8;
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
 			if (i==0 || i==1 || i==4 || i==7) table[i] = new ArrayList<Integer>();
@@ -63,25 +57,6 @@ public class MultiChoicePicTable extends AbstractTableModel {
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@Override
-	public int getRowCount() {
-		return table[0].size();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return NUM_COLS;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		return table[columnIndex].get(rowIndex);
-	}
-	
-	public ArrayList<String>[] getTable(){
-		return table;
 	}
 	
 }
