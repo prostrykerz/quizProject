@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import messages.Message;
+import models.Quiz;
 
 public class User {
 	private static int IDGEN = 0;
@@ -19,6 +20,7 @@ public class User {
 	ArrayList<Message> messages;
 	HashSet<User> friends;
 	ArrayList<Message> friendRequests;
+	ArrayList<Quiz> quizzes;
 	private boolean admin;
 	
 	public User(String username, String password, boolean isAdmin) {
@@ -26,6 +28,7 @@ public class User {
 		this.admin = isAdmin;
 		this.messages = new ArrayList<Message>();
 		this.friendRequests = new ArrayList<Message>();
+		this.quizzes = new ArrayList<Quiz>();
 		this.friends = new HashSet<User>();
 		this.id = IDGEN++;
 		try{
@@ -85,6 +88,10 @@ public class User {
 		if(!friends.contains(u)) {
 			friends.add(u);
 		}
+	}
+	
+	public void addQuiz(Quiz q) {
+		quizzes.add(q);
 	}
 	
 	public void deleteFriendRequest(User requester) {

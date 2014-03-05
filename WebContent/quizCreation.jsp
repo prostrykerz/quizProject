@@ -8,11 +8,14 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
+<jsp:include page="header.jsp">
+	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
+	</jsp:include>
 <h1> Create a quiz! </h1>
 <h2> Add questions to create a quiz. </h2>
 <%int currIndex = 0;%>
 
-<form action="LoginServlet" method="post">
+<form action="QuizServlet" method="post">
 	Choose question type:
 		<select  name="mydropdown<%=currIndex%>">
 			<option value="Text Question-Response">Text Question-Response</option>
