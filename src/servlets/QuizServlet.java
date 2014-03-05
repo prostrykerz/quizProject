@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import models.FillBlankQuestion;
+import models.MultiChoicePicQuestion;
 import models.MultiChoiceTextQuestion;
 import models.Question;
 import models.SingleResponsePicQuestion;
@@ -76,21 +78,22 @@ public class QuizServlet extends HttpServlet {
 				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, answers, counter);
 			}
 			else if(question_type.equals("Picture Multiple-Choice")) {
-				
+				ArrayList<String> answers = new ArrayList<String>();
+				answers.add("test");
+				String text = "Question";
+				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, "url", answers, answers, counter);
 			}
 			else if(question_type.equals("Fill in the blank")) {
-				
+				ArrayList<String> answers = new ArrayList<String>();
+				answers.add("test");
+				String text = "Question";
+				FillBlankQuestion q = new FillBlankQuestion(text, answers, counter);
 			}
 			else {
-				throw new Exception("Question type not found");
+				System.out.println("Question type not found");
 			}
 			counter++;
 		}
-		<option value="Text Question-Response">Text Question-Response</option>
-		<option value="Picture Question-Response"> Picture Question-Response </option>
-		<option value="Text Multiple-Choice">Text Multiple-Choice</option>
-		<option value="Picture Multiple-Choice">Picture Multiple-Choice</option>
-		<option value="Fill in the blank">Fill in the blank</option>
 	}
 
 }
