@@ -13,7 +13,7 @@
 			out.println("<li class='divider'></li>");
 		}
 		%>
-		<li><a href="#" class="navbar_link">Quizzes</a></li>
+		<li><a href="quizCreation.jsp" class="navbar_link">Quizzes</a></li>
 		<li class="divider"></li>
 		<% if(user != null) {
 			out.println("<li><a href='#' class='navbar_link'>Admin</a></li>");

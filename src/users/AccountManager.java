@@ -2,13 +2,16 @@ package users;
 
 import java.util.HashSet;
 
+import databases.UserTable;
+
 import messages.Message;
 
 public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
-		users = new HashSet<User>();
-		initializeStarterUsers();
+		UserTable.createTable();
+		users = UserTable.getUsers();
+		if(users.size() == 0) initializeStarterUsers();
 	}
 	
 	public void addUser(User user) {
@@ -22,12 +25,12 @@ public class AccountManager {
 		return null;
 	}
 	
-	public User getUserById(int id) {
-		for(User user : users) {
-			if(user.getId() == id) return user;
-		}
-		return null;
-	}
+//	public User getUserById(int id) {
+//		for(User user : users) {
+//			if(user.getId() == id) return user;
+//		}
+//		return null;
+//	}
 	
 	public boolean userExists(String username) {
 		for(User user : users) {
@@ -53,10 +56,9 @@ public class AccountManager {
 		User andrew = new User("andrew","gloving");
 		User travis = new User("travis","poop");
 		User adrian = new User("adrian","poop");
-		users.add(andrew);
-		users.add(travis);
-		users.add(adrian);
-		Message note = new Message(travis, andrew, "BROMANCE!");
-		andrew.addMessage(note);
+		UserTable.save(andrew);
+		UserTable.save(travis);
+		UserTable.save(adrian);
+		users = UserTable.getUsers();
 	}
 }

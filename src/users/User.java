@@ -13,15 +13,24 @@ import messages.Message;
 import models.Quiz;
 
 public class User {
-	private static int IDGEN = 0;
 	private String username;
-	private int id;
 	private byte[] hash, salt;
 	ArrayList<Message> messages;
 	HashSet<User> friends;
 	ArrayList<Message> friendRequests;
 	ArrayList<Quiz> quizzes;
 	private boolean admin;
+	
+	public User(String username, byte[] salt, byte[] hash, boolean isAdmin) {
+		this.username = username;
+		this.admin = isAdmin;
+		this.messages = new ArrayList<Message>();
+		this.friendRequests = new ArrayList<Message>();
+		this.quizzes = new ArrayList<Quiz>();
+		this.friends = new HashSet<User>();
+		this.salt = salt;
+		this.hash = hash;
+	}
 	
 	public User(String username, String password, boolean isAdmin) {
 		this.username = username;
@@ -30,7 +39,6 @@ public class User {
 		this.friendRequests = new ArrayList<Message>();
 		this.quizzes = new ArrayList<Quiz>();
 		this.friends = new HashSet<User>();
-		this.id = IDGEN++;
 		try{
 			this.hash = hashPassword(password);
 		}
@@ -106,17 +114,10 @@ public class User {
 	}
 	
 	//Getters
-	public int getId() {
-		return id;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	
-	public boolean isAdmin() {
-		return admin;
-	}
+	public String getUsername() {return username;}
+	public byte[] getSalt() {return salt;}
+	public byte[] getHash() {return hash;}
+	public boolean isAdmin() {return admin;}
 	
 	public ArrayList<Message> getMessages() {
 		return messages;
