@@ -1,5 +1,9 @@
 package databases;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -24,57 +29,15 @@ public class UserTable extends Database {
 	//2 = salt
 	//3 = hash
 	//4 = admin
-
-//	public UserTable(){
-//		table = new ArrayList[NUM_COLS];
-//		for(int i=0; i<NUM_COLS; i++){
-//			if (i ==0) table[i] = new ArrayList<String>();
-//			else if(i != 4)table[i] = new ArrayList<Byte[]>();
-//			else table[i] = new ArrayList<Boolean>();
-//		}
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
-//			Statement stmt = con.createStatement();
-//			stmt.executeQuery("USE " + database);
-//			
-//			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
-//			int rowcount = 0;
-//			if (rs.last()) {
-//			  rowcount = rs.getRow();
-//			  rs.beforeFirst(); // not rs.first() because the rs.next() below will move on, missing the first element
-//			}
-//			if(rowcount == 0) initializeStarterUsers();
-//			while(rs.next()) {
-//				String username = rs.getString("username");
-//				Blob saltblob = rs.getBlob("salt");
-//				byte[] salt = saltblob.getBytes(1, (int) saltblob.length());
-//				Blob hashblob = rs.getBlob("hash");
-//				byte[] hash = hashblob.getBytes(1, (int) hashblob.length());
-//				boolean admin = rs.getBoolean("admin");
-//				table[0].add(username);
-//				table[1].add(salt);
-//				table[2].add(hash);
-//				table[3].add(admin);
-//			}
-//			con.close();
-//		}
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	public static void createTable() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
-			stmt.executeQuery("USE " + database);
+			stmt.executeQuery("USE " + database);			
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
-			query += "(username CHAR(64), salt BLOB, hash BLOB, admin BOOLEAN);";
+			query += "(id INT NOT NULL AUTO_INCREMENT, username CHAR(64), salt BLOB, hash BLOB, admin BOOLEAN, PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
 		}
 		catch (SQLException e) {
@@ -85,20 +48,25 @@ public class UserTable extends Database {
 		}
 	}
 	
-	public static void save(User user){
+	public static User save(String username, String user_password, boolean admin){
 		try {
+			byte[] salt = createSalt();
+			byte[] hash = createHash(salt, user_password);
+			
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = "INSERT INTO " + tableName + " (username, salt, hash, admin) VALUES (?,?,?,?)";
 			PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(query);
-			pstmt.setString(1, user.getUsername());
-			pstmt.setBytes(2, user.getSalt());
-			pstmt.setBytes(3, user.getHash());
-			pstmt.setBoolean(4, user.isAdmin());
+			pstmt.setString(1, username);
+			pstmt.setBytes(2, salt);
+			pstmt.setBytes(3, hash);
+			pstmt.setBoolean(4, admin);
 			pstmt.execute();
+			User user = lastUser();
 			con.close();
+			return user;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -106,10 +74,32 @@ public class UserTable extends Database {
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	private static byte[] createSalt() {
+		final Random r = new SecureRandom();
+		byte[] salt = new byte[32];
+		r.nextBytes(salt);
+		return salt;
+	}
+	
+	private static byte[] createHash(byte[] salt, String password) {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+			digest.reset();
+			digest.update(salt);
+			return digest.digest(password.getBytes("UTF-8"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static HashSet<User> getUsers() {
-		
 		try {
 			HashSet<User> users = new HashSet<User>();
 			Class.forName("com.mysql.jdbc.Driver");
@@ -118,13 +108,7 @@ public class UserTable extends Database {
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			while(rs.next()) {
-				String username = rs.getString("username");
-				Blob saltblob = rs.getBlob("salt");
-				byte[] salt = saltblob.getBytes(1, (int) saltblob.length());
-				Blob hashblob = rs.getBlob("hash");
-				byte[] hash = hashblob.getBytes(1, (int) hashblob.length());
-				boolean admin = rs.getBoolean("admin");
-				User user = new User(username, salt, hash, admin);
+				User user = rsToUser(rs);
 				users.add(user);
 			}
 			con.close();
@@ -134,6 +118,45 @@ public class UserTable extends Database {
 			e.printStackTrace();
 		}
 		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static User lastUser() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			rs.last();
+			User user = rsToUser(rs);
+			con.close();
+			return user;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static User rsToUser(ResultSet rs) {
+		try {
+			int id = rs.getInt("id");
+			String username = rs.getString("username");
+			Blob saltblob = rs.getBlob("salt");
+			byte[] salt = saltblob.getBytes(1, (int) saltblob.length());
+			Blob hashblob = rs.getBlob("hash");
+			byte[] hash = hashblob.getBytes(1, (int) hashblob.length());
+			boolean admin = rs.getBoolean("admin");
+			ArrayList<Integer> friends = FriendTable.getFriends(id);
+			return new User(id, username, salt, hash, admin, friends);
+		}
+		catch(SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

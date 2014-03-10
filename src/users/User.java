@@ -9,58 +9,33 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
+import databases.FriendTable;
+
 import messages.Message;
 import models.Quiz;
 
 public class User {
+	private int id;
 	private String username;
 	private byte[] hash, salt;
 	ArrayList<Message> messages;
-	HashSet<User> friends;
+	ArrayList<Integer> friends;
 	ArrayList<Message> friendRequests;
 	ArrayList<Quiz> quizzes;
 	private boolean admin;
 	
-	public User(String username, byte[] salt, byte[] hash, boolean isAdmin) {
+	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Integer> friends) {
+		this.id = id;
 		this.username = username;
 		this.admin = isAdmin;
 		this.messages = new ArrayList<Message>();
 		this.friendRequests = new ArrayList<Message>();
 		this.quizzes = new ArrayList<Quiz>();
-		this.friends = new HashSet<User>();
+		this.friends = friends;
 		this.salt = salt;
 		this.hash = hash;
 	}
-	
-	public User(String username, String password, boolean isAdmin) {
-		this.username = username;
-		this.admin = isAdmin;
-		this.messages = new ArrayList<Message>();
-		this.friendRequests = new ArrayList<Message>();
-		this.quizzes = new ArrayList<Quiz>();
-		this.friends = new HashSet<User>();
-		try{
-			this.hash = hashPassword(password);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public User(String username, String password) {
-		this(username, password, false);
-	}
-	
-	private byte[] hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		final Random r = new SecureRandom();
-		byte[] salt = new byte[32];
-		r.nextBytes(salt);
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		digest.reset();
-		digest.update(salt);
-		this.salt = salt;
-		return digest.digest(password.getBytes("UTF-8"));
-	}
+
 	
 	public boolean authenticate(String password) {
 		try {
@@ -93,9 +68,7 @@ public class User {
 	}
 	
 	public void addFriend(User u) {
-		if(!friends.contains(u)) {
-			friends.add(u);
-		}
+		friends.add(u.getId());
 	}
 	
 	public void addQuiz(Quiz q) {
@@ -113,23 +86,21 @@ public class User {
 		friendRequests.remove(msg);
 	}
 	
+	public static void addFriend(User one, User two) {
+		FriendTable.save(one, two);
+		one.addFriend(two);
+		two.addFriend(one);
+	}
+	
 	//Getters
 	public String getUsername() {return username;}
 	public byte[] getSalt() {return salt;}
 	public byte[] getHash() {return hash;}
 	public boolean isAdmin() {return admin;}
-	
-	public ArrayList<Message> getMessages() {
-		return messages;
-	}
-	
-	public HashSet<User> getFriends() {
-		return friends;
-	}
-	
-	public ArrayList<Message> getFriendRequests() {
-		return friendRequests;
-	}
+	public int getId() {return id;}
+	public ArrayList<Message> getMessages() {return messages;}
+	public ArrayList<Integer> getFriends() {return friends;}
+	public ArrayList<Message> getFriendRequests() {return friendRequests;}
 	
 	//Misc
 	public boolean equals(User other) {

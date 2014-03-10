@@ -9,13 +9,13 @@ import messages.Message;
 public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
-		UserTable.createTable();
 		users = UserTable.getUsers();
 		if(users.size() == 0) initializeStarterUsers();
 	}
 	
-	public void addUser(User user) {
-		users.add(user);
+	public void addUser(String username, String password) {
+		User constructed_user = UserTable.save(username, password, false);
+		users.add(constructed_user);
 	}
 	
 	public User getUserByUsername(String username) {
@@ -53,12 +53,9 @@ public class AccountManager {
 	}
 	
 	private void initializeStarterUsers() {
-		User andrew = new User("andrew","gloving");
-		User travis = new User("travis","poop");
-		User adrian = new User("adrian","poop");
-		UserTable.save(andrew);
-		UserTable.save(travis);
-		UserTable.save(adrian);
+		UserTable.save("andrew", "gloving", true);
+		UserTable.save("travis", "gloving", true);
+		UserTable.save("adrian", "gloving", true);
 		users = UserTable.getUsers();
 	}
 }
