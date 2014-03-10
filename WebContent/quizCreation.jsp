@@ -12,14 +12,12 @@
 	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
 <h1> Create a quiz! </h1>
-<%int currIndex = 1;%>
 
-<form action="QuizServlet" method="post">
 	Quiz Title: <input type="quizTitle" name="qTitle">
 	<h4> Add questions to create a quiz. </h4>
 	<div id="entry">
 	Choose question type:
-		<select id="drop<%=currIndex%>" name="mydropdown<%=currIndex%>">
+		<select id="drop" name="mydropdown">
 			<option value="1">Text Question-Response</option>
 			<option value="2"> Picture Question-Response </option>
 			<option value="3">Text Multiple-Choice</option>
@@ -28,20 +26,21 @@
 		</select>
 		<button id="addQ" type="button">Add Question</button> <br>
 		</div>
-		<button id="addButton" type="submit">Create Quiz</button>
-</form>
+		<button id="addButton" type="button">Create Quiz</button>
 				
 <script type="text/javascript">
-	var counter = 2;
+	var counter = 1;
 	$(document).ready(function() {
+		var question_divs = new Array();
 		
 		$("#addQ").click(addAnotherQ);
 		
 		function addAnotherQ(e) {
-			var dropVal = $("#drop"+ (counter - 1)).val();	
+			var dropVal = $("#drop").val();	
 			$("#entry").remove();
-			
-			var newQ = "<div id=\"entry\">Choose question type: <select id=\"drop"+counter+"\"name=\"mydropdown"+counter+"\">";
+			var divID = "#question-" + counter;
+			question_divs.push(divID);
+			var newQ = "<div id=\"entry\">Choose question type: <select id=\"drop\"name=\"mydropdown"+counter+"\">";
 			newQ += "<option value=\"1\">Text Question-Response</option>";
 			newQ += "<option value=\"2\"> Picture Question-Response </option>";
 			newQ += "<option value=\"3\">Text Multiple-Choice</option>";
@@ -51,24 +50,24 @@
 			newQ += "<button id=\"addQ\" type=\"button\">Add Question</button> <br> </div>";
 		
 			if (dropVal === "5") {
-				$("#addButton").before("Indicate a blank with 'X'. <br>");
+				$(divID).append("Indicate a blank with 'X'. <br>");
 			}
 			
-			var qText = "Question " +(counter -1)+ " Text: <input type=\"questionText\" name=\"qText\" />\<br>";
+			var qText = "Question " + counter + " Text: <input class=\"question_text\" type=\"questionText\" name=\"qText\" />\<br>";
+			$("#addButton").before("<div class=\"question type-" + dropVal + "\" id=\"question-" + counter + "\">");
 			
-			$("#addButton").before(qText);
-			
+			$(divID).append(qText);
 			if (dropVal === "2" || dropVal === "4") {
-				$("#addButton").before("Picture Title: <input type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
-				$("#addButton").before("Picture URL: <input type=\"qPic\" name=\"qPic\"/>\<br>");
+				$(divID).append("Picture Title: <input class=\"pictureTitle\" type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
+				$(divID).append("Picture URL: <input class=\"pictureURL\" type=\"qPic\" name=\"qPic\"/>\<br>");
 			}
 			
 			if (dropVal === "3" || dropVal === "4") {
 				var optionCount = 1;
 				var optionButtonID = "addOpt"+ (counter ) + "-" + optionCount;
-				$("#addButton").before("Option "+optionCount+": <input id=\"oppField"+optionCount+"\"  type=\"qOppField\" name=\"qOppField\"/>");
-				$("#addButton").before(" Correct? <input type=\"checkbox\" id=\"correctBox"+counter+"-"+optionCount+"\"name=\"correctBox\">");
-				$("#addButton").before("<button id="+optionButtonID+" type=\"button\">Add Option</button><br>");
+				$(divID).append("Option "+optionCount+": <input class=\"answer-" + optionCount + " answer\"  type=\"qOppField\" name=\"qOppField\"/>");
+				$(divID).append(" Correct? <input type=\"checkbox\" class=\"correctBox-"+optionCount+"\"name=\"correctBox\">");
+				$(divID).append("<button id="+optionButtonID+" type=\"button\">Add Option</button>");
 				console.log("First " + optionButtonID);
 				$("#"+optionButtonID).click(addOption);
 			}
@@ -76,17 +75,17 @@
 			if ((dropVal === "1") || (dropVal === "2") || (dropVal === "5")) {
 				var answerCount = 1;
 				var answerButtonID = "addAns"+ counter + "-" + answerCount;
-				$("#addButton").before("Answer "+answerCount+": <input id=\"qAnswer-"+counter+"-"+answerCount+"\"  type=\"text\" name=\"qAnswer\"/>");
-				$("#addButton").before("<button id="+answerButtonID+" type=\"button\">Add Answer</button><br>");
+				$(divID).append("Answer "+answerCount+": <input class=\"answer\"  type=\"text\" name=\"qAnswer\"/>");
+				$(divID).append("<button id="+answerButtonID+" type=\"button\">Add Answer</button>");
 				$("#"+answerButtonID).click(addAnswer);
 			}
 			
 			function addOption() {
 				optionCount++;
-				optionButtonID = "addOpt"+ (counter - 1) + "-" + optionCount;
-				$(this).before("<br>Option "+optionCount+": <input id=\"oppField"+optionCount+"\"  type=\"qOppField\" name=\"qOppField\"/>");
-				$(this).before(" Correct? <input type=\"checkbox\" id=\"correctBox"+counter+"-"+optionCount+"\"name=\"correctBox\">");
-				$(this).before("<button id="+optionButtonID+" type=\"button\">Add Option</button>");
+				optionButtonID = "addOpt"+ counter + "-" + optionCount;
+				$(divID).append("<br>Option "+optionCount+": <input class=\"answer-" + optionCount + " answer\"  type=\"qOppField\" name=\"qOppField\"/>");
+				$(divID).append(" Correct? <input type=\"checkbox\" class=\"correctBox-"+optionCount+"\"name=\"correctBox\">");
+				$(divID).append("<button id="+optionButtonID+" type=\"button\">Add Option</button>");
 				$(this).remove();
 				console.log(optionButtonID);
 				$("#"+optionButtonID).click(addOption);
@@ -94,17 +93,65 @@
 			
 			function addAnswer() {
 				answerCount++;
-				answerButtonID = "addAns"+ (counter - 1) + "-" + answerCount;
-				$(this).before("<br>Answer "+answerCount+": <input  type=\"qAnswer\" name=\"qAnswer\"/>");
-				$(this).before("<button id="+answerButtonID+" type=\"button\">Add Answer</button>");
+				answerButtonID = "addAns"+ counter + "-" + answerCount;
+				$(divID).append("<br>Answer "+answerCount+": <input class=\"answer\" type=\"qAnswer\" name=\"qAnswer\"/>");
+				//$(divID).append("<br>Answer "+answerCount+": <input class=\"answer-" + answerCount + "\" type=\"qAnswer\" name=\"qAnswer\"/>");
+				$(divID).append("<button id="+answerButtonID+" type=\"button\">Add Answer</button>");
 				$(this).remove();
 				$("#"+answerButtonID).click(addAnswer);
 			}
-				
+			
+			
 			$("#addButton").before("<br>");
 			$("#addButton").before(newQ);
 			$("#addQ").click(addAnotherQ);
 			counter++;
+		}
+		
+		$("#addButton").click(function() {
+			var data = formatData();
+			$.post("QuizServlet",data, function(responseText) {
+				console.log(responseText);
+			});
+		});
+		
+		function formatData() {
+			var questions = [];
+			for(var i = 0; i < question_divs.length; i++) {
+				var div = $(question_divs[i]);
+				var question = {};
+				
+				var q_text = div.find(".question_text").val();
+				question.text = q_text;
+				if(div.hasClass("type-1") || div.hasClass("type-2") || div.hasClass("type-5")) {
+					var answers = new Array();
+					div.find(".answer").each(function() {
+						answers.push($(this).val());
+					});
+					question.correct_answers = answers;
+				}
+				else if(div.hasClass("type-3") || div.hasClass("type-4")) {
+					var possible_answers = new Array();
+					var correct_answers = new Array();
+					div.find(".answer").each(function(index) {
+						console.log(".correctBox-" + index);
+						if(div.find(".correctBox-" + (index+1)).is(":checked")) {
+							correct_answers.push($(this).val());
+						}
+						possible_answers.push($(this).val());
+					});
+					question.correct_answers = correct_answers;
+					question.possible_answers = possible_answers;
+				}
+				if(div.hasClass("type-2") || div.hasClass("type-4")){
+					question.pictureTitle = div.find(".pictureTitle").val();
+					question.pictureURL = div.find(".pictureURL").val();
+				}
+				questions.push(question);
+			}
+			data = {};
+			data.questions = questions;
+			return data;
 		}
 	});
 	
