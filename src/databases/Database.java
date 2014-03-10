@@ -17,7 +17,7 @@ public class Database extends AbstractTableModel {
 	protected static String password = MyDBInfo.MYSQL_PASSWORD; 
 	protected static String server = MyDBInfo.MYSQL_DATABASE_SERVER; 
 	protected static String database = MyDBInfo.MYSQL_DATABASE_NAME;
-	protected ArrayList[] table;
+	protected static ArrayList[] table;
 	protected static int NUM_COLS;
 	protected static Connection con;
 	protected String tableName;
