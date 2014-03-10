@@ -29,6 +29,9 @@
 	%><a href="#"><button>Practice Quiz</button></a><%
 	}
 	%>
-	<a href="#"><button>Take the Quiz</button></a>
+	<form action="PlayQuizServlet" method="post">
+		<input type="hidden" name="quiz_id" value="<%=id%>">
+		<button type="submit">Take the Quiz</button>
+	</form>
 </body>
 </html>

@@ -67,6 +67,10 @@ public class Quiz {
 		return this.infoMap;
 	}
 	
+	public ArrayList<Question> getQuestionArr(){
+		return this.quizMDB.getQuestions();
+	}
+	
 	private void storeQuestions(){
 		for (int i=0; i<this.questionArr.size(); i++){
 			Question q = this.questionArr.get(i);
