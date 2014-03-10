@@ -5,12 +5,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class QuizTest {
 
+	private Quiz quiz;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -37,7 +39,7 @@ public class QuizTest {
 		boolean hasImmediateFeedback = false;
 		boolean practiceMode = false;
 		String creator = "Travis";
-		Quiz quiz = new Quiz(questionArr, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
+		this.quiz = new Quiz(questionArr, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 	}
 
 	@Test
@@ -45,4 +47,9 @@ public class QuizTest {
 //		Quiz.loadXML("");
 	}
 
+	@Test
+	public void test2(){
+		HashMap<String,Object> infoMap = quiz.getInfoMap();
+		System.out.println(infoMap.get("title"));
+	}
 }

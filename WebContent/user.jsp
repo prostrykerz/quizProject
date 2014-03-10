@@ -22,7 +22,7 @@
 </head>
 <body>
 	<jsp:include page="header.jsp">
-	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
+	    <jsp:param value="active" name="user.jsp"></jsp:param> 
 	</jsp:include>
 	<%
 		String error = (String) request.getParameter("error");
@@ -50,22 +50,19 @@
 			out.println("<a href='message.jsp?user=" + user.getUsername() + "'>Message User</a>");
 		}
 	%>
-	
 	<br />
-	
 	Welcome to <%= user.getUsername() %>'s page
 	<h2>My Friends</h2>
 	<%
 		for(int id : user.getFriends()) {
 			for(User u : manager.getUsers()) {
 				if(u.getId() == id) {
-					out.println(u.getUsername() + "<br/>");
+					out.println(u.getUsername() + " <a class=\"remove_friend_btn\" data-user=\"" + u.getUsername() + "\" href=\"#\">Remove Friend</a><br/>");
 					break;
 				}
 			}
 		}
 	%>
-	
 	<script>
 		$(document).ready(function() {
 			$('#add_friend_btn').click(function() {
@@ -77,6 +74,16 @@
 						$('#errors').html("ERROR: " + response.error);
 					}
 					else $('#add_friend_btn').html(response.msg);
+				});
+			});
+			$(".remove_friend_btn").click(function(e) {
+				e.preventDefault();
+				var that = this;
+				var user = $(this).attr("data-user");
+				$.post("RemoveFriendServlet", {user: user}, function(responseJson) {
+					var response = $.parseJSON(responseJson);
+					console.log(response);
+					//$(that).html(response.msg);
 				});
 			});
 		});

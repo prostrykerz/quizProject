@@ -30,7 +30,7 @@
 		<form action="MessageServlet" id="msg_form" method="post">
 			Receiver: <input type="text" name="receiver" value="<%= username %>"/>
 			<br />
-			Message: <textarea name="message">Enter Message Here</textarea>
+			Message: <textarea name="message" placeholder="Enter Message Here"></textarea>
 			<br />
 			<button type="button" id="send_btn">Send Message</button>
 		</form>

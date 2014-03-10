@@ -178,6 +178,7 @@ public class QuizModelTable extends Database {
 			while(rs.next()) {
 				Integer p_id = rs.getInt("p_id");
 				String name = rs.getString("name");
+				String description = rs.getString("description");
 				Boolean random = rs.getBoolean("random");
 				Boolean onePage = rs.getBoolean("onePage");
 				Boolean immediateFeedback = rs.getBoolean("immediateFeedback");
@@ -186,8 +187,9 @@ public class QuizModelTable extends Database {
 				Integer time = rs.getInt("time");
 				String creator = rs.getString("creator");
 				
-				info.put("p_id", p_id);
-				info.put("name", name);
+				info.put("quiz_id", p_id);
+				info.put("title", name);
+				info.put("description", description);
 				info.put("random", random);
 				info.put("onePage", onePage);
 				info.put("immediateFeedback", immediateFeedback);
@@ -209,7 +211,8 @@ public class QuizModelTable extends Database {
 	}
 	
 	private String createGetQuizInfoQuery(){
-		String query = "";
+		String query = "SELECT * FROM quizzes ";
+		query+= "WHERE p_id="+this.quizID+";";
 		return query;
 	}
 }

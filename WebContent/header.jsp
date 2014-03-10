@@ -16,7 +16,7 @@
 
 		<li><a href="quizCreation.jsp" class="navbar_link">Quizzes</a></li>
 		<li class="divider"></li>
-		<li><a href="all_users.jsp" class="navbar_link">All Users</a></li>
+		<li><a href="find_users.jsp" class="navbar_link">Find Users</a></li>
 		<li class="divider"></li>
 		<% if(user != null) {
 			out.println("<li><a href='#' class='navbar_link'>Admin</a></li>");
