@@ -69,6 +69,7 @@ public class FriendTable extends Database {
 				else if(id_two == id) friends.add(id_one);
 			}
 			con.close();
+			return friends;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -76,7 +77,7 @@ public class FriendTable extends Database {
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return friends;
+		return null;
 	}
 	
 	public static void removeFriendship(User one, User two) {

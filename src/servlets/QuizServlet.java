@@ -23,6 +23,8 @@ import models.SingleResponseTextQuestion;
 import users.AccountManager;
 import users.User;
 
+import org.json.*;
+
 /**
  * Servlet implementation class QuizServlet
  */
@@ -55,8 +57,8 @@ public class QuizServlet extends HttpServlet {
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		User user = (User) session.getAttribute("user");
 		if(user == null) return;
-		
-		
+		System.out.println((String)request.getParameter("questions"));
+		JSONObject o = new JSONObject((String)request.getParameter("questions"));
 		
 		ArrayList<Question> questions = new ArrayList<Question>();
 		int counter = 1;
