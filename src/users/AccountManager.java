@@ -2,6 +2,7 @@ package users;
 
 import java.util.HashSet;
 
+import databases.FriendTable;
 import databases.UserTable;
 
 import messages.Message;
