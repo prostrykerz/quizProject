@@ -52,7 +52,11 @@ body {
 		border: 1px solid white;
 	}
 		
-		
+#question_box {
+	width: 800px;
+	margin: 10px auto;
+	border: 1px solid white;
+}		
 		
 		
 		
