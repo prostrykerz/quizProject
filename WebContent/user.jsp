@@ -9,7 +9,7 @@
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
 	User curuser = (User) session.getAttribute("user");
 	String username = request.getParameter("username");
-	User user = new User("","");
+	User user = null;
 	for(User u: manager.getUsers()) {
 		if(u.getUsername().equals(username)) user = u;
 	}
@@ -56,8 +56,13 @@
 	Welcome to <%= user.getUsername() %>'s page
 	<h2>My Friends</h2>
 	<%
-		for(User u : user.getFriends()) {
-			out.println(u.getUsername() + "<br/>");
+		for(int id : user.getFriends()) {
+			for(User u : manager.getUsers()) {
+				if(u.getId() == id) {
+					out.println(u.getUsername() + "<br/>");
+					break;
+				}
+			}
 		}
 	%>
 	

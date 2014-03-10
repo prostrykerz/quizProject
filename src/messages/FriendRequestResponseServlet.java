@@ -59,8 +59,7 @@ public class FriendRequestResponseServlet extends HttpServlet {
 			User requester = manager.getUserByUsername(requesterusername);
 			String json = "";
 			if(accept.equals("true")) {
-				requester.addFriend(user);
-				user.addFriend(requester);
+				User.addFriend(user, requester);
 				user.deleteFriendRequest(requester);
 				json = "{ \"msg\": \"Friend Request Accepted\"}";
 			}
