@@ -13,6 +13,7 @@
 			out.println("<li class='divider'></li>");
 		}
 		%>
+
 		<li><a href="quizCreation.jsp" class="navbar_link">Quizzes</a></li>
 		<li class="divider"></li>
 		<li><a href="find_users.jsp" class="navbar_link">Find Users</a></li>
