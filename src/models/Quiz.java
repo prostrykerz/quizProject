@@ -59,12 +59,18 @@ public class Quiz {
 		this.quizID = quizID;
 		this.quizMDB = new QuizModelTable(this.quizID);
 		this.questionArr = this.quizMDB.getQuestions();
+
 		this.infoMap = new HashMap<String,Object>(this.quizMDB.getQuizInfo());
+
 		if (this.infoMap==null) System.out.println("ono");
 	}
 	
 	public HashMap<String, Object> getInfoMap(){
 		return this.infoMap;
+	}
+	
+	public ArrayList<Question> getQuestionArr(){
+		return this.quizMDB.getQuestions();
 	}
 	
 	private void storeQuestions(){
