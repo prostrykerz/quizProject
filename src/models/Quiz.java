@@ -2,6 +2,8 @@ package models;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -16,6 +18,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import databases.FillBlankTable;
 import databases.MultiChoicePicTable;
 import databases.MultiChoiceTextTable;
+import databases.QuizModelTable;
 import databases.QuizTable;
 import databases.SingleResponsePicTable;
 import databases.SingleResponseTextTable;
@@ -24,7 +27,6 @@ import databases.SingleResponseTextTable;
 public class Quiz {
 	
 	private ArrayList<Question> questionArr;
-	private ArrayList<String> answerArr;
 	private String title;
 	private boolean isRandom;
 	private boolean isOnePage;
@@ -32,7 +34,7 @@ public class Quiz {
 	private boolean practiceMode;
 	private int score;
 	private int completionTime;
-	private QuizTable quizDB;
+	private QuizModelTable quizMDB;
 	private String creator;
 	private Integer quizID;
 	
@@ -40,7 +42,6 @@ public class Quiz {
 			String description, boolean isRandom, 
 			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode, String creator) {
 		this.questionArr = questionArr;
-		this.answerArr = new ArrayList<String>(questionArr.size());
 		this.title = title;
 		this.isRandom = isRandom;
 		this.isOnePage = isOnePage;
@@ -49,13 +50,27 @@ public class Quiz {
 		this.score = 0;
 		this.completionTime = 0;
 		this.creator = creator;
-		this.quizDB = new QuizTable();
-		this.quizID = this.quizDB.add(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
+		this.quizID = QuizTable.addToDatabase(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
+		this.quizMDB = new QuizModelTable(this.quizID);
 		this.storeQuestions();
 	}
 	
+	public Quiz(int quizID){
+		this.quizID = quizID;
+		this.quizMDB = new QuizModelTable(this.quizID);
+		this.questionArr = this.quizMDB.getQuestions();
+		HashMap<String,Object> info = this.quizMDB.getQuizInfo();
+		this.title = (String) info.get("name");
+		this.isRandom = (Boolean) info.get("random");
+		this.isOnePage = (Boolean) info.get("onePage");
+		this.hasImmediateFeedback = (Boolean) info.get("immediateFeedback");
+		this.practiceMode = (Boolean) info.get("practiceMode");
+		this.score = (Integer) info.get("score");
+		this.completionTime = (Integer) info.get("time");
+		this.creator = (String) info.get("creator");
+	}
+	
 	private void storeQuestions(){
-		
 		for (int i=0; i<this.questionArr.size(); i++){
 			Question q = this.questionArr.get(i);
 			if(this.questionArr.get(i) instanceof FillBlankQuestion){
@@ -63,6 +78,33 @@ public class Quiz {
 				ArrayList<String> answers = quest.getCorrectAnswers();
 				for (int j=0; j<answers.size(); j++){
 					FillBlankTable.addToDatabase(i+1, quest.getQuestion(), j+1, answers.get(j), i+1, this.quizID);
+				}
+			}
+			else if(this.questionArr.get(i) instanceof MultiChoicePicQuestion){
+				MultiChoicePicQuestion quest = (MultiChoicePicQuestion) q;
+				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
+				ArrayList<String> possibleAnswers = quest.getChoices();
+				for (int j=0; j<possibleAnswers.size(); j++){
+					Boolean correct = false;
+					for (int k=0; k<correctAnswers.size(); k++){
+						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
+					}
+					MultiChoicePicTable.addToDatabase(i+1, quest.getQuestion(), quest.getPicture(), j+1, 
+							possibleAnswers.get(j), correct, i+1, this.quizID);
+				}
+			}
+			else if(this.questionArr.get(i) instanceof MultiChoiceTextQuestion){
+				
+				MultiChoiceTextQuestion quest = (MultiChoiceTextQuestion) q;
+				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
+				ArrayList<String> possibleAnswers = quest.getChoices();
+				for (int j=0; j<possibleAnswers.size(); j++){
+					Boolean correct = false;
+					for (int k=0; k<correctAnswers.size(); k++){
+						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
+					}
+					MultiChoiceTextTable.addToDatabase(i+1, quest.getQuestion(), j+1, possibleAnswers.get(j), 
+							correct, i+1, this.quizID);
 				}
 			}
 			else if(this.questionArr.get(i) instanceof SingleResponseTextQuestion){
@@ -77,32 +119,6 @@ public class Quiz {
 				ArrayList<String> answers = quest.getCorrectAnswers();
 				for (int j=0; j<answers.size(); j++){
 					SingleResponsePicTable.addToDatabase(i+1, quest.getQuestion(), quest.getPicture(), j+1, answers.get(j), i+1, this.quizID);
-				}
-			}
-			else if(this.questionArr.get(i) instanceof MultiChoiceTextQuestion){
-				MultiChoiceTextQuestion quest = (MultiChoiceTextQuestion) q;
-				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
-				ArrayList<String> possibleAnswers = quest.getChoices();
-				for (int j=0; j<possibleAnswers.size(); j++){
-					Boolean correct = false;
-					for (int k=0; k<correctAnswers.size(); k++){
-						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
-					}
-					MultiChoiceTextTable.addToDatabase(i+1, quest.getQuestion(), j+1, possibleAnswers.get(j), 
-							correct, i+1, this.quizID);
-				}
-			}
-			else if(this.questionArr.get(i) instanceof MultiChoicePicQuestion){
-				MultiChoicePicQuestion quest = (MultiChoicePicQuestion) q;
-				ArrayList<String> correctAnswers = quest.getCorrectAnswers();
-				ArrayList<String> possibleAnswers = quest.getChoices();
-				for (int j=0; j<possibleAnswers.size(); j++){
-					Boolean correct = false;
-					for (int k=0; k<correctAnswers.size(); k++){
-						if (possibleAnswers.get(j).equals(correctAnswers.get(k))) correct = true;
-					}
-					MultiChoicePicTable.addToDatabase(i+1, quest.getQuestion(), quest.getPicture(), j+1, 
-							possibleAnswers.get(j), correct, i+1, this.quizID);
 				}
 			}
 		}
@@ -168,4 +184,6 @@ public class Quiz {
 	    }
 	}
 
+	
+	
 }

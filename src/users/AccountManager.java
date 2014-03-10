@@ -2,17 +2,20 @@ package users;
 
 import java.util.HashSet;
 
+import databases.UserTable;
+
 import messages.Message;
 
 public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
-		users = new HashSet<User>();
-		initializeStarterUsers();
+		users = UserTable.getUsers();
+		if(users.size() == 0) initializeStarterUsers();
 	}
 	
-	public void addUser(User user) {
-		users.add(user);
+	public void addUser(String username, String password) {
+		User constructed_user = UserTable.save(username, password, false);
+		users.add(constructed_user);
 	}
 	
 	public User getUserByUsername(String username) {
@@ -22,12 +25,12 @@ public class AccountManager {
 		return null;
 	}
 	
-	public User getUserById(int id) {
-		for(User user : users) {
-			if(user.getId() == id) return user;
-		}
-		return null;
-	}
+//	public User getUserById(int id) {
+//		for(User user : users) {
+//			if(user.getId() == id) return user;
+//		}
+//		return null;
+//	}
 	
 	public boolean userExists(String username) {
 		for(User user : users) {
@@ -50,13 +53,9 @@ public class AccountManager {
 	}
 	
 	private void initializeStarterUsers() {
-		User andrew = new User("andrew","gloving");
-		User travis = new User("travis","poop");
-		User adrian = new User("adrian","poop");
-		users.add(andrew);
-		users.add(travis);
-		users.add(adrian);
-		Message note = new Message(travis, andrew, "BROMANCE!");
-		andrew.addMessage(note);
+		UserTable.save("andrew", "gloving", true);
+		UserTable.save("travis", "gloving", true);
+		UserTable.save("adrian", "gloving", true);
+		users = UserTable.getUsers();
 	}
 }

@@ -3,21 +3,24 @@ package messages;
 import users.User;
 
 public class Message {
+	private int id;
 	private User sender, receiver;
 	private boolean read = false;
 	private String message;
-	private int id;
-	private static int ID_GEN = 0;
 	
-	public Message(User sender, User receiver, String message) {
+	public Message(int id, User sender, User receiver, String message) {
+		this.id = id;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.message = message;
-		this.id = ID_GEN++;
 	}
 	
 	public void setReadStatus(boolean status) {
 		this.read = status;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public User getSender() {

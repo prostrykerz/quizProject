@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import databases.MessageTable;
+
 import users.AccountManager;
 import users.User;
 
@@ -57,7 +59,7 @@ public class FriendRequestServlet extends HttpServlet {
 		else {
 			User receiver = manager.getUserByUsername(receiverusername);
 			String text = constructMessage(user, receiver);
-			Message msg = new Message(user, receiver, text);
+			Message msg = MessageTable.save(user, receiver, text);
 			receiver.addFriendRequest(msg);
 			String json = "{ \"msg\": \"Friend Request Sent\"}";
 			response.getWriter().write(json);
