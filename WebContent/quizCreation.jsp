@@ -12,10 +12,11 @@
 	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
 <h1> Create a quiz! </h1>
-<h2> Add questions to create a quiz. </h2>
 <%int currIndex = 1;%>
 
 <form action="QuizServlet" method="post">
+	Quiz Title: <input type="quizTitle" name="qTitle">
+	<h4> Add questions to create a quiz. </h4>
 	<div id="entry">
 	Choose question type:
 		<select id="drop<%=currIndex%>" name="mydropdown<%=currIndex%>">
