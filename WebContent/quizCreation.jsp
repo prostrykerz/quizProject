@@ -16,6 +16,7 @@
 <%int currIndex = 1;%>
 
 <form action="QuizServlet" method="post">
+	<div id="entry">
 	Choose question type:
 		<select id="drop<%=currIndex%>" name="mydropdown<%=currIndex%>">
 			<option value="1">Text Question-Response</option>
@@ -24,10 +25,10 @@
 			<option value="4">Picture Multiple-Choice</option>
 			<option value="5">Fill in the blank</option>
 		</select>
-		<button id="addQ" type="button">Add Question</button>
-		<br>
+		<button id="addQ" type="button">Add Question</button> <br>
+		</div>
 		<button id="addButton" type="submit">Create Quiz</button>
-	</form>
+</form>
 				
 <script type="text/javascript">
 	var counter = 2;
@@ -36,75 +37,70 @@
 		$("#addQ").click(addAnotherQ);
 		
 		function addAnotherQ(e) {
-			var answerCount = 1;
-			var dropVal = $("#drop"+ (counter - 1)).val();
+			var dropVal = $("#drop"+ (counter - 1)).val();	
+			$("#entry").remove();
 			
-			$("#addQ").remove();
-			var newQ = "Choose question type: <select id=\"drop"+counter+"\"name=\"mydropdown"+counter+"\">";
+			var newQ = "<div id=\"entry\">Choose question type: <select id=\"drop"+counter+"\"name=\"mydropdown"+counter+"\">";
 			newQ += "<option value=\"1\">Text Question-Response</option>";
 			newQ += "<option value=\"2\"> Picture Question-Response </option>";
 			newQ += "<option value=\"3\">Text Multiple-Choice</option>";
 			newQ += "<option value=\"4\">Picture Multiple-Choice</option>";
 			newQ += "<option value=\"5\">Fill in the blank</option>";
 			newQ += "</select>";
-			newQ += "<button id=\"addQ\" type=\"button\">Add Question</button> <br>";
+			newQ += "<button id=\"addQ\" type=\"button\">Add Question</button> <br> </div>";
 		
-			var qText = "Question Text: <input type=\"questionText\" name=\"qText\" />\<br>";
 			if (dropVal === "5") {
 				$("#addButton").before("Indicate a blank with 'X'. <br>");
 			}
+			
+			var qText = "Question " +(counter -1)+ " Text: <input type=\"questionText\" name=\"qText\" />\<br>";
+			
 			$("#addButton").before(qText);
-			console.log(dropVal);
 			
-			if (dropVal === "2") {
+			if (dropVal === "2" || dropVal === "4") {
 				$("#addButton").before("Picture Title: <input type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
 				$("#addButton").before("Picture URL: <input type=\"qPic\" name=\"qPic\"/>\<br>");
-				$("#addButton").before("Answer: <input type=\"qResponse\" name=\"qResponse\"/>\<br>");
 			}
 			
-			if (dropVal === "3") {
+			if (dropVal === "3" || dropVal === "4") {
 				var optionCount = 1;
-				
+				var optionButtonID = "addOpt"+ (counter ) + "-" + optionCount;
 				$("#addButton").before("Option "+optionCount+": <input id=\"oppField"+optionCount+"\"  type=\"qOppField\" name=\"qOppField\"/>");
-				$("#addButton").before("<button id=\"addOpp"+optionCount+"\" type=\"button\">Add Option</button><br>");
-				$("#addOpp" + optionCount).click(addOption);
-				function addOption(e) {
-					optionCount++;
-					$("#addOpp" + (optionCount - 1)).before("<br>Option "+optionCount+": <input  type=\"qPicTitle\" name=\"qPicTitle\"/>");
-					$("#addOpp" + (optionCount -1 )).before("<button id=\"addOpp"+optionCount+"\" type=\"button\">Add Option</button>");
-					$("#addOpp" + (optionCount -1)).remove();
-					$("#addOpp"+(optionCount)).click(addOption);
-				}	
+				$("#addButton").before(" Correct? <input type=\"checkbox\" id=\"correctBox"+counter+"-"+optionCount+"\"name=\"correctBox\">");
+				$("#addButton").before("<button id="+optionButtonID+" type=\"button\">Add Option</button><br>");
+				console.log("First " + optionButtonID);
+				$("#"+optionButtonID).click(addOption);
 			}
-		
-			if (dropVal === "4") {
-				var optionCount = 1;
-		
-				$("#addButton").before("Picture Title: <input type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
-				$("#addButton").before("Picture URL: <input type=\"qPic\" name=\"qPic\"/>\<br>");
-				$("#addButton").before("Option "+optionCount+": <input id=\"oppField"+optionCount+"\"  type=\"qOppField\" name=\"qOppField\"/>");
-				$("#addButton").before("<button id=\"addOpp"+optionCount+"\" type=\"button\">Add Option</button><br>");
-				$("#addOpp" + optionCount).click(addOption);
-				function addOption(e) {
-					optionCount++;
-					$("#addOpp" + (optionCount - 1)).before("<br>Option "+optionCount+": <input  type=\"qPicTitle\" name=\"qPicTitle\"/>");
-					$("#addOpp" + (optionCount -1 )).before("<button id=\"addOpp"+optionCount+"\" type=\"button\">Add Option</button>");
-					$("#addOpp" + (optionCount -1)).remove();
-					$("#addOpp"+(optionCount)).click(addOption);
-				}	
-			}	
+						
+			if ((dropVal === "1") || (dropVal === "2") || (dropVal === "5")) {
+				var answerCount = 1;
+				var answerButtonID = "addAns"+ counter + "-" + answerCount;
+				$("#addButton").before("Answer "+answerCount+": <input id=\"qAnswer-"+counter+"-"+answerCount+"\"  type=\"text\" name=\"qAnswer\"/>");
+				$("#addButton").before("<button id="+answerButtonID+" type=\"button\">Add Answer</button><br>");
+				$("#"+answerButtonID).click(addAnswer);
+			}
 			
-			$("#addButton").before("Answer "+answerCount+": <input id=\"qAnswer"+answerCount+"\"  type=\"text\" name=\"qAnswer\"/>");
-			$("#addButton").before("<button id=\"addAns"+answerCount+"\" type=\"button\">Add Answer</button><br>");
-			$("#addAns" + answerCount).click(addAnswer);
-			function addAnswer(e) {
+			function addOption() {
+				optionCount++;
+				optionButtonID = "addOpt"+ (counter - 1) + "-" + optionCount;
+				$(this).before("<br>Option "+optionCount+": <input id=\"oppField"+optionCount+"\"  type=\"qOppField\" name=\"qOppField\"/>");
+				$(this).before(" Correct? <input type=\"checkbox\" id=\"correctBox"+counter+"-"+optionCount+"\"name=\"correctBox\">");
+				$(this).before("<button id="+optionButtonID+" type=\"button\">Add Option</button>");
+				$(this).remove();
+				console.log(optionButtonID);
+				$("#"+optionButtonID).click(addOption);
+			}
+			
+			function addAnswer() {
 				answerCount++;
-				$("#addAns" + (answerCount - 1)).before("<br>Answer "+answerCount+": <input  type=\"qAnswer\" name=\"qAnswer\"/>");
-				$("#addAns" + (answerCount -1 )).before("<button id=\"addAns"+answerCount+"\" type=\"button\">Add Answer</button>");
-				$("#addAns" + (answerCount -1)).remove();
-				$("#addAns" + (answerCount)).click(addAnswer);
+				answerButtonID = "addAns"+ (counter - 1) + "-" + answerCount;
+				$(this).before("<br>Answer "+answerCount+": <input  type=\"qAnswer\" name=\"qAnswer\"/>");
+				$(this).before("<button id="+answerButtonID+" type=\"button\">Add Answer</button>");
+				$(this).remove();
+				$("#"+answerButtonID).click(addAnswer);
 			}
 				
+			$("#addButton").before("<br>");
 			$("#addButton").before(newQ);
 			$("#addQ").click(addAnotherQ);
 			counter++;
