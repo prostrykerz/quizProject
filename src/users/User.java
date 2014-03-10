@@ -7,9 +7,11 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 import databases.FriendTable;
+import databases.MessageTable;
 
 import messages.Message;
 import models.Quiz;
@@ -84,12 +86,31 @@ public class User {
 			}
 		}
 		friendRequests.remove(msg);
+		MessageTable.deleteMessage(msg.getId());
 	}
 	
 	public static void addFriend(User one, User two) {
 		FriendTable.save(one, two);
 		one.addFriend(two);
 		two.addFriend(one);
+	}
+	
+	public void removeFriend(User u) {
+		int id = u.getId();
+		Iterator<Integer> it = friends.iterator();
+		while(it.hasNext()) {
+			int curid = it.next();
+			if(curid == id) {
+				it.remove();
+				break;
+			}
+		}
+	}
+	
+	public static void removeFriend(User one, User two) {
+		FriendTable.removeFriendship(one, two);
+		one.removeFriend(two);
+		two.removeFriend(one);
 	}
 	
 	//Getters

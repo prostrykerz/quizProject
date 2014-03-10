@@ -10,22 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import databases.MessageTable;
-
 import users.AccountManager;
 import users.User;
 
 /**
- * Servlet implementation class FriendRequestServlet
+ * Servlet implementation class RemoveFriendServlet
  */
-@WebServlet("/FriendRequestServlet")
-public class FriendRequestServlet extends HttpServlet {
+@WebServlet("/RemoveFriendServlet")
+public class RemoveFriendServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FriendRequestServlet() {
+    public RemoveFriendServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,9 +42,9 @@ public class FriendRequestServlet extends HttpServlet {
 		ServletContext context = getServletContext();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
-		String receiverusername = request.getParameter("user");
-		String error = validations(user, receiverusername, manager);
+		User curuser = (User) session.getAttribute("user");
+		String username = request.getParameter("user");
+		String error = validations(curuser, username, manager);
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		if(error != "") {
@@ -57,31 +55,28 @@ public class FriendRequestServlet extends HttpServlet {
 			response.getWriter().write(sb.toString());
 		}
 		else {
-			User receiver = manager.getUserByUsername(receiverusername);
-			String text = constructMessage(user, receiver);
-			Message msg = MessageTable.save(user, receiver, text);
-			receiver.addFriendRequest(msg);
-			String json = "{ \"msg\": \"Friend Request Sent\"}";
+			User.removeFriend(curuser, manager.getUserByUsername(username));
+			String json = "{ \"msg\": \"Friendship Revoked\"}";
 			response.getWriter().write(json);
-			//create and send message then forward
 		}
 	}
 	
-	private String constructMessage(User from, User to) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(from.getUsername());
-		sb.append(" wants to be friends. ");
-		sb.append("<a data-user=\"" + from.getUsername() + "\" class=\"accept_friend_request\" href=\"#\">Accept Friend Request</a> ");
-		sb.append("<a data-user=\"" + from.getUsername() + "\" class=\"deny_friend_request\" href=\"#\">Deny Friend Request</a> ");
-		return sb.toString();
-	}
-	
-	private String validations(User user, String receiverusername, AccountManager manager) {
+	private String validations(User user, String username, AccountManager manager) {
 		if(user == null) return "Please Login";
-		if(!manager.userExists(receiverusername)) return "No user found by name of: " + receiverusername;
-		User receiver = manager.getUserByUsername(receiverusername);
-		if(receiver.hasFriendRequestFrom(user)) return "Friend Request Already Sent";
+		if(!manager.userExists(username)) return "No user found by name of: " + username;
+		boolean friendExists = false;
+		for(Integer id : user.getFriends()) {
+			for(User u : manager.getUsers()) {
+				if(u.getId() == id) {
+					if(u.getUsername().equals(username)) {
+						friendExists = true;
+						break;
+					}
+				}
+			}
+			if(friendExists) break;
+		}
+		if(!friendExists)return "Not friends";
 		return "";
 	}
-
 }
