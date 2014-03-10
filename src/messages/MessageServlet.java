@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import databases.MessageTable;
+
 import users.AccountManager;
 import users.User;
 
@@ -58,7 +60,7 @@ public class MessageServlet extends HttpServlet {
 		}
 		else {
 			User receiver = manager.getUserByUsername(receiverusername);
-			Message msg = new Message(user, receiver, message);
+			Message msg = MessageTable.save(user, receiver, message);
 			receiver.addMessage(msg);
 			String json = "{ \"msg\": \"Message Sent\"}";
 			response.getWriter().write(json);

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import databases.FriendTable;
+import databases.MessageTable;
 
 import messages.Message;
 import models.Quiz;
@@ -84,6 +85,7 @@ public class User {
 			}
 		}
 		friendRequests.remove(msg);
+		MessageTable.deleteMessage(msg.getId());
 	}
 	
 	public static void addFriend(User one, User two) {

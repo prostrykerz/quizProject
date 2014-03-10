@@ -14,7 +14,6 @@ import users.User;
 public class FriendTable extends Database {
 
 	private static String tableName = "Friends";
-	private static final int NUM_COLS = 4;
 	
 	public static void createTable() {
 		try {

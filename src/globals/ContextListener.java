@@ -9,6 +9,7 @@ import users.AccountManager;
 
 import databases.DatabaseUtils;
 import databases.FriendTable;
+import databases.MessageTable;
 import databases.UserTable;
 
 /**
@@ -49,7 +50,11 @@ public class ContextListener implements ServletContextListener {
     	//TEsting
     	DatabaseUtils.dropTable("Users");
     	DatabaseUtils.dropTable("Friends");
+    	DatabaseUtils.dropTable("Messages");
+    	
+    	//KEep
     	UserTable.createTable();
     	FriendTable.createTable();
+    	MessageTable.createTable();
     }
 }

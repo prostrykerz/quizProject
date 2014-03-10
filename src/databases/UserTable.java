@@ -24,7 +24,6 @@ import databases.MyDBInfo;
 public class UserTable extends Database {
 	
 	private static String tableName = "Users";
-	private static final int NUM_COLS = 4;
 	//1 = username
 	//2 = salt
 	//3 = hash
@@ -113,6 +112,31 @@ public class UserTable extends Database {
 			}
 			con.close();
 			return users;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static User getUser(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			User user;
+			while(rs.next()) {
+				if(id == rs.getInt("id")) {
+					user = rsToUser(rs);
+					return user;
+				}
+			}
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
