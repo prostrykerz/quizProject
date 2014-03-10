@@ -12,13 +12,13 @@
 	questions.add(two);
 	String question_text = "";
 	boolean first = true;
-	for(Question q : questions) {
-		question_text += "\"" + q.getQuestion() + "\"";
-		if(first) {
-			question_text += "\"" + q.getQuestion() + "\"";
+	for(int i = 0; i < questions.size(); i++) {
+		question_text += "\"";
+		if(i == questions.size()-1) {
+			question_text += questions.get(i).getQuestion() + "\"";
 		}
 		else {
-			
+			question_text += questions.get(i).getQuestion() + "\"" + ",";
 		}
 	}
 %>
@@ -33,21 +33,43 @@
 		<jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
 	<div id="question_box"">
-		sdfsdf
+		WILL BE REPLACED BY JAVASCRIPT
 	</div>
 <script>
 	$(document).ready(function() {
-		quizInitialization();
-		showFirstQuestion();
+		//Initialization
+		var question_text = new Array(<%= question_text %>);
+		var answers = new Array();
+		
+		showQuestion(0);
+		
+		function showQuestion(index) {
+			var prevdisabled = "";
+			var nextdisabled = "";
+			if(index == 0) prevdisabled = "disabled";
+			if(index == question_text.length-1) nextdisabled = "disabled";
+			var html = "";
+			html += "Question: " + question_text[index];
+			html += "<br />";
+			html += "Answer: ";
+			html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" />";
+			html += "<br />";
+			html += "<button id=\"prev_btn\" type=\"button\" " + prevdisabled + ">Prev</button>";
+			html += "<button id=\"next_btn\" type=\"button\" " + nextdisabled + ">Next</button>";
+			$("#question_box").html("");
+			$("#question_box").html(html);
+			
+			$("#next_btn").click(function() {
+				showQuestion(index+1);
+			});
+			$("#prev_btn").click(function() {
+				showQuestion(index-1);
+			});
+		}
+		
 		
 	});
-	function quizInitialization() {
-		var question_text = new Array("<%= question_text %>");
-		
-	}
-	function showFirstQuestion() {
-		console.log("test");
-	}
+	
 </script>
 </body>
 </html>
