@@ -27,30 +27,30 @@ import databases.SingleResponseTextTable;
 public class Quiz {
 	
 	private ArrayList<Question> questionArr;
-	private String title;
-	private boolean isRandom;
-	private boolean isOnePage;
-	private boolean hasImmediateFeedback;
-	private boolean practiceMode;
-	private int score;
-	private int completionTime;
-	private QuizModelTable quizMDB;
-	private String creator;
+
 	private Integer quizID;
+	private HashMap<String, Object> infoMap;
+
+	private QuizModelTable quizMDB;
 	
 	public Quiz(ArrayList<Question> questionArr, String title, 
 			String description, boolean isRandom, 
 			boolean isOnePage, boolean hasImmediateFeedback, boolean practiceMode, String creator) {
 		this.questionArr = questionArr;
-		this.title = title;
-		this.isRandom = isRandom;
-		this.isOnePage = isOnePage;
-		this.hasImmediateFeedback = hasImmediateFeedback;
-		this.practiceMode = practiceMode;
-		this.score = 0;
-		this.completionTime = 0;
-		this.creator = creator;
-		this.quizID = QuizTable.addToDatabase(this.title, this.isRandom, this.isOnePage, this.hasImmediateFeedback, this.practiceMode, this.score, this.completionTime, this.creator);
+		
+		this.infoMap = new HashMap<String, Object>();
+		this.infoMap.put("quiz_id", this.quizID);
+		this.infoMap.put("title", title);
+		this.infoMap.put("description", description);
+		this.infoMap.put("random", isRandom);
+		this.infoMap.put("onePage", isOnePage);
+		this.infoMap.put("immediateFeedback", hasImmediateFeedback);
+		this.infoMap.put("practiceMode", practiceMode);
+		this.infoMap.put("score", 0);
+		this.infoMap.put("time", 0);
+		this.infoMap.put("creator", creator);
+		
+		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator);
 		this.quizMDB = new QuizModelTable(this.quizID);
 		this.storeQuestions();
 	}
@@ -59,15 +59,12 @@ public class Quiz {
 		this.quizID = quizID;
 		this.quizMDB = new QuizModelTable(this.quizID);
 		this.questionArr = this.quizMDB.getQuestions();
-		HashMap<String,Object> info = this.quizMDB.getQuizInfo();
-		this.title = (String) info.get("name");
-		this.isRandom = (Boolean) info.get("random");
-		this.isOnePage = (Boolean) info.get("onePage");
-		this.hasImmediateFeedback = (Boolean) info.get("immediateFeedback");
-		this.practiceMode = (Boolean) info.get("practiceMode");
-		this.score = (Integer) info.get("score");
-		this.completionTime = (Integer) info.get("time");
-		this.creator = (String) info.get("creator");
+		this.infoMap = new HashMap<String,Object>(this.quizMDB.getQuizInfo());
+		if (this.infoMap==null) System.out.println("ono");
+	}
+	
+	public HashMap<String, Object> getInfoMap(){
+		return this.infoMap;
 	}
 	
 	private void storeQuestions(){

@@ -24,7 +24,7 @@ public class QuizTableTest {
 
 	@Test
 	public void test2(){
-		QuizTable.addToDatabase("quiz 4", true, false, false, true, 5, 3000, "Adrian");
+		QuizTable.addToDatabase("quiz 4", "description needed", true, false, false, true, 5, 3000, "Adrian");
 		System.out.println(quizTable.getTable()[0].size());
 		
 		for (int i=0; i<quizTable.getTable()[1].size(); i++){

@@ -13,14 +13,14 @@ import databases.MyDBInfo;
 
 public class QuizTable extends Database {
 
-	private static int NUM_COLS = 9;
+	private static int NUM_COLS = 10;
 	private static String tableName = "quizzes";
 	
 	public QuizTable(){
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
-			if (i==0 || i==6 || i==7) table[i] = new ArrayList<Integer>();
-			else if (i>=2 && i<=5) table[i] = new ArrayList<Boolean>();
+			if (i==0 || i==7 || i==8) table[i] = new ArrayList<Integer>();
+			else if (i>=3 && i<=6) table[i] = new ArrayList<Boolean>();
 			else table[i] = new ArrayList<String>();
 		}
 		try {
@@ -33,6 +33,7 @@ public class QuizTable extends Database {
 			while(rs.next()) {
 				Integer p_id = rs.getInt("p_id");
 				String name = rs.getString("name");
+				String description = rs.getString("description");
 				Boolean random = rs.getBoolean("random");
 				Boolean onePage = rs.getBoolean("onePage");
 				Boolean immediateFeedback = rs.getBoolean("immediateFeedback");
@@ -42,13 +43,14 @@ public class QuizTable extends Database {
 				String creator = rs.getString("creator");
 				table[0].add(p_id);
 				table[1].add(name);
-				table[2].add(random);
-				table[3].add(onePage);
-				table[4].add(immediateFeedback);
-				table[5].add(practiceMode);
-				table[6].add(score);
-				table[7].add(time);
-				table[8].add(creator);
+				table[2].add(description);
+				table[3].add(random);
+				table[4].add(onePage);
+				table[5].add(immediateFeedback);
+				table[6].add(practiceMode);
+				table[7].add(score);
+				table[8].add(time);
+				table[9].add(creator);
 			}
 			con.close();
 		}
@@ -92,26 +94,28 @@ public class QuizTable extends Database {
 //		return null;
 //	}
 //	
-	public static Integer addToDatabase(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+	public static Integer addToDatabase(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			String query = buildAddQuery(name, random, onePage, immediateFeedback, practiceMode, score, time, creator);
+			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator);
 			stmt.executeUpdate(query);
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
 			if (rs.next())	i = rs.getInt("last_insert_id()");
-			table[0].add(i);
-			table[1].add(name);
-			table[2].add(random);
-			table[3].add(onePage);
-			table[4].add(immediateFeedback);
-			table[5].add(practiceMode);
-			table[6].add(score);
-			table[7].add(time);
-			table[8].add(creator);
+//			System.out.println(i);
+//			table[0].add(i);
+//			table[1].add(name);
+//			table[2].add(description);
+//			table[3].add(random);
+//			table[4].add(onePage);
+//			table[5].add(immediateFeedback);
+//			table[6].add(practiceMode);
+//			table[7].add(score);
+//			table[8].add(time);
+//			table[9].add(creator);
 			con.close();
 			return i;
 		}
@@ -125,10 +129,10 @@ public class QuizTable extends Database {
 		return null;
 	}
 	
-	private static String buildAddQuery(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+	private static String buildAddQuery(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
 		String query = " INSERT INTO "+tableName;
-		query += " (name, random, onePage, immediateFeedback, practiceMode, score, time, creator)";
-		query += " VALUES(\""+name+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\");";
+		query += " (name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator)";
+		query += " VALUES(\""+name+"\",\""+description+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\");";
 		return query;
 	}
 	
