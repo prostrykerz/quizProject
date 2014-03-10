@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.*" %>
+<%@ page import="models.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,6 +14,13 @@
 	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
 <h1>Quiz: </h1>
+<ul>
+<%ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
+System.out.println(qArr.size());
+for (int i=0; i<qArr.size(); i++){
+	%><li><%=qArr.get(i).getQuestion()%></li><%
+}%>
+</ul>
 </head>
 <body>
 	
