@@ -68,19 +68,34 @@
 				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
 			}
 			else if(questionArr[index]["class"]=="<%=MultiChoiceTextQuestion.class.toString()%>"){
-				
 				var possibleAnswers = questionArr[index]["possibleAnswers"];
-				for(var i=0; i<possibleAnswers.length; i++){
-					html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
-					html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+				if (questionArr[index]["correctAnswers"].length==1){
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"radio\" class=\"answer-"+i+"\" name=\"checkBox"+index +"\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}
+				else{
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
 				}
 			}
 			else if(questionArr[index]["class"]=="<%=MultiChoicePicQuestion.class.toString()%>"){
 				var possibleAnswers = questionArr[index]["possibleAnswers"];
 				html += "<img src="+questionArr[index]["pictureURL"] +"alt='Smiley face' height='500' width='500'><br/>";
-				for(var i=0; i<possibleAnswers.length; i++){
-					html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
-					html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+				if (questionArr[index]["correctAnswers"].length==1){
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"radio\" class=\"answer-"+i+"\" name=\"checkBox"+index +"\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}
+				else{
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
 				}		
 			}
 			else if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>"){
