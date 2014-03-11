@@ -19,8 +19,10 @@
 		<li><a href="find_users.jsp" class="navbar_link">Find Users</a></li>
 		<li class="divider"></li>
 		<% if(user != null) {
-			out.println("<li><a href='#' class='navbar_link'>Admin</a></li>");
-			out.println("<li class='divider'></li>");
+			if(user.isAdmin()) {
+				out.println("<li><a href='admin_dashboard.jsp' class='navbar_link'>Admin</a></li>");
+				out.println("<li class='divider'></li>");
+			}
 			out.println("<li><a href='/quizProject/messages.jsp' class='navbar_link'>Messages</a></li>");
 			out.println("<li class='divider'></li>");
 		}
