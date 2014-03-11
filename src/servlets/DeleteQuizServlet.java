@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import databases.QuizTable;
+
 import users.AccountManager;
 import users.User;
 
@@ -44,15 +46,15 @@ public class DeleteQuizServlet extends HttpServlet {
 		ServletContext context = getServletContext();
 		String idString = request.getParameter("id");
 		int id = Integer.parseInt(idString);
-//		Iterator<User> it = users.iterator();
-//		while(it.hasNext() && !username.equals("")) {
-//			User u = it.next();
-//			if(u.getUsername().equals(username)) {
-//				u.delete();
-//				it.remove();
-//				break;
-//			}
-//		}
+		System.out.println(id);
+		AccountManager manager = (AccountManager) context.getAttribute("manager");
+		HashSet<User> users = manager.getUsers();
+		for(User u : users) {
+			if(u.ownsQuiz(id)) {
+				u.deleteQuiz(id);
+				break;
+			}
+		}
 		RequestDispatcher dispatch = request.getRequestDispatcher("admin_dashboard.jsp");
 		dispatch.forward(request, response);
 	}

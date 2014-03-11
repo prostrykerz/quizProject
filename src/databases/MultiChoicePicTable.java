@@ -120,4 +120,21 @@ public class MultiChoicePicTable extends Database {
 		query += " VALUES("+q_id+",\""+q_text+"\",\""+q_url+"\","+a_id+",\""+a_text+"\","+a_correct+","+position+","+quiz_id+");";
 		return query;
 	}
+	
+	public static void deleteQuestion(int quiz_id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

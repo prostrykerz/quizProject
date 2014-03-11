@@ -17,6 +17,9 @@ import java.util.Random;
 
 import javax.swing.table.AbstractTableModel;
 
+import messages.Message;
+import models.Quiz;
+
 import users.User;
 
 import databases.MyDBInfo;
@@ -181,7 +184,9 @@ public class UserTable extends Database {
 			byte[] hash = hashblob.getBytes(1, (int) hashblob.length());
 			boolean admin = rs.getBoolean("admin");
 			ArrayList<Integer> friends = FriendTable.getFriends(id);
-			return new User(id, username, salt, hash, admin, friends);
+			ArrayList<Message> messages = MessageTable.getMessages(id);
+			ArrayList<Quiz> quizzes = QuizTable.getQuizzes(username);
+			return new User(id, username, salt, hash, admin, messages, quizzes, friends);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

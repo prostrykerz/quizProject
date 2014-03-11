@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import messages.Message;
+import models.Quiz;
+
 import users.User;
 
 import databases.MyDBInfo;
@@ -94,6 +97,23 @@ public class QuizTable extends Database {
 		return query;
 	}
 	
+	public static void deleteQuiz(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE p_id = " + id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void deleteUserQuizzes(String username) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -111,4 +131,30 @@ public class QuizTable extends Database {
 		}
 	}
 	
+	public static ArrayList<Quiz> getQuizzes(String username) {
+		try {
+			ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			while(rs.next()) {
+				String creator = rs.getString("creator");
+				if(username.equals(creator)) {
+					Quiz quiz = new Quiz(rs.getInt("p_id"));
+					quizzes.add(quiz);
+				}
+			}
+			con.close();
+			return quizzes;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
