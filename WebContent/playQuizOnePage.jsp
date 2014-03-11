@@ -21,13 +21,13 @@ String quizTitle = "Adrian's Quiz";
 	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
 <h2><%=quizTitle%></h2>
-<ul>
+<ol>
 <%ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
 System.out.println(qArr.size());
 for (int i = 0; i < qArr.size(); i++) {
 	%><li><%=qArr.get(i).getQuestion()%></li><%
 }%>
-</ul>
+</ol>
 
 	<script type="text/javascript">
 	
