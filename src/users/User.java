@@ -67,6 +67,11 @@ public class User {
 		return false;
 	}
 	
+	public void makeAdmin() {
+		UserTable.makeAdmin(id);
+		admin = true;
+	}
+	
 	public boolean ownsQuiz(int id) {
 		for(Quiz q : quizzes) {
 			if(q.getId() == id) return true;

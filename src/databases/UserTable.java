@@ -210,4 +210,21 @@ public class UserTable extends Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void makeAdmin(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("UPDATE " + tableName + " SET admin = 1 WHERE id = " + id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }
