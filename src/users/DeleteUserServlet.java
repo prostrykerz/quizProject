@@ -44,18 +44,16 @@ public class DeleteUserServlet extends HttpServlet {
 		ServletContext context = getServletContext();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		HashSet<User> users = manager.getUsers();
-		String idString = request.getParameter("id");
-		int id = Integer.parseInt(idString);
-		
-//		Iterator<User> it = users.iterator();
-//		while(it.hasNext() && !username.equals("")) {
-//			User u = it.next();
-//			if(u.getUsername().equals(username)) {
-//				u.delete();
-//				it.remove();
-//				break;
-//			}
-//		}
+		String username = request.getParameter("username");
+		Iterator<User> it = users.iterator();
+		while(it.hasNext() && !username.equals("")) {
+			User u = it.next();
+			if(u.getUsername().equals(username)) {
+				u.delete();
+				it.remove();
+				break;
+			}
+		}
 		RequestDispatcher dispatch = request.getRequestDispatcher("admin_dashboard.jsp");
 		dispatch.forward(request, response);
 	}

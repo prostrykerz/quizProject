@@ -42,16 +42,17 @@ public class DeleteQuizServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = getServletContext();
-		String title = request.getParameter("title");
-		Iterator<User> it = users.iterator();
-		while(it.hasNext() && !username.equals("")) {
-			User u = it.next();
-			if(u.getUsername().equals(username)) {
-				u.delete();
-				it.remove();
-				break;
-			}
-		}
+		String idString = request.getParameter("id");
+		int id = Integer.parseInt(idString);
+//		Iterator<User> it = users.iterator();
+//		while(it.hasNext() && !username.equals("")) {
+//			User u = it.next();
+//			if(u.getUsername().equals(username)) {
+//				u.delete();
+//				it.remove();
+//				break;
+//			}
+//		}
 		RequestDispatcher dispatch = request.getRequestDispatcher("admin_dashboard.jsp");
 		dispatch.forward(request, response);
 	}
