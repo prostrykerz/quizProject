@@ -19,7 +19,6 @@
 		if (q==null) System.out.println("quiz is null");
 		HashMap<String, Object> infoMap = q.getInfoMap();
 		if (infoMap==null) System.out.println("infoMap is null");
-		System.out.println(infoMap.get("title"));
 	%>
 	<h1>Quiz: <%=infoMap.get("title") %> </h1>
 	<h3>Description: <%=infoMap.get("description")%></h3>

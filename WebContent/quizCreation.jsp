@@ -27,6 +27,13 @@
 		</select>
 		<button id="addQ" type="button">Add Question</button> <br>
 		</div>
+		<br>
+		How would you like your questions displayed? 
+		<select id="one-page-dropdown" name="mydropdown">
+			<option value="single">All on one page</option>
+			<option value="multi"> One per page</option>
+		</select>
+		<br><br>
 		<button id="addButton" type="button">Create Quiz</button>
 				
 <script type="text/javascript">

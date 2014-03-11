@@ -24,7 +24,7 @@ String quizTitle = "Adrian's Quiz";
 <ul>
 <%ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
 System.out.println(qArr.size());
-for (int i=0; i<qArr.size(); i++){
+for (int i = 0; i < qArr.size(); i++) {
 	%><li><%=qArr.get(i).getQuestion()%></li><%
 }%>
 </ul>
