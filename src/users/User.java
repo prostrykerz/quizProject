@@ -74,6 +74,7 @@ public class User {
 	}
 	
 	public void addQuiz(Quiz q) {
+		//Need to save to db
 		quizzes.add(q);
 	}
 	
@@ -122,6 +123,7 @@ public class User {
 	public ArrayList<Message> getMessages() {return messages;}
 	public ArrayList<Integer> getFriends() {return friends;}
 	public ArrayList<Message> getFriendRequests() {return friendRequests;}
+	public ArrayList<Quiz> getQuizzes() {return quizzes;}
 	
 	//Misc
 	public boolean equals(User other) {

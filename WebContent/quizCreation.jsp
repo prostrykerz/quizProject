@@ -110,6 +110,7 @@
 		
 		$("#addButton").click(function() {
 			var questions = formatData();
+			console.log(questions);
 			$.post("QuizServlet",{questions: JSON.stringify(questions)}, function(responseText) {
 				console.log(responseText);
 			});
@@ -154,11 +155,11 @@
 		}
 		
 		function getType(div) {
-			if(div.hasClass("type-1")) return 1;
-			else if(div.hasClass("type-2")) return 2;
-			else if(div.hasClass("type-3")) return 3;
-			else if(div.hasClass("type-4")) return 4;
-			else if(div.hasClass("type-5")) return 5;
+			if(div.hasClass("type-1")) return "1";
+			else if(div.hasClass("type-2")) return "2";
+			else if(div.hasClass("type-3")) return "3";
+			else if(div.hasClass("type-4")) return "4";
+			else if(div.hasClass("type-5")) return "5";
 			else return -1;
 		}
 	});

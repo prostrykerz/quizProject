@@ -5,6 +5,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import users.AccountManager;
 
 import databases.DatabaseUtils;
@@ -43,7 +45,11 @@ public class ContextListener implements ServletContextListener {
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent arg0) {
-        // TODO Auto-generated method stub
+    	try {
+            AbandonedConnectionCleanupThread.shutdown();
+        } catch (InterruptedException e) {
+            // again failure, not much you can do
+        }
     }
 	
     private void createTables() {

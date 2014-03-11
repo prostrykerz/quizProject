@@ -63,6 +63,9 @@
 			}
 		}
 	%>
+	<br />
+	<h2>Quizzes</h2>
+	<%= user.getQuizzes().size() %>
 	<script>
 		$(document).ready(function() {
 			$('#add_friend_btn').click(function() {
