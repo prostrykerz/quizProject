@@ -13,26 +13,23 @@
 			out.println("<li class='divider'></li>");
 		}
 		%>
-
-		<li><a href="quizCreation.jsp" class="navbar_link">Quizzes</a></li>
-		<li class="divider"></li>
-		<li><a href="find_users.jsp" class="navbar_link">Find Users</a></li>
-		<li class="divider"></li>
 		<% if(user != null) {
+			out.println("<li><a href=\"quizList.jsp\" class=\"navbar_link\">Quiz List</a></li>");
+			out.println("<li class='divider'></li>");
+			out.println("<li><a href=\"find_users.jsp\" class=\"navbar_link\">Find Users</a></li>");
+			out.println("<li class='divider'></li>");
+			out.println("<li><a href=\"quizCreation.jsp\" class=\"navbar_link\">Create Quiz</a></li>");
+			out.println("<li class='divider'></li>");
 			if(user.isAdmin()) {
 				out.println("<li><a href='admin_dashboard.jsp' class='navbar_link'>Admin</a></li>");
 				out.println("<li class='divider'></li>");
 			}
 			out.println("<li><a href='/quizProject/messages.jsp' class='navbar_link'>Messages</a></li>");
 			out.println("<li class='divider'></li>");
+			out.println("<li><a href='/quizProject/user.jsp?username=" + user.getUsername() + "' class='navbar_link'>" + user.getUsername() + "</a></li>");
+			out.println("<li class='divider'></li>");
+			out.println("<li><a href=\"logout.jsp\" class=\"navbar_link\">Sign Out</a></li>");
 		}
-		%>
-		<% 
-			if(user != null) {
-				out.println("<li><a href='/quizProject/user.jsp?username=" + user.getUsername() + "' class='navbar_link'>" + user.getUsername() + "</a></li>");
-				out.println("<li class='divider'></li>");
-				out.println("<li><a href=\"logout.jsp\" class=\"navbar_link\">Sign Out</a></li>");
-			}
 			else out.println("Status: Not logged in");
 		%>
 	</ul>

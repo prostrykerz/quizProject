@@ -32,5 +32,6 @@
 		<input type="hidden" name="quiz_id" value="<%=id%>">
 		<button type="submit">Take the Quiz</button>
 	</form>
+	<a href="challenge.jsp?id=<%=id%>"><button type="button">Challenge Friend</button></a>
 </body>
 </html>

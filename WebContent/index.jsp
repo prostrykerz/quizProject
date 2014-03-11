@@ -50,7 +50,7 @@
 			}
 		%>
 	</table>
-	<a href="create_account.jsp">Create New Account</a>
+
 
 </body>
 </html>

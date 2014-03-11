@@ -1,15 +1,10 @@
 package users;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
-
 import databases.FillBlankTable;
 import databases.FriendTable;
 import databases.MessageTable;
@@ -27,10 +22,11 @@ public class User {
 	private int id;
 	private String username;
 	private byte[] hash, salt;
-	ArrayList<Message> messages;
-	ArrayList<Integer> friends;
-	ArrayList<Message> friendRequests;
-	ArrayList<Quiz> quizzes;
+	private ArrayList<Message> messages;
+	private ArrayList<Integer> friends;
+	private ArrayList<Message> friendRequests;
+	private ArrayList<Quiz> quizzes;
+	private HashMap<Integer, Boolean> achievements;
 	private boolean admin;
 	
 	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends) {
