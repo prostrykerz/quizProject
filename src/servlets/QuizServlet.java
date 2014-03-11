@@ -60,7 +60,7 @@ public class QuizServlet extends HttpServlet {
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		if(user == null) {
-			response.getWriter().write("{error: \"Not Logged In\"}");
+			response.getWriter().write("{\"error\": \"Not Logged In\"}");
 			return;
 		}
 		Map<String, String[]> parameters = request.getParameterMap();
@@ -121,7 +121,7 @@ public class QuizServlet extends HttpServlet {
 		String creator = user.getUsername();
 		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 		user.addQuiz(quiz);
-		response.getWriter().write("{msg: \"Success\"}");
+		response.getWriter().write("{\"msg\": \"Success\"}");
 	}
 
 }

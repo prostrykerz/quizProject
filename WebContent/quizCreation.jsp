@@ -114,6 +114,7 @@
 			$.post("QuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
 				console.log(responseJson);
 				var response = $.parseJSON(responseJson);
+				console.log(response);
 				if(response.error) {
 					alert(response.error);
 				}
