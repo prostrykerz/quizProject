@@ -40,7 +40,7 @@
 	<div id="question_box"">
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
-<script><!--
+<script>
 	$(document).ready(function() {
 		//Initialization
 		var questionArr = <%= qArrJson%>;
@@ -132,6 +132,6 @@
 		
 	});
 	
---></script>
+</script>
 </body>
 </html>
