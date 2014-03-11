@@ -90,14 +90,14 @@ public class QuizServlet extends HttpServlet {
 				SingleResponsePicQuestion q = new SingleResponsePicQuestion(text, pictureURL, answers, i);
 				questions.add(q);
 			}
-			else if(question.getString("type").equals("3")) {
+			else if(question.getString("type").equals("3") || question.getString("type").equals("5")) {
 				ArrayList<String> possible_answers = new ArrayList<String>();
 				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
 				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
 				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, possible_answers, i);
 				questions.add(q);
 			}
-			else if(question.getString("type").equals("4")) {
+			else if(question.getString("type").equals("4") || question.getString("type").equals("6")) {
 				String pictureURL = question.getString("pictureURL");
 				String pictureTitle = question.getString("pictureTitle");
 				ArrayList<String> possible_answers = new ArrayList<String>();
@@ -106,7 +106,7 @@ public class QuizServlet extends HttpServlet {
 				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, pictureURL, answers, possible_answers, i);
 				questions.add(q);
 			}
-			else if(question.getString("type").equals("5")) {
+			else if(question.getString("type").equals("7")) {
 				FillBlankQuestion q = new FillBlankQuestion(text, answers, i);
 				questions.add(q);
 			}
