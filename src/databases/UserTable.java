@@ -131,14 +131,15 @@ public class UserTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
-			User user;
+			User user = null;
 			while(rs.next()) {
 				if(id == rs.getInt("id")) {
 					user = rsToUser(rs);
-					return user;
+					break;
 				}
 			}
 			con.close();
+			return user;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

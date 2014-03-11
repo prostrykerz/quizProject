@@ -1,5 +1,7 @@
 package globals;
 
+import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -8,7 +10,9 @@ import javax.servlet.annotation.WebListener;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 import users.AccountManager;
+import admin.Announcement;
 
+import databases.AnnouncementTable;
 import databases.DatabaseUtils;
 import databases.FriendTable;
 import databases.MessageTable;
@@ -37,7 +41,8 @@ public class ContextListener implements ServletContextListener {
     	createTables();
     	
     	manager = new AccountManager();
-        
+    	
+        context.setAttribute("announcements", new ArrayList<Announcement>());
         context.setAttribute("manager", manager);
     }
 
@@ -57,10 +62,12 @@ public class ContextListener implements ServletContextListener {
     	DatabaseUtils.dropTable("Users");
     	DatabaseUtils.dropTable("Friends");
     	DatabaseUtils.dropTable("Messages");
+    	DatabaseUtils.dropTable("Announcements");
     	
     	//KEep
     	UserTable.createTable();
     	FriendTable.createTable();
     	MessageTable.createTable();
+    	AnnouncementTable.createTable();
     }
 }

@@ -133,13 +133,13 @@ public class QuizModelTable extends Database {
 				while (i<table[0].size()){
 					int compare_id = (Integer)table[0].get(i);
 					if (q_id!=compare_id){
-						i--;
 						break;
 					}
 					answerChoices.add((String)table[4].get(i));
 					if ((Boolean)table[5].get(i)) correctAnswers.add((String)table[4].get(i));
 					i++;
 				}
+				i--;
 				int position = (Integer)table[6].get(i);
 				qArr.add(new MultiChoiceTextQuestion(questionText, correctAnswers, answerChoices, position));
 			}
