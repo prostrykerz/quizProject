@@ -13,7 +13,7 @@
 	</jsp:include>
 <h1> Create a quiz! </h1>
 
-	Quiz Title: <input type="quizTitle" name="qTitle">
+	Quiz Title: <input id="quiz_title" type="quizTitle" name="qTitle">
 	<h4> Add questions to create a quiz. </h4>
 	<div id="entry">
 	Choose question type:
@@ -109,10 +109,16 @@
 		}
 		
 		$("#addButton").click(function() {
-			var questions = formatData();
-			console.log(questions);
-			$.post("QuizServlet",{questions: JSON.stringify(questions)}, function(responseText) {
-				console.log(responseText);
+			var data = formatData();
+			console.log(data);
+			$.post("QuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
+				console.log(responseJson);
+				var response = $.parseJSON(responseJson);
+				console.log(response);
+				if(response.error) {
+					alert(response.error);
+				}
+				else alert(response.msg);
 			});
 		});
 		
@@ -151,7 +157,11 @@
 				question.type = getType(div);
 				questions.push(question);
 			}
-			return questions;
+			data = {};
+			data.questions = questions;
+			data.title = $('#quiz_title').val();
+			data.description = "update me. In quizcreation.jsp";
+			return data;
 		}
 		
 		function getType(div) {

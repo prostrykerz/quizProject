@@ -60,19 +60,20 @@ public class QuizServlet extends HttpServlet {
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		if(user == null) {
-			response.getWriter().write("{error: \"Not Logged In\"}");
+			response.getWriter().write("{\"error\": \"Not Logged In\"}");
 			return;
 		}
 		Map<String, String[]> parameters = request.getParameterMap();
 		for(String parameter : parameters.keySet()) {
 		    System.out.println(parameter);
 		}
-		String json = "{\"questions\":" + request.getParameter("questions") + "}";
+		String json = "{\"data\":" + request.getParameter("data") + "}";
 		System.out.println(json);
-		JSONObject o = new JSONObject(json);
+		JSONObject outer = new JSONObject(json);
+		JSONObject inner = outer.getJSONObject("data");
 		
 		ArrayList<Question> questions = new ArrayList<Question>();
-		JSONArray jsonQuestions = o.getJSONArray("questions");
+		JSONArray jsonQuestions =inner.getJSONArray("questions");
 		for(int i = 0; i < jsonQuestions.length(); i++) {
 			JSONObject question = jsonQuestions.getJSONObject(i);
 			ArrayList<String> answers = new ArrayList<String>();
@@ -91,7 +92,7 @@ public class QuizServlet extends HttpServlet {
 			}
 			else if(question.getString("type").equals("3")) {
 				ArrayList<String> possible_answers = new ArrayList<String>();
-				JSONArray jPossibleAnswers = question.getJSONArray("posible_answers");
+				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
 				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
 				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, possible_answers, i);
 				questions.add(q);
@@ -100,7 +101,7 @@ public class QuizServlet extends HttpServlet {
 				String pictureURL = question.getString("pictureURL");
 				String pictureTitle = question.getString("pictureTitle");
 				ArrayList<String> possible_answers = new ArrayList<String>();
-				JSONArray jPossibleAnswers = question.getJSONArray("posible_answers");
+				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
 				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
 				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, pictureURL, answers, possible_answers, i);
 				questions.add(q);
@@ -110,64 +111,17 @@ public class QuizServlet extends HttpServlet {
 				questions.add(q);
 			}
 		}
-//		int counter = 1;
-//		while(true) {
-//			String question_type = request.getParameter("mydropdown" + counter);
-//			
-//			if(question_type == null) break;
-//			if(question_type.equals("Text Question-Response")) {
-//				ArrayList<String> answers = new ArrayList<String>();
-//				answers.add("test");
-//				String text = "Question";
-//				SingleResponseTextQuestion q = new SingleResponseTextQuestion(text, answers, counter);
-//				questions.add(q);
-//			}
-//			else if(question_type.equals("Picture Question-Response")) {
-//				ArrayList<String> answers = new ArrayList<String>();
-//				answers.add("test");
-//				String text = "Question";
-//				SingleResponsePicQuestion q = new SingleResponsePicQuestion(text, "url", answers, counter);
-//				questions.add(q);
-//			}
-//			else if(question_type.equals("Text Multiple-Choice")) {
-//				ArrayList<String> answers = new ArrayList<String>();
-//				answers.add("test");
-//				String text = "Question";
-//				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, answers, counter);
-//				questions.add(q);
-//			}
-//			else if(question_type.equals("Picture Multiple-Choice")) {
-//				ArrayList<String> answers = new ArrayList<String>();
-//				answers.add("test");
-//				String text = "Question";
-//				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, "url", answers, answers, counter);
-//				questions.add(q);
-//			}
-//			else if(question_type.equals("Fill in the blank")) {
-//				ArrayList<String> answers = new ArrayList<String>();
-//				answers.add("test");
-//				String text = "Question";
-//				FillBlankQuestion q = new FillBlankQuestion(text, answers, counter);
-//				questions.add(q);
-//			}
-//			else {
-//				System.out.println("Question type not found");
-//				return;
-//			}
-//			counter++;
-//		}
-		String title = "HARD CODED TITLE. ADD LATER";
-		String description = "HARD CODED DESCRIPTION";
+		String title = inner.getString("title");
+		String description = inner.getString("description");
 		boolean isRandom = false;
 		boolean isOnePage = true;
 		boolean hasImmediateFeedback = false;
 		boolean practiceMode = false;
 		//make user
-		String creator = "andrew";
-		System.out.println(questions.size());
+		String creator = user.getUsername();
 		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 		user.addQuiz(quiz);
-		response.getWriter().write("{msg: \"Success\"}");
+		response.getWriter().write("{\"msg\": \"Success\"}");
 	}
 
 }

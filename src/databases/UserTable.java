@@ -38,6 +38,7 @@ public class UserTable extends Database {
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, username CHAR(64), salt BLOB, hash BLOB, admin BOOLEAN, PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

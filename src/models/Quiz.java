@@ -39,7 +39,7 @@ public class Quiz {
 		this.questionArr = questionArr;
 		
 		this.infoMap = new HashMap<String, Object>();
-		this.infoMap.put("quiz_id", this.quizID);
+		
 		this.infoMap.put("title", title);
 		this.infoMap.put("description", description);
 		this.infoMap.put("random", isRandom);
@@ -51,6 +51,7 @@ public class Quiz {
 		this.infoMap.put("creator", creator);
 		
 		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator);
+		this.infoMap.put("quiz_id", this.quizID);
 		this.quizMDB = new QuizModelTable(this.quizID);
 		this.storeQuestions();
 	}
@@ -187,6 +188,7 @@ public class Quiz {
 	    }
 	}
 
-	
+	public int getId() {return (Integer) infoMap.get("quiz_id");}
+	public String getTitle() {return (String) infoMap.get("title");}
 	
 }

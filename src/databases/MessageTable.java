@@ -23,6 +23,7 @@ public class MessageTable extends Database{
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, sender INT, receiver INT, message VARCHAR(200), PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -112,6 +113,7 @@ public class MessageTable extends Database{
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

@@ -3,6 +3,8 @@
 <%@ page import="users.User" %>
 <%@ page import="messages.Message" %>
 <%@ page import="users.AccountManager" %>
+<%@ page import="java.util.*" %>
+<%@ page import="models.Quiz" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
@@ -65,7 +67,13 @@
 	%>
 	<br />
 	<h2>Quizzes</h2>
-	<%= user.getQuizzes().size() %>
+	<%
+		ArrayList<Quiz> quizzes = user.getQuizzes();
+		for(Quiz q : quizzes) {
+			out.println("<a href=\"quizSummary.jsp?id=" + q.getId() + "\">" + q.getTitle() + "</a>");
+			out.println("<br />");
+		}
+	%>
 	<script>
 		$(document).ready(function() {
 			$('#add_friend_btn').click(function() {
