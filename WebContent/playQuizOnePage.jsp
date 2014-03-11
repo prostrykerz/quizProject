@@ -1,41 +1,201 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.*" %>
+<%@ page import="org.json.*" %>
 <%@ page import="models.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-
-<%!
-ArrayList<Question> questions = new ArrayList<Question>();
-int numQuestions = questions.size();
-String quizTitle = "Adrian's Quiz";
-%>
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Take a Quiz</title><link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
+<title>QUIZ TITLE</title>
+<link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
-<jsp:include page="header.jsp">
-	    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
+	<jsp:include page="header.jsp">
+		<jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
-<h2><%=quizTitle%></h2>
-<ol>
-<%ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
-System.out.println(qArr.size());
-for (int i = 0; i < qArr.size(); i++) {
-	%><li><%=qArr.get(i).getQuestion()%></li><%
-}%>
-</ol>
-
-	<script type="text/javascript">
-	
-	
-		for (var i = 0; i < <%=numQuestions%>; i++) { 
-			
+	<%
+		ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
+		//ArrayList<Question> qArr1 = new ArrayList<Question>();
+		//SingleResponseTextQuestion q1 = new SingleResponseTextQuestion("how are you?", new ArrayList<String>(Arrays.asList("good")), 1);
+		//SingleResponseTextQuestion q2 = new SingleResponseTextQuestion("how are you?", new ArrayList<String>(Arrays.asList("bad")), 2);
+		//qArr.add(q1);
+		//qArr.add(q2);
+		
+		JSONArray qArrJson = new JSONArray();
+		if(qArr != null) {
+			for (int i = 0; i < qArr.size(); i++){
+				qArrJson.put(qArr.get(i).getJSON());
+			}
 		}
-
+		Integer id = Integer.parseInt(request.getParameter("quiz_id"));
+		Quiz q = new Quiz(id);
+		if (q==null) System.out.println("quiz is null");
+		HashMap<String, Object> infoMap = q.getInfoMap();
+		if (infoMap==null) System.out.println("infoMap is null");
+		//System.out.println(qArrJson.toString());
+	%>
+	<h1>Quiz: <%=infoMap.get("title") %></h1>
+	<div id="container"">
+		WILL BE REPLACED BY JAVASCRIPT
+	</div>
+<script><!--
+	$(document).ready(function() {
+		//Initialization
+		var questionArr = <%= qArrJson%>;
+		var answerArr = new Array(questionArr.length);
+		
+		for (var i=0; i<questionArr.length; i++){
+			createQuestion(i);
+		}
+		
+		$("#container").append( "<button id=\"submit_btn\" type=\"button\" >Submit</button>");
+		
+		$("#submit_btn").click(function() {
+			for(var i = 0; i < questionArr.length; i++) addData(i);
+			var data = formatData();
+			console.log(data);
+			$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
+				console.log(responseJson);
+				var response = $.parseJSON(responseJson);
+				console.log(response);
+				if(response.error) {
+					alert(response.error);
+				}
+				else alert(response.msg);
+			});
+		});
+		
+		function addData(index){
+			if ($("#question-" + index + " input").attr("type")!="checkbox" && $("#question-" + index + " input").attr("type")!="radio"){
+				var ans = new Array();
+				ans[0] = $("#question-" + index + " input").val();
+				answerArr[index] = ans;
+			}
+			else{
+				var checkboxArr = new Array();
+				var inputs = $("#question-" + index + " input").each(function(index){
+					checkboxArr[index] = $(this).is(":checked");
+				});
+				answerArr[index] = checkboxArr;
+			}
+		}
+		
+		function createQuestion(index) {
+			
+			var html = "";
+			html += "<div id='question-"+index+"'><h3>Question "+index+": " + questionArr[index]["questionText"]+"</h3>";
+			//html += "<br />";
+			
+			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
+				html += "<h3 style='display:inline;'>Answer: </h3>";
+				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
+			}
+			else if(questionArr[index]["class"]=="<%=SingleResponsePicQuestion.class.toString()%>"){
+				html += "<img src='http://www.geekosystem.com/wp-content/uploads/2013/12/doge.jpg' "+questionArr[index]["pictureURL"] +" alt='Smiley face' style='max-height:500px; max-width:500px'><br/>";
+				html += "<h3 style='display:inline;'>Answer: </h3>";
+				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
+			}
+			else if(questionArr[index]["class"]=="<%=MultiChoiceTextQuestion.class.toString()%>"){
+				var possibleAnswers = questionArr[index]["possibleAnswers"];
+				if (questionArr[index]["correctAnswers"].length==1){
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"radio\" class=\"answer-"+i+"\" name=\"checkBox"+index +"\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}
+				else{
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}
+			}
+			else if(questionArr[index]["class"]=="<%=MultiChoicePicQuestion.class.toString()%>"){
+				var possibleAnswers = questionArr[index]["possibleAnswers"];
+				html += "<img src="+questionArr[index]["pictureURL"] +"alt='Smiley face' height='500' width='500'><br/>";
+				if (questionArr[index]["correctAnswers"].length==1){
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"radio\" class=\"answer-"+i+"\" name=\"checkBox"+index +"\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}
+				else{
+					for(var i=0; i<possibleAnswers.length; i++){
+						html +="<input type=\"checkbox\" class=\"answer-"+i+"\" name=\"checkBox\">";
+						html +="<h3 style='display:inline;'> Option "+(i+1)+": "+possibleAnswers[i]+"</h3><br\>";
+					}
+				}		
+			}
+			else if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>"){
+				html += "<h3 style='display:inline;'>Answer: </h3>";
+				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
+			}
+			
+			
+			html += "<br/>";
+			html += "</div>";
+			$("#container").append(html);
+			
+			if (answerArr[index]!=undefined && ($("#question-" + index + " input").attr("type")!="checkbox"&&$("#question-" + index + " input").attr("type")!="radio")) $("#question-" + index + " input").val(answerArr[index][0]);
+			if (answerArr[index]!=undefined && ($("#question-" + index + " input").attr("type")=="checkbox"||$("#question-" + index + " input").attr("type")=="radio")){
+				var checkboxArr = answerArr[index];
+				$("#question-" + index + " input").each(function(index){
+					$(this).prop("checked",checkboxArr[index]);
+				});
+			}
+		}
+		
+		
+		function formatData() {
+			var data = {};
+			var correctAnswers = new Array();
+			var attemptedAnswers = new Array();
+			var type = new Array();
+			for(var i = 0; i < questionArr.length; i++) {
+				var ans = new Array();
+				for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
+					ans.push(questionArr[i]["correctAnswers"][j]);
+				}
+				correctAnswers.push(ans);
+				
+				var attemptedAns = new Array();
+				for (var j=0; j<answerArr[i].length; j++){
+					if (answerArr[i][j]){
+						attemptedAns.push(questionArr[i]["possibleAnswers"][j]);
+					}
+				}
+				attemptedAnswers.push(attemptedAns);
+				type.push(getType(i));
+			}
+			
+			data.correctAnswers = correctAnswers;
+			data.attemptedAnswers = attemptedAnswers;
+			data.type = type;
+			data.title = "<%=infoMap.get("title") %>";
+			
+			return data;
+		}
+		function getType(index) {
+			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>") return "1";
+			else if(questionArr[index]["class"]=="<%=SingleResponsePicQuestion.class.toString()%>") return "2";
+			else if(questionArr[index]["class"]=="<%=MultiChoiceTextQuestion.class.toString()%>"){
+				if (questionArr[index]["correctAnswers"].length==1){
+					return "3";
+				}
+				else return "5";
+			}
+			else if(questionArr[index]["class"]=="<%=MultiChoicePicQuestion.class.toString()%>"){
+				if (questionArr[index]["correctAnswers"].length==1){
+					return "4";
+				}
+				else return "6";
+			}
+			else if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>") return "7";
+			else return -1;
+		}
+	});
 	
 </script>
 </body>

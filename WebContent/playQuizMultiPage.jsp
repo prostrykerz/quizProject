@@ -55,7 +55,7 @@
 			if(index == 0) prevdisabled = "disabled";
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
-			html += "<h3>Question: " + questionArr[index]["questionText"]+"</h3>";
+			html += "<h3>Question "+index+": " + questionArr[index]["questionText"]+"</h3>";
 			//html += "<br />";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
