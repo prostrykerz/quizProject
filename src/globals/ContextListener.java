@@ -59,10 +59,10 @@ public class ContextListener implements ServletContextListener {
 	
     private void createTables() {
     	//TEsting
-    	DatabaseUtils.dropTable("Users");
-    	DatabaseUtils.dropTable("Friends");
-    	DatabaseUtils.dropTable("Messages");
-    	DatabaseUtils.dropTable("Announcements");
+//    	DatabaseUtils.dropTable("Users");
+//    	DatabaseUtils.dropTable("Friends");
+//    	DatabaseUtils.dropTable("Messages");
+//    	DatabaseUtils.dropTable("Announcements");
     	
     	//KEep
     	UserTable.createTable();
