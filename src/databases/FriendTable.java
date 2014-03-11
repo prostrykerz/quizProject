@@ -24,6 +24,7 @@ public class FriendTable extends Database {
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(user_one INT, user_two INT);";
 			stmt.executeUpdate(query);
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -87,6 +88,7 @@ public class FriendTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE (user_one = " + one.getId() + " AND user_two = " + two.getId() + ") OR (user_one = " + two.getId() + " AND user_two = " + one.getId() + ")");
+			con.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
