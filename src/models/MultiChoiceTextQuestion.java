@@ -8,6 +8,7 @@ public class MultiChoiceTextQuestion extends Question {
 	public MultiChoiceTextQuestion(String questionText, ArrayList<String> correctAnswers, ArrayList<String> answerChoices, int position){
 		super(questionText, correctAnswers, position);
 		this.answerChoices = answerChoices;
+		this.infoMap.put("possibleAnswers", answerChoices);
 	}
 	
 	public ArrayList<String> getChoices() {

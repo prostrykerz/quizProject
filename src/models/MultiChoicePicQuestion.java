@@ -8,6 +8,7 @@ public class MultiChoicePicQuestion extends SingleResponsePicQuestion {
 	public MultiChoicePicQuestion(String questionText, String pictureURL, ArrayList<String> correctAnswers, ArrayList<String> answerChoices, int position) {
 		super(questionText, pictureURL, correctAnswers, position);
 		this.answerChoices = answerChoices;
+		this.infoMap.put("possibleAnswers", answerChoices);
 	}
 	
 	public ArrayList<String> getChoices() {
