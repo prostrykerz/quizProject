@@ -188,4 +188,21 @@ public class UserTable extends Database {
 		}
 		return null;
 	}
+	
+	public static void deleteUser(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

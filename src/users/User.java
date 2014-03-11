@@ -12,6 +12,8 @@ import java.util.Random;
 
 import databases.FriendTable;
 import databases.MessageTable;
+import databases.QuizTable;
+import databases.UserTable;
 
 import messages.Message;
 import models.Quiz;
@@ -112,6 +114,13 @@ public class User {
 		FriendTable.removeFriendship(one, two);
 		one.removeFriend(two);
 		two.removeFriend(one);
+	}
+	
+	public void delete() {
+		MessageTable.deleteUserMessages(id);
+		FriendTable.deleteUserFriends(id);
+		QuizTable.deleteUserQuizzes(username);
+		UserTable.deleteUser(id);
 	}
 	
 	//Getters
