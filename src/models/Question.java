@@ -39,6 +39,7 @@ import org.json.JSONObject;
 		if (correctAnswers.contains(prospAnswer)) return true;
 		return false;
 	}
+	
 	public JSONObject getJSON(){
 		HashMap<String, Object> qObj = new HashMap<String, Object>(this.infoMap);
 		for (Map.Entry<String, Object> entry : qObj.entrySet()){
