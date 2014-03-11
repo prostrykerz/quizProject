@@ -3,10 +3,12 @@
 <%@ page import="users.User" %>
 <%@ page import="messages.Message" %>
 <%@ page import="users.AccountManager" %>
-<%@ page import="java.util.HashSet" %>
+<%@ page import="admin.Announcement" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
+	ArrayList<Announcement> announcements = (ArrayList<Announcement>) application.getAttribute("announcements");
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
 	HashSet<User> users = manager.getUsers();
 %>
@@ -20,7 +22,13 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="index.jsp"></jsp:param> 
 	</jsp:include>
-	HOME PAGE
+	<div style="margin: 0 auto; width: 90%;">
+		<%
+			for(Announcement a : announcements) {
+				out.println("<h2 style=\"border: 1px solid white\">" + a.getText() + "</h2>");
+			}
+		%>
+	</div>
 	<table class="table">
 		<tr>
 			<td>Username</td>
