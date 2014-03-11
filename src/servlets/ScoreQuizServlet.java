@@ -69,49 +69,49 @@ public class ScoreQuizServlet extends HttpServlet {
 		}
 		String json = "{\"data\":" + request.getParameter("data") + "}";
 		System.out.println(json);
-//		JSONObject outer = new JSONObject(json);
-//		JSONObject inner = outer.getJSONObject("data");
-//		
-//		ArrayList<Question> questions = new ArrayList<Question>();
-//		JSONArray jsonQuestions =inner.getJSONArray("questions");
-//		for(int i = 0; i < jsonQuestions.length(); i++) {
-//			JSONObject question = jsonQuestions.getJSONObject(i);
-//			ArrayList<String> answers = new ArrayList<String>();
-//			JSONArray jAnswers = question.getJSONArray("correct_answers");
-//			for(int j = 0; j < jAnswers.length(); j++) answers.add(jAnswers.getString(j));
-//			String text = question.getString("text");
-//			if(question.getString("type").equals("1")) {
-//				SingleResponseTextQuestion q = new SingleResponseTextQuestion(text, answers, i);
-//				questions.add(q);
-//			}
-//			else if(question.getString("type").equals("2")) {
-//				String pictureURL = question.getString("pictureURL");
-//				String pictureTitle = question.getString("pictureTitle");
-//				SingleResponsePicQuestion q = new SingleResponsePicQuestion(text, pictureURL, answers, i);
-//				questions.add(q);
-//			}
-//			else if(question.getString("type").equals("3") || question.getString("type").equals("5")) {
-//				ArrayList<String> possible_answers = new ArrayList<String>();
-//				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
-//				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
-//				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, possible_answers, i);
-//				questions.add(q);
-//			}
-//			else if(question.getString("type").equals("4") || question.getString("type").equals("6")) {
-//				String pictureURL = question.getString("pictureURL");
-//				String pictureTitle = question.getString("pictureTitle");
-//				ArrayList<String> possible_answers = new ArrayList<String>();
-//				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
-//				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
-//				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, pictureURL, answers, possible_answers, i);
-//				questions.add(q);
-//			}
-//			else if(question.getString("type").equals("7")) {
-//				FillBlankQuestion q = new FillBlankQuestion(text, answers, i);
-//				questions.add(q);
-//			}
-//		}
-//		String title = inner.getString("title");
+		JSONObject outer = new JSONObject(json);
+		JSONObject inner = outer.getJSONObject("data");
+		
+		JSONArray correctAnswers = inner.getJSONArray("correctAnswers");
+		JSONArray attemptedAnswers = inner.getJSONArray("attemptedAnswers");
+		JSONArray type = inner.getJSONArray("type");
+		
+		ArrayList<Integer> scoreArr = new ArrayList<Integer>();
+		
+		for (int i=0; i<correctAnswers.length(); i++){
+			JSONArray answerKeyArr = correctAnswers.getJSONArray(i);
+			JSONArray attemptedKeyArr = attemptedAnswers.getJSONArray(i);
+			for (int j=0; j<answerKeyArr.length(); j++){
+				if(j>=attemptedKeyArr.length()){
+					scoreArr.add(0);
+					break;
+				}
+				
+			}
+			if(type.getString(i).equals("1")||type.getString(i).equals("2")||type.getString(i).equals("7")) {
+				boolean correct = false;
+				for (int j=0; j<answerKeyArr.length(); j++){
+					if (answerKeyArr.getString(j).equals(attemptedKeyArr.getString(0))){
+						correct = true;
+						break;
+					}
+				}
+				if (correct) scoreArr.add(1);
+				else scoreArr.add(0);
+			}
+			else if(type.getString(i).equals("3") || type.getString(i).equals("4") || type.getString(i).equals("5") || type.getString(i).equals("6")) {
+				boolean correct = false;
+				int score = 0;
+				for (int j=0; j<answerKeyArr.length(); j++){
+					if (!answerKeyArr.getString(j).equals(attemptedKeyArr.getString(j))) continue;
+					score++;
+				}
+				scoreArr.add(score);
+			}
+		}
+		
+		
+		String title = inner.getString("title");
 //		String description = inner.getString("description");
 //		boolean isRandom = false;
 //		boolean isOnePage = true;

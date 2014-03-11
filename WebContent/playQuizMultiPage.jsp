@@ -122,37 +122,16 @@
 				$("#submit_btn").css("visibility","visible");
 			}
 			$("#next_btn").click(function() {
-				if ($("input").attr("type")!="checkbox" && $("input").attr("type")!="radio"){
-					var ans = new Array();
-					ans[0] = $("input").val();
-					answerArr[index] = ans;
-				}
-				else{
-					var checkboxArr = new Array();
-					var inputs = $("input").each(function(index){
-						checkboxArr[index] = $(this).is(":checked");
-					});
-					answerArr[index] = checkboxArr;
-				}
+				addData();
 				showQuestion(index+1);
 			});
 			$("#prev_btn").click(function() {
-				if ($("input").attr("type")!="checkbox" && $("input").attr("type")!="radio"){
-					var ans = new Array();
-					ans[0] = $("input").val();
-					answerArr[index] = ans;
-				}
-				else{
-					var checkboxArr = new Array();
-					var inputs = $("input").each(function(index){
-						checkboxArr[index] = $(this).is(":checked");
-					});
-					answerArr[index] = checkboxArr;
-				}
+				addData();
 				$("#submit_btn").css("visibility","hidden");
 				showQuestion(index-1);
 			});
 			$("#submit_btn").click(function() {
+				addData();
 				var data = formatData();
 				console.log(data);
 				$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
@@ -165,6 +144,20 @@
 					else alert(response.msg);
 				});
 			});
+			function addData(){
+				if ($("input").attr("type")!="checkbox" && $("input").attr("type")!="radio"){
+					var ans = new Array();
+					ans[0] = $("input").val();
+					answerArr[index] = ans;
+				}
+				else{
+					var checkboxArr = new Array();
+					var inputs = $("input").each(function(index){
+						checkboxArr[index] = $(this).is(":checked");
+					});
+					answerArr[index] = checkboxArr;
+				}
+			}
 		}
 		
 		
@@ -172,7 +165,7 @@
 			var data = {};
 			var correctAnswers = new Array();
 			var attemptedAnswers = new Array();
-			
+			var type = new Array();
 			for(var i = 0; i < questionArr.length; i++) {
 				var ans = new Array();
 				for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
@@ -182,15 +175,38 @@
 				
 				var attemptedAns = new Array();
 				for (var j=0; j<answerArr[i].length; j++){
-					attemptedAns.push(answerArr[i][j]);
+					if (answerArr[i][j]){
+						attemptedAns.push(questionArr[i]["possibleAnswers"][j]);
+					}
 				}
-				attemptedAnswers.push(attemptedAns.push);
+				attemptedAnswers.push(attemptedAns);
+				type.push(getType(i));
 			}
+			
 			data.correctAnswers = correctAnswers;
 			data.attemptedAnswers = attemptedAnswers;
+			data.type = type;
 			data.title = "<%=infoMap.get("title") %>";
 			
 			return data;
+		}
+		function getType(index) {
+			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>") return "1";
+			else if(questionArr[index]["class"]=="<%=SingleResponsePicQuestion.class.toString()%>") return "2";
+			else if(questionArr[index]["class"]=="<%=MultiChoiceTextQuestion.class.toString()%>"){
+				if (questionArr[index]["correctAnswers"].length==1){
+					return "3";
+				}
+				else return "5";
+			}
+			else if(questionArr[index]["class"]=="<%=MultiChoicePicQuestion.class.toString()%>"){
+				if (questionArr[index]["correctAnswers"].length==1){
+					return "4";
+				}
+				else return "6";
+			}
+			else if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>") return "7";
+			else return -1;
 		}
 	});
 	
