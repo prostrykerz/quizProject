@@ -91,7 +91,7 @@ public class QuizServlet extends HttpServlet {
 			}
 			else if(question.getString("type").equals("3")) {
 				ArrayList<String> possible_answers = new ArrayList<String>();
-				JSONArray jPossibleAnswers = question.getJSONArray("posible_answers");
+				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
 				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
 				MultiChoiceTextQuestion q = new MultiChoiceTextQuestion(text, answers, possible_answers, i);
 				questions.add(q);
@@ -100,7 +100,7 @@ public class QuizServlet extends HttpServlet {
 				String pictureURL = question.getString("pictureURL");
 				String pictureTitle = question.getString("pictureTitle");
 				ArrayList<String> possible_answers = new ArrayList<String>();
-				JSONArray jPossibleAnswers = question.getJSONArray("posible_answers");
+				JSONArray jPossibleAnswers = question.getJSONArray("possible_answers");
 				for(int j = 0; j < jPossibleAnswers.length(); j++) possible_answers.add(jPossibleAnswers.getString(j));
 				MultiChoicePicQuestion q = new MultiChoicePicQuestion(text, pictureURL, answers, possible_answers, i);
 				questions.add(q);
