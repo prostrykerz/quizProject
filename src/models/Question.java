@@ -43,14 +43,13 @@ import org.json.JSONObject;
 		HashMap<String, Object> qObj = new HashMap<String, Object>(this.infoMap);
 		for (Map.Entry<String, Object> entry : qObj.entrySet()){
 			if (entry.getValue() instanceof ArrayList){
-				System.out.println(entry.getValue());
-				System.out.println(entry.getValue().getClass());
 				JSONArray arr = new JSONArray((ArrayList)entry.getValue());
 				entry.setValue(arr);
 			}
 		}
+		qObj.put("class", this.getClass().toString());
 		JSONObject jsonObj = new JSONObject(qObj);
-		System.out.println(jsonObj.toString());
+//		System.out.println(jsonObj.toString());
 		return jsonObj;
 	}
 }

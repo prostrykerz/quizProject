@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,14 +25,15 @@ public class QuizTest {
 		MultiChoiceTextQuestion q6 = new MultiChoiceTextQuestion("who is on the team?", new ArrayList<String>(Arrays.asList("me")), new ArrayList<String>(Arrays.asList("me", "you")), 1);
 		MultiChoicePicQuestion q7 = new MultiChoicePicQuestion("where do we live?", "www.google.com", new ArrayList<String>(Arrays.asList("here")), new ArrayList<String>(Arrays.asList("here", "there")), 1);
 		
-		q1.getJSON();
+		JSONObject j1 = q1.getJSON();
 		q2.getJSON();
 		q3.getJSON();
 		q4.getJSON();
 		q5.getJSON();
 		q6.getJSON();
 		q7.getJSON();
-		
+		if(j1.getString("class").equals(SingleResponseTextQuestion.class.toString())) System.out.println("hi");
+		System.out.println(SingleResponseTextQuestion.class.toString());
 		
 		
 //		ArrayList<Question> questionArr = new ArrayList<Question>();
