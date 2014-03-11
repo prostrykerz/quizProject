@@ -28,7 +28,7 @@
 		</div>
 		<br>
 		How would you like your questions displayed? 
-		<select id="one-page-dropdown" name="mydropdown">
+		<select id="onePage" name="mydropdown">
 			<option value="single">All on one page</option>
 			<option value="multi"> One per page</option>
 		</select>
@@ -168,6 +168,7 @@
 			data.questions = questions;
 			data.title = $('#quiz_title').val();
 			data.description = "update me. In quizcreation.jsp";
+			data.onePage = $('#onePage').val();
 			return data;
 		}
 		

@@ -113,8 +113,10 @@ public class QuizServlet extends HttpServlet {
 		}
 		String title = inner.getString("title");
 		String description = inner.getString("description");
+		String dispType = inner.getString("onePage");
+		boolean isOnePage = false;
+		if (dispType.equals("single")) isOnePage = true; 
 		boolean isRandom = false;
-		boolean isOnePage = true;
 		boolean hasImmediateFeedback = false;
 		boolean practiceMode = false;
 		//make user

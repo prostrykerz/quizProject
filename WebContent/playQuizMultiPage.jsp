@@ -24,8 +24,8 @@
 		//qArr.add(q2);
 		
 		JSONArray qArrJson = new JSONArray();
-		if(qArr!=null){
-			for (int i=0; i<qArr.size(); i++){
+		if(qArr != null) {
+			for (int i = 0; i < qArr.size(); i++){
 				qArrJson.put(qArr.get(i).getJSON());
 			}
 		}
