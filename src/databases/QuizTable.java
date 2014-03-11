@@ -9,6 +9,11 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import messages.Message;
+import models.Quiz;
+
+import users.User;
+
 import databases.MyDBInfo;
 
 public class QuizTable extends Database {
@@ -61,39 +66,7 @@ public class QuizTable extends Database {
 			e.printStackTrace();
 		}
 	}
-//	
-//	public Integer add(String name, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
-//			Statement stmt = con.createStatement();
-//			stmt.executeQuery("USE " + database);
-//			String query = buildAddQuery(name, random, onePage, immediateFeedback, practiceMode, score, time, creator);
-//			stmt.executeUpdate(query);
-//			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
-//			Integer i=0;
-//			if (rs.next())	i = rs.getInt("last_insert_id()");
-//			table[0].add(i);
-//			table[1].add(name);
-//			table[2].add(random);
-//			table[3].add(onePage);
-//			table[4].add(immediateFeedback);
-//			table[5].add(practiceMode);
-//			table[6].add(score);
-//			table[7].add(time);
-//			table[8].add(creator);
-//			con.close();
-//			return i;
-//		}
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-//	
+
 	public static Integer addToDatabase(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -105,17 +78,6 @@ public class QuizTable extends Database {
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
 			if (rs.next())	i = rs.getInt("last_insert_id()");
-//			System.out.println(i);
-//			table[0].add(i);
-//			table[1].add(name);
-//			table[2].add(description);
-//			table[3].add(random);
-//			table[4].add(onePage);
-//			table[5].add(immediateFeedback);
-//			table[6].add(practiceMode);
-//			table[7].add(score);
-//			table[8].add(time);
-//			table[9].add(creator);
 			con.close();
 			return i;
 		}
@@ -123,7 +85,6 @@ public class QuizTable extends Database {
 			e.printStackTrace();
 		} 
 		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -136,4 +97,64 @@ public class QuizTable extends Database {
 		return query;
 	}
 	
+	public static void deleteQuiz(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE p_id = " + id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteUserQuizzes(String username) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE creator = \"" + username + "\"");
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<Quiz> getQuizzes(String username) {
+		try {
+			ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			while(rs.next()) {
+				String creator = rs.getString("creator");
+				if(username.equals(creator)) {
+					Quiz quiz = new Quiz(rs.getInt("p_id"));
+					quizzes.add(quiz);
+				}
+			}
+			con.close();
+			return quizzes;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

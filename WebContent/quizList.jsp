@@ -16,7 +16,8 @@
 		</jsp:include>
 	<h1> Choose a Quiz! </h1>
 	<ul>
-		<% 	QuizTable qt = new QuizTable();
+		<% 	
+			QuizTable qt = new QuizTable();
 			ArrayList[] table = qt.getTable();
 			for (int i=0; i<table[0].size(); i++){
 				%><li><a href="quizSummary.jsp?id=<%=table[0].get(i)%>"><%=table[1].get(i)%></a></li><%

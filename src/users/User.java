@@ -10,8 +10,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
+import databases.FillBlankTable;
 import databases.FriendTable;
 import databases.MessageTable;
+import databases.MultiChoicePicTable;
+import databases.MultiChoiceTextTable;
+import databases.QuizTable;
+import databases.SingleResponsePicTable;
+import databases.SingleResponseTextTable;
+import databases.UserTable;
 
 import messages.Message;
 import models.Quiz;
@@ -26,13 +33,13 @@ public class User {
 	ArrayList<Quiz> quizzes;
 	private boolean admin;
 	
-	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Integer> friends) {
+	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends) {
 		this.id = id;
 		this.username = username;
 		this.admin = isAdmin;
-		this.messages = new ArrayList<Message>();
+		this.messages = messages;
 		this.friendRequests = new ArrayList<Message>();
-		this.quizzes = new ArrayList<Quiz>();
+		this.quizzes = quizzes;
 		this.friends = friends;
 		this.salt = salt;
 		this.hash = hash;
@@ -56,6 +63,18 @@ public class User {
 	public boolean hasFriendRequestFrom(User u) {
 		for(Message fr : friendRequests) {
 			if(fr.getSender().equals(u)) return true;
+		}
+		return false;
+	}
+	
+	public void makeAdmin() {
+		UserTable.makeAdmin(id);
+		admin = true;
+	}
+	
+	public boolean ownsQuiz(int id) {
+		for(Quiz q : quizzes) {
+			if(q.getId() == id) return true;
 		}
 		return false;
 	}
@@ -112,6 +131,30 @@ public class User {
 		FriendTable.removeFriendship(one, two);
 		one.removeFriend(two);
 		two.removeFriend(one);
+	}
+	
+	public void delete() {
+		MessageTable.deleteUserMessages(id);
+		FriendTable.deleteUserFriends(id);
+		QuizTable.deleteUserQuizzes(username);
+		UserTable.deleteUser(id);
+	}
+	
+	public void deleteQuiz(int id) {
+		Iterator<Quiz> it = quizzes.iterator();
+		while(it.hasNext()) {
+			Quiz q = it.next();
+			if(q.getId() == id) {
+				QuizTable.deleteQuiz(id);
+				FillBlankTable.deleteQuestion(id);
+				MultiChoicePicTable.deleteQuestion(id);
+				MultiChoiceTextTable.deleteQuestion(id);
+				SingleResponsePicTable.deleteQuestion(id);
+				SingleResponseTextTable.deleteQuestion(id);
+				it.remove();
+				break;
+			}
+		}
 	}
 	
 	//Getters
