@@ -4,24 +4,6 @@
 <%@ page import="models.Question" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<%
-	ArrayList<Question> questions = new ArrayList<Question>(); //Receive from servlet
-	Question one = new Question("one", new ArrayList<String>(), 1);
-	Question two = new Question("two", new ArrayList<String>(), 2);
-	questions.add(one);
-	questions.add(two);
-	String question_text = "";
-	boolean first = true;
-	for(int i = 0; i < questions.size(); i++) {
-		question_text += "\"";
-		if(i == questions.size()-1) {
-			question_text += questions.get(i).getQuestion() + "\"";
-		}
-		else {
-			question_text += questions.get(i).getQuestion() + "\"" + ",";
-		}
-	}
-%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>QUIZ TITLE</title>
@@ -32,13 +14,22 @@
 	<jsp:include page="header.jsp">
 		<jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 	</jsp:include>
+	<%
+		ArrayList<Question> qArr = (ArrayList<Question>)request.getAttribute("questionArr");
+		if(qArr!=null){
+			for (int i=0; i<qArr.size(); i++){
+				%><li><%=qArr.get(i).getQuestion()%></li><%
+			}
+		}
+	%>
+	
 	<div id="question_box"">
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
 <script>
 	$(document).ready(function() {
 		//Initialization
-		var question_text = new Array(<%= question_text %>);
+		var question_text = new Array(<%= qArr %>);
 		var answers = new Array();
 		
 		showQuestion(0);

@@ -11,6 +11,7 @@ public class SingleResponsePicQuestion extends Question {
 	public SingleResponsePicQuestion(String questionText, String pictureURL, ArrayList<String> correctAnswers, int position) {
 		super(questionText, correctAnswers, position);
 		this.pictureURL = pictureURL;
+		this.infoMap.put("pictureURL", pictureURL);
 	}
 	
 	public String getPicture() {

@@ -24,22 +24,32 @@ public class QuizTest {
 		MultiChoiceTextQuestion q6 = new MultiChoiceTextQuestion("who is on the team?", new ArrayList<String>(Arrays.asList("me")), new ArrayList<String>(Arrays.asList("me", "you")), 1);
 		MultiChoicePicQuestion q7 = new MultiChoicePicQuestion("where do we live?", "www.google.com", new ArrayList<String>(Arrays.asList("here")), new ArrayList<String>(Arrays.asList("here", "there")), 1);
 		
-		ArrayList<Question> questionArr = new ArrayList<Question>();
-		questionArr.add(q1);
-		questionArr.add(q2);
-		questionArr.add(q3);
-		questionArr.add(q4);
-		questionArr.add(q5);
-		questionArr.add(q6);
-		questionArr.add(q7);
-		String title = "First Ever Quiz";
-		String description = "this is cool if it works...";
-		boolean isRandom = false;
-		boolean isOnePage = true;
-		boolean hasImmediateFeedback = false;
-		boolean practiceMode = false;
-		String creator = "Travis";
-		this.quiz = new Quiz(questionArr, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
+		q1.getJSON();
+		q2.getJSON();
+		q3.getJSON();
+		q4.getJSON();
+		q5.getJSON();
+		q6.getJSON();
+		q7.getJSON();
+		
+		
+		
+//		ArrayList<Question> questionArr = new ArrayList<Question>();
+//		questionArr.add(q1);
+//		questionArr.add(q2);
+//		questionArr.add(q3);
+//		questionArr.add(q4);
+//		questionArr.add(q5);
+//		questionArr.add(q6);
+//		questionArr.add(q7);
+//		String title = "First Ever Quiz";
+//		String description = "this is cool if it works...";
+//		boolean isRandom = false;
+//		boolean isOnePage = true;
+//		boolean hasImmediateFeedback = false;
+//		boolean practiceMode = false;
+//		String creator = "Travis";
+//		this.quiz = new Quiz(questionArr, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 	}
 
 	@Test
@@ -49,7 +59,7 @@ public class QuizTest {
 
 	@Test
 	public void test2(){
-		HashMap<String,Object> infoMap = quiz.getInfoMap();
-		System.out.println(infoMap.get("title"));
+//		HashMap<String,Object> infoMap = quiz.getInfoMap();
+//		System.out.println(infoMap.get("title"));
 	}
 }
