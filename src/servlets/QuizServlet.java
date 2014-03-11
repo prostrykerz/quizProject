@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -56,9 +57,19 @@ public class QuizServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		User user = (User) session.getAttribute("user");
-		if(user == null) return;
-		System.out.println((String)request.getParameter("questions"));
-		JSONObject o = new JSONObject((String)request.getParameter("questions"));
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
+//		if(user == null) {
+//			response.getWriter().write("{error: \"Not Logged In\"}");
+//			return;
+//		}
+		Map<String, String[]> parameters = request.getParameterMap();
+		for(String parameter : parameters.keySet()) {
+		    System.out.println(parameter);
+		}
+		String json = "{\"questions\":" + request.getParameter("questions") + "}";
+		System.out.println(json);
+		JSONObject o = new JSONObject(json);
 		
 		ArrayList<Question> questions = new ArrayList<Question>();
 		int counter = 1;

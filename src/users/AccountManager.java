@@ -11,7 +11,7 @@ public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
 		users = UserTable.getUsers();
-		if(users.size() == 0) initializeStarterUsers();
+//		if(users == null || users.size() == 0) initializeStarterUsers();
 	}
 	
 	public void addUser(String username, String password) {

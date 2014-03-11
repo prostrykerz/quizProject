@@ -115,6 +115,7 @@ public class UserTable extends Database {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+			return new HashSet<User>();
 		}
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();

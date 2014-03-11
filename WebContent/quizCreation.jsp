@@ -109,8 +109,8 @@
 		}
 		
 		$("#addButton").click(function() {
-			var data = formatData();
-			$.post("QuizServlet",data, function(responseText) {
+			var questions = formatData();
+			$.post("QuizServlet",{questions: JSON.stringify(questions)}, function(responseText) {
 				console.log(responseText);
 			});
 		});
@@ -147,11 +147,19 @@
 					question.pictureTitle = div.find(".pictureTitle").val();
 					question.pictureURL = div.find(".pictureURL").val();
 				}
+				question.type = getType(div);
 				questions.push(question);
 			}
-			data = {};
-			data.questions = questions;
-			return data;
+			return questions;
+		}
+		
+		function getType(div) {
+			if(div.hasClass("type-1")) return 1;
+			else if(div.hasClass("type-2")) return 2;
+			else if(div.hasClass("type-3")) return 3;
+			else if(div.hasClass("type-4")) return 4;
+			else if(div.hasClass("type-5")) return 5;
+			else return -1;
 		}
 	});
 	
