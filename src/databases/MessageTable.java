@@ -122,4 +122,21 @@ public class MessageTable extends Database{
 			e.printStackTrace();
 		}
 	}
+	
+	public static void deleteUserMessages(int id) {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE sender = " + id + " OR receiver = " + id);
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }
