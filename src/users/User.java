@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import databases.AchievementTable;
 import databases.FillBlankTable;
 import databases.FriendTable;
 import databases.MessageTable;
@@ -16,6 +18,7 @@ import databases.SingleResponseTextTable;
 import databases.UserTable;
 
 import messages.Message;
+import models.Achievement;
 import models.Quiz;
 
 public class User {
@@ -26,10 +29,10 @@ public class User {
 	private ArrayList<Integer> friends;
 	private ArrayList<Message> friendRequests;
 	private ArrayList<Quiz> quizzes;
-	private HashMap<Integer, Boolean> achievements;
+	boolean[] achievements;
 	private boolean admin;
 	
-	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends) {
+	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends, boolean[] achievements) {
 		this.id = id;
 		this.username = username;
 		this.admin = isAdmin;
@@ -39,6 +42,7 @@ public class User {
 		this.friends = friends;
 		this.salt = salt;
 		this.hash = hash;
+		this.achievements = achievements;
 	}
 
 	
@@ -153,6 +157,11 @@ public class User {
 		}
 	}
 	
+	public void awardAchievement(int code) {
+		achievements[code] = true;
+		AchievementTable.awardAchievement(id, Achievement.getIndex(code));
+	}
+	
 	//Getters
 	public String getUsername() {return username;}
 	public byte[] getSalt() {return salt;}
@@ -163,6 +172,13 @@ public class User {
 	public ArrayList<Integer> getFriends() {return friends;}
 	public ArrayList<Message> getFriendRequests() {return friendRequests;}
 	public ArrayList<Quiz> getQuizzes() {return quizzes;}
+	public ArrayList<String> getAchievements() {
+		ArrayList<String> text = new ArrayList<String>();
+		for(int i = 0; i < achievements.length; i++) {
+			if(achievements[i]) text.add(Achievement.getText(i));
+		}
+		return text;
+	}
 	
 	//Misc
 	public boolean equals(User other) {

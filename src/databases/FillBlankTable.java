@@ -47,6 +47,7 @@ public class FillBlankTable extends Database {
 				table[5].add(position);
 				table[6].add(quiz_id);
 			}
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -75,6 +76,7 @@ public class FillBlankTable extends Database {
 			table[4].add(a_text);
 			table[5].add(position);
 			table[6].add(quiz_id);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -94,6 +96,7 @@ public class FillBlankTable extends Database {
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, a_id, a_text, position, quiz_id);
 			stmt.executeUpdate(query);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -119,6 +122,7 @@ public class FillBlankTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {

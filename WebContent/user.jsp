@@ -74,6 +74,13 @@
 			out.println("<br />");
 		}
 	%>
+	<h2>Achievements</h2>
+	<%
+		ArrayList<String> achievements = user.getAchievements();
+		for(String s : achievements) {
+			out.println(s + "<br />");
+		}
+	%>
 	<script>
 		$(document).ready(function() {
 			$('#add_friend_btn').click(function() {

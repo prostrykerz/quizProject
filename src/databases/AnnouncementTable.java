@@ -18,6 +18,7 @@ public class AnnouncementTable extends Database{
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, text VARCHAR(255),  PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -44,6 +45,8 @@ public class AnnouncementTable extends Database{
 				count = rs.getInt(1);
 			}
 			con.close();
+			stmt.close();
+			pstmt.close();
 			return count;
 		}
 		catch (SQLException e) {
@@ -62,6 +65,7 @@ public class AnnouncementTable extends Database{
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {

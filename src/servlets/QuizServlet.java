@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import models.Achievement;
 import models.FillBlankQuestion;
 import models.MultiChoicePicQuestion;
 import models.MultiChoiceTextQuestion;
@@ -25,6 +26,8 @@ import users.AccountManager;
 import users.User;
 
 import org.json.*;
+
+import databases.AchievementTable;
 
 /**
  * Servlet implementation class QuizServlet
@@ -123,7 +126,13 @@ public class QuizServlet extends HttpServlet {
 		String creator = user.getUsername();
 		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 		user.addQuiz(quiz);
+		awardQuizCreationAchievements(user);
 		response.getWriter().write("{\"msg\": \"Success\"}");
 	}
 
+	private void awardQuizCreationAchievements(User user) {
+		if(user.getQuizzes().size() == 1) user.awardAchievement(0);
+		else if(user.getQuizzes().size() == 5) user.awardAchievement(1);
+		else if(user.getQuizzes().size() == 10) user.awardAchievement(2);
+	}
 }

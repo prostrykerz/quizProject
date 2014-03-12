@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class CreateAccountServlet
@@ -37,6 +38,7 @@ public class CreateAccountServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = getServletContext();
+		HttpSession session = request.getSession();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -48,6 +50,7 @@ public class CreateAccountServlet extends HttpServlet {
 		else {
 			RequestDispatcher dispatch = request.getRequestDispatcher("user.jsp");
 			manager.addUser(username, password);
+			session.setAttribute("user", manager.getUserByUsername(username));
 			dispatch.forward(request, response);
 		}
 	}

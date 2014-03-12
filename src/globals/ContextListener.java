@@ -12,6 +12,7 @@ import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import users.AccountManager;
 import admin.Announcement;
 
+import databases.AchievementTable;
 import databases.AnnouncementTable;
 import databases.DatabaseUtils;
 import databases.FriendTable;
@@ -69,5 +70,6 @@ public class ContextListener implements ServletContextListener {
     	FriendTable.createTable();
     	MessageTable.createTable();
     	AnnouncementTable.createTable();
+    	AchievementTable.createTable();
     }
 }

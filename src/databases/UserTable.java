@@ -17,6 +17,8 @@ import java.util.Random;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import messages.Message;
 import models.Quiz;
 
@@ -41,7 +43,13 @@ public class UserTable extends Database {
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, username CHAR(64), salt BLOB, hash BLOB, admin BOOLEAN, PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
+			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -68,7 +76,14 @@ public class UserTable extends Database {
 			pstmt.setBoolean(4, admin);
 			pstmt.execute();
 			User user = lastUser();
+			stmt.close();
+			pstmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return user;
 		}
 		catch (SQLException e) {
@@ -103,6 +118,7 @@ public class UserTable extends Database {
 	}
 	
 	public static HashSet<User> getUsers() {
+//		return new HashSet<User>();
 		try {
 			HashSet<User> users = new HashSet<User>();
 			Class.forName("com.mysql.jdbc.Driver");
@@ -114,7 +130,13 @@ public class UserTable extends Database {
 				User user = rsToUser(rs);
 				users.add(user);
 			}
+			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return users;
 		}
 		catch (SQLException e) {
@@ -141,6 +163,7 @@ public class UserTable extends Database {
 					break;
 				}
 			}
+			stmt.close();
 			con.close();
 			return user;
 		}
@@ -162,6 +185,12 @@ public class UserTable extends Database {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			rs.last();
 			User user = rsToUser(rs);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			con.close();
 			return user;
 		}
@@ -186,7 +215,13 @@ public class UserTable extends Database {
 			ArrayList<Integer> friends = FriendTable.getFriends(id);
 			ArrayList<Message> messages = MessageTable.getMessages(id);
 			ArrayList<Quiz> quizzes = QuizTable.getQuizzes(username);
-			return new User(id, username, salt, hash, admin, messages, quizzes, friends);
+			boolean[] achievements = AchievementTable.getAchievements(id);
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+			return new User(id, username, salt, hash, admin, messages, quizzes, friends, achievements);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -201,7 +236,13 @@ public class UserTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
+			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -218,7 +259,13 @@ public class UserTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("UPDATE " + tableName + " SET admin = 1 WHERE id = " + id);
+			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

@@ -13,6 +13,7 @@ public class DatabaseUtils extends Database{
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {

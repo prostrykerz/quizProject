@@ -24,6 +24,7 @@ public class FriendTable extends Database {
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(user_one INT, user_two INT);";
 			stmt.executeUpdate(query);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -45,6 +46,8 @@ public class FriendTable extends Database {
 			pstmt.setInt(1, one.getId());
 			pstmt.setInt(2, two.getId());
 			pstmt.execute();
+			stmt.close();
+			pstmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -69,6 +72,7 @@ public class FriendTable extends Database {
 				if(id_one == id) friends.add(id_two);
 				else if(id_two == id) friends.add(id_one);
 			}
+			stmt.close();
 			con.close();
 			return friends;
 		}
@@ -88,6 +92,7 @@ public class FriendTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE (user_one = " + one.getId() + " AND user_two = " + two.getId() + ") OR (user_one = " + two.getId() + " AND user_two = " + one.getId() + ")");
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -105,6 +110,7 @@ public class FriendTable extends Database {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE user_one = " + id + " OR user_two = " + id);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {

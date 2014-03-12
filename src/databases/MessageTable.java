@@ -23,6 +23,7 @@ public class MessageTable extends Database{
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, sender INT, receiver INT, message VARCHAR(200), PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
@@ -46,6 +47,8 @@ public class MessageTable extends Database{
 			pstmt.setString(3, message);
 			pstmt.execute();
 			Message m = lastMessage();
+			stmt.close();
+			pstmt.close();
 			con.close();
 			return m;
 		}
@@ -74,6 +77,7 @@ public class MessageTable extends Database{
 					messages.add(message);
 				}
 			}
+			stmt.close();
 			con.close();
 		}
 		catch (SQLException e) {
