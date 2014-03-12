@@ -18,6 +18,7 @@ import models.MultiChoicePicQuestion;
 import models.MultiChoiceTextQuestion;
 import models.Question;
 import models.Quiz;
+import models.QuizHistory;
 import models.SingleResponsePicQuestion;
 import models.SingleResponseTextQuestion;
 
@@ -131,6 +132,8 @@ public class ScoreQuizServlet extends HttpServlet {
 		for (int i=0; i<scoreArr.size(); i++){
 			score+=scoreArr.get(i);
 		}
+		//Change 1 to the quiz object
+		QuizHistory.save(user, 1, score, time);
 //		String description = inner.getString("description");
 //		boolean isRandom = false;
 //		boolean isOnePage = true;
