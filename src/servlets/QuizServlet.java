@@ -114,11 +114,17 @@ public class QuizServlet extends HttpServlet {
 		String title = inner.getString("title");
 		String description = inner.getString("description");
 		String dispType = inner.getString("onePage");
+		String order = inner.getString("order");
+		String feedBack = inner.getString("feedback");
+		String practice = inner.getString("practice");
 		boolean isOnePage = false;
 		if (dispType.equals("single")) isOnePage = true; 
 		boolean isRandom = false;
+		if (order.equals("random")) isRandom = true; 
 		boolean hasImmediateFeedback = false;
+		if (feedBack.equals("yes")) hasImmediateFeedback = true; 
 		boolean practiceMode = false;
+		if (practice.equals("yes")) practiceMode = true; 
 		//make user
 		String creator = user.getUsername();
 		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);

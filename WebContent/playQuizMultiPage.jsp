@@ -36,7 +36,7 @@
 		if (infoMap==null) System.out.println("infoMap is null");
 		//System.out.println(qArrJson.toString());
 	%>
-	<h1>Quiz: <%=infoMap.get("title") %></h1>
+	<h1><%=infoMap.get("title") %></h1>
 	<div id="question_box"">
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
@@ -55,7 +55,7 @@
 			if(index == 0) prevdisabled = "disabled";
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
-			html += "<h3>Question "+index+": " + questionArr[index]["questionText"]+"</h3>";
+			html += "<h3>"+(index+1)+". " + questionArr[index]["questionText"]+"</h3>";
 			//html += "<br />";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){

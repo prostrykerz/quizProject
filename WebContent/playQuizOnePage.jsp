@@ -36,7 +36,7 @@
 		if (infoMap==null) System.out.println("infoMap is null");
 		//System.out.println(qArrJson.toString());
 	%>
-	<h1>Quiz: <%=infoMap.get("title") %></h1>
+	<h1><%=infoMap.get("title") %></h1>
 	<div id="container"">
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
@@ -85,7 +85,7 @@
 		function createQuestion(index) {
 			
 			var html = "";
-			html += "<div id='question-"+index+"'><h3>Question "+index+": " + questionArr[index]["questionText"]+"</h3>";
+			html += "<div id='question-"+index+"'><h3>"+(index + 1)+". " + questionArr[index]["questionText"]+"</h3>";
 			//html += "<br />";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
