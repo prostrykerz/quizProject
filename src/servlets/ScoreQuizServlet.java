@@ -65,10 +65,6 @@ public class ScoreQuizServlet extends HttpServlet {
 			response.getWriter().write("{\"error\": \"Not Logged In\"}");
 			return;
 		}
-		Map<String, String[]> parameters = request.getParameterMap();
-		for(String parameter : parameters.keySet()) {
-		    System.out.println(parameter);
-		}
 		String json = "{\"data\":" + request.getParameter("data") + "}";
 		System.out.println(json);
 		JSONObject outer = new JSONObject(json);

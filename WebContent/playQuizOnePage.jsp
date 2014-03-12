@@ -22,7 +22,7 @@
 		//SingleResponseTextQuestion q2 = new SingleResponseTextQuestion("how are you?", new ArrayList<String>(Arrays.asList("bad")), 2);
 		//qArr.add(q1);
 		//qArr.add(q2);
-		
+
 		JSONArray qArrJson = new JSONArray();
 		if(qArr != null) {
 			for (int i = 0; i < qArr.size(); i++){
@@ -36,37 +36,42 @@
 		if (infoMap==null) System.out.println("infoMap is null");
 		//System.out.println(qArrJson.toString());
 	%>
-	<h1><%=infoMap.get("title") %></h1>
+	<h1>Quiz: <%=infoMap.get("title") %></h1>
 	<div id="container"">
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
-<script><!--
+<script>
+var startTime;
 	$(document).ready(function() {
 		//Initialization
+		startTime = (new Date).getTime();
 		var questionArr = <%= qArrJson%>;
 		var answerArr = new Array(questionArr.length);
-		
+
 		for (var i=0; i<questionArr.length; i++){
 			createQuestion(i);
 		}
-		
+
 		$("#container").append( "<button id=\"submit_btn\" type=\"button\" >Submit</button>");
-		
+
 		$("#submit_btn").click(function() {
+			var endTime = (new Date).getTime();
+			var time = endTime-startTime;
 			for(var i = 0; i < questionArr.length; i++) addData(i);
-			var data = formatData();
+			var data = formatData(time);
 			console.log(data);
 			$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
 				console.log(responseJson);
 				var response = $.parseJSON(responseJson);
 				console.log(response);
-				if(response.error) {
-					alert(response.error);
+				if(responseJson.error) {
+					alert(responseJson.error);
 				}
-				else alert(response.msg);
+				//else alert(response.msg);
+				else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
 			});
 		});
-		
+
 		function addData(index){
 			if ($("#question-" + index + " input").attr("type")!="checkbox" && $("#question-" + index + " input").attr("type")!="radio"){
 				var ans = new Array();
@@ -81,13 +86,13 @@
 				answerArr[index] = checkboxArr;
 			}
 		}
-		
+
 		function createQuestion(index) {
-			
+
 			var html = "";
-			html += "<div id='question-"+index+"'><h3>"+(index + 1)+". " + questionArr[index]["questionText"]+"</h3>";
+			html += "<div id='question-"+index+"'><h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
 			//html += "<br />";
-			
+
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
 				html += "<h3 style='display:inline;'>Answer: </h3>";
 				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
@@ -132,12 +137,12 @@
 				html += "<h3 style='display:inline;'>Answer: </h3>";
 				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
 			}
-			
-			
+
+
 			html += "<br/>";
 			html += "</div>";
 			$("#container").append(html);
-			
+
 			if (answerArr[index]!=undefined && ($("#question-" + index + " input").attr("type")!="checkbox"&&$("#question-" + index + " input").attr("type")!="radio")) $("#question-" + index + " input").val(answerArr[index][0]);
 			if (answerArr[index]!=undefined && ($("#question-" + index + " input").attr("type")=="checkbox"||$("#question-" + index + " input").attr("type")=="radio")){
 				var checkboxArr = answerArr[index];
@@ -146,35 +151,52 @@
 				});
 			}
 		}
-		
-		
-		function formatData() {
+
+
+		function formatData(time) {
 			var data = {};
 			var correctAnswers = new Array();
 			var attemptedAnswers = new Array();
 			var type = new Array();
 			for(var i = 0; i < questionArr.length; i++) {
+				type.push(getType(i));
 				var ans = new Array();
-				for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
-					ans.push(questionArr[i]["correctAnswers"][j]);
-				}
-				correctAnswers.push(ans);
-				
-				var attemptedAns = new Array();
-				for (var j=0; j<answerArr[i].length; j++){
-					if (answerArr[i][j]){
-						attemptedAns.push(questionArr[i]["possibleAnswers"][j]);
+				if (type[i]=="1" || type[i]=="2" || type[i]=="7"){
+					for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
+						ans.push(questionArr[i]["correctAnswers"][j]);
 					}
 				}
+				else{
+					for (var k=0; k<questionArr[i]["possibleAnswers"].length; k++){
+						var isTrue = false;
+						for (var g=0; g<questionArr[i]["correctAnswers"].length; g++){
+							if (questionArr[i]["possibleAnswers"][k]==questionArr[i]["correctAnswers"][g]){
+								isTrue=true;
+								break;
+							}
+						}
+						if (isTrue) ans.push(true);
+						else ans.push(false);
+					}
+				}
+				correctAnswers.push(ans);
+
+
+				var attemptedAns = new Array();
+				for (var j=0; j<answerArr[i].length; j++){
+					if (type[i]=="1" || type[i]=="2" || type[i]=="7") attemptedAns.push(answerArr[i][j]);
+					else attemptedAns.push(answerArr[i][j]);
+				}
 				attemptedAnswers.push(attemptedAns);
-				type.push(getType(i));
+
 			}
-			
+
 			data.correctAnswers = correctAnswers;
 			data.attemptedAnswers = attemptedAnswers;
 			data.type = type;
+			data.time = time;
 			data.title = "<%=infoMap.get("title") %>";
-			
+
 			return data;
 		}
 		function getType(index) {
@@ -196,7 +218,7 @@
 			else return -1;
 		}
 	});
-	
+
 </script>
 </body>
 </html>
