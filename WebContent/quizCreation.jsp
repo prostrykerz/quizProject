@@ -220,8 +220,10 @@
 			data.questions = questions;
 			data.title = $('#quiz_title').val();
 			data.description = "update me. In quizcreation.jsp";
+			data.feedback = $('#feedback').val();
 			data.onePage = $('#onePage').val();
-			date.order = $('#order').val();
+			data.order = $('#order').val();
+			data.practice = $('#practice').val();
 			return data;
 		}
 		
