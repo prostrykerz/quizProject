@@ -165,6 +165,11 @@ public class UserTable extends Database {
 			}
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return user;
 		}
 		catch (SQLException e) {
@@ -186,12 +191,12 @@ public class UserTable extends Database {
 			rs.last();
 			User user = rsToUser(rs);
 			stmt.close();
+			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
 	            e.printStackTrace();
 	        }
-			con.close();
 			return user;
 		}
 		catch (SQLException e) {
