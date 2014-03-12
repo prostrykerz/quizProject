@@ -57,11 +57,8 @@ var startTime;
 			if(index == 0) prevdisabled = "disabled";
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
-<<<<<<< HEAD
-			html += "<h3>"+(index+1)+". " + questionArr[index]["questionText"]+"</h3>";
-=======
+
 			html += "<h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
->>>>>>> branch 'master' of https://github.com/prostrykerz/quizProject.git
 			//html += "<br />";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
