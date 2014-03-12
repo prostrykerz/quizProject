@@ -41,8 +41,10 @@
 		WILL BE REPLACED BY JAVASCRIPT
 	</div>
 <script>
+var startTime;
 	$(document).ready(function() {
 		//Initialization
+		startTime = (new Date).getTime();
 		var questionArr = <%= qArrJson%>;
 		var answerArr = new Array(questionArr.length);
 		console.log(questionArr);
@@ -55,7 +57,11 @@
 			if(index == 0) prevdisabled = "disabled";
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
+<<<<<<< HEAD
 			html += "<h3>"+(index+1)+". " + questionArr[index]["questionText"]+"</h3>";
+=======
+			html += "<h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
+>>>>>>> branch 'master' of https://github.com/prostrykerz/quizProject.git
 			//html += "<br />";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
@@ -131,17 +137,19 @@
 				showQuestion(index-1);
 			});
 			$("#submit_btn").click(function() {
+				var endTime = (new Date).getTime();
+				var time = endTime-startTime;
 				addData();
-				var data = formatData();
-				console.log(data);
+				var data = formatData(time);
 				$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
 					console.log(responseJson);
 					var response = $.parseJSON(responseJson);
 					console.log(response);
-					if(response.error) {
-						alert(response.error);
+					if(responseJson.error) {
+						alert(responseJson.error);
 					}
-					else alert(response.msg);
+					//else alert(response.msg);
+					else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
 				});
 			});
 			function addData(){
@@ -161,31 +169,46 @@
 		}
 		
 		
-		function formatData() {
+		function formatData(time) {
 			var data = {};
 			var correctAnswers = new Array();
 			var attemptedAnswers = new Array();
 			var type = new Array();
 			for(var i = 0; i < questionArr.length; i++) {
+				type.push(getType(i));
 				var ans = new Array();
-				for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
-					ans.push(questionArr[i]["correctAnswers"][j]);
+				if (type[i]=="1" || type[i]=="2" || type[i]=="7"){
+					for (var j=0; j<questionArr[i]["correctAnswers"].length; j++){
+						ans.push(questionArr[i]["correctAnswers"][j]);
+					}
+				}
+				else{
+					for (var k=0; k<questionArr[i]["possibleAnswers"].length; k++){
+						var isTrue = false;
+						for (var g=0; g<questionArr[i]["correctAnswers"].length; g++){
+							if (questionArr[i]["possibleAnswers"][k]==questionArr[i]["correctAnswers"][g]){
+								isTrue=true;
+								break;
+							}
+						}
+						if (isTrue) ans.push(true);
+						else ans.push(false);
+					}
 				}
 				correctAnswers.push(ans);
 				
 				var attemptedAns = new Array();
 				for (var j=0; j<answerArr[i].length; j++){
-					if (answerArr[i][j]){
-						attemptedAns.push(questionArr[i]["possibleAnswers"][j]);
-					}
+					if (type[i]=="1" || type[i]=="2" || type[i]=="7") attemptedAns.push(answerArr[i][j]);
+					else attemptedAns.push(answerArr[i][j]);
 				}
 				attemptedAnswers.push(attemptedAns);
-				type.push(getType(i));
 			}
 			
 			data.correctAnswers = correctAnswers;
 			data.attemptedAnswers = attemptedAnswers;
 			data.type = type;
+			data.time = time;
 			data.title = "<%=infoMap.get("title") %>";
 			
 			return data;
