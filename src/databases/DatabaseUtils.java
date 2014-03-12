@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 public class DatabaseUtils extends Database{
 	
 	public static void dropTable(String tableName) {
@@ -15,6 +17,11 @@ public class DatabaseUtils extends Database{
 			stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

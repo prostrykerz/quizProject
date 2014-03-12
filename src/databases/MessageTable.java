@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import messages.Message;
 
 import users.User;
@@ -25,6 +27,11 @@ public class MessageTable extends Database{
 			stmt.executeUpdate(query);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -50,6 +57,11 @@ public class MessageTable extends Database{
 			stmt.close();
 			pstmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return m;
 		}
 		catch (SQLException e) {
@@ -79,6 +91,11 @@ public class MessageTable extends Database{
 			}
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -99,6 +116,11 @@ public class MessageTable extends Database{
 			rs.last();
 			Message message = new Message(rs.getInt("id"),UserTable.getUser(rs.getInt("sender")), UserTable.getUser(rs.getInt("receiver")), rs.getString("message"));
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return message;
 		}
 		catch (SQLException e) {
@@ -118,6 +140,11 @@ public class MessageTable extends Database{
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -135,6 +162,11 @@ public class MessageTable extends Database{
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE sender = " + id + " OR receiver = " + id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
