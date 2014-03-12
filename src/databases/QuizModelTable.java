@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import models.FillBlankQuestion;
 import models.MultiChoicePicQuestion;
 import models.MultiChoiceTextQuestion;
@@ -58,6 +60,11 @@ public class QuizModelTable extends Database {
 				table[7].add(q_type);
 			}
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -226,6 +233,11 @@ public class QuizModelTable extends Database {
 				info.put("creator", creator);
 			}
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return info;
 		}
 		catch (SQLException e) {

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import messages.Message;
 import models.Quiz;
 
@@ -58,6 +60,11 @@ public class QuizTable extends Database {
 				table[9].add(creator);
 			}
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -79,6 +86,11 @@ public class QuizTable extends Database {
 			Integer i=0;
 			if (rs.next())	i = rs.getInt("last_insert_id()");
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return i;
 		}
 		catch (SQLException e) {
@@ -105,6 +117,11 @@ public class QuizTable extends Database {
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE p_id = " + id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -122,6 +139,11 @@ public class QuizTable extends Database {
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE creator = \"" + username + "\"");
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -147,6 +169,11 @@ public class QuizTable extends Database {
 				}
 			}
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return quizzes;
 		}
 		catch (SQLException e) {

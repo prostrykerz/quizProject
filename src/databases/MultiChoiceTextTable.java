@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import databases.MyDBInfo;
 
 public class MultiChoiceTextTable extends Database {
@@ -50,6 +52,11 @@ public class MultiChoiceTextTable extends Database {
 				table[7].add(quiz_id);
 			}
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -79,6 +86,11 @@ public class MultiChoiceTextTable extends Database {
 			table[6].add(position);
 			table[7].add(quiz_id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -98,6 +110,11 @@ public class MultiChoiceTextTable extends Database {
 			String query = buildAddQuery(q_id, q_text, a_id, a_text, a_correct, position, quiz_id);
 			stmt.executeUpdate(query);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -123,6 +140,11 @@ public class MultiChoiceTextTable extends Database {
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

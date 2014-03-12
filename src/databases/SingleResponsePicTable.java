@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import databases.MyDBInfo;
 
 public class SingleResponsePicTable extends Database {
@@ -79,6 +81,11 @@ public class SingleResponsePicTable extends Database {
 			table[6].add(position);
 			table[7].add(quiz_id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -98,6 +105,11 @@ public class SingleResponsePicTable extends Database {
 			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, position, quiz_id);
 			stmt.executeUpdate(query);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -123,6 +135,11 @@ public class SingleResponsePicTable extends Database {
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
