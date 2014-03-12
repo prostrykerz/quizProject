@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 public class AchievementTable extends Database{
 	private static String tableName = "Achievements";
 	public static void createTable() {
@@ -19,6 +21,11 @@ public class AchievementTable extends Database{
 			stmt.executeUpdate(query);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -46,6 +53,11 @@ public class AchievementTable extends Database{
 			}
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -65,6 +77,11 @@ public class AchievementTable extends Database{
 			stmt.executeUpdate("UPDATE " + tableName + " SET " + index + " = 1 WHERE uid = " + uid);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

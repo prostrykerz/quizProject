@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import databases.MyDBInfo;
 
 public class FillBlankTable extends Database {
@@ -49,6 +51,11 @@ public class FillBlankTable extends Database {
 			}
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -78,6 +85,11 @@ public class FillBlankTable extends Database {
 			table[6].add(quiz_id);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -98,6 +110,11 @@ public class FillBlankTable extends Database {
 			stmt.executeUpdate(query);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -124,6 +141,11 @@ public class FillBlankTable extends Database {
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

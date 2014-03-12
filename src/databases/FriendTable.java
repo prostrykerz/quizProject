@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 import users.User;
 
 
@@ -26,6 +28,11 @@ public class FriendTable extends Database {
 			stmt.executeUpdate(query);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -49,6 +56,11 @@ public class FriendTable extends Database {
 			stmt.close();
 			pstmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -74,6 +86,11 @@ public class FriendTable extends Database {
 			}
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return friends;
 		}
 		catch (SQLException e) {
@@ -94,6 +111,11 @@ public class FriendTable extends Database {
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE (user_one = " + one.getId() + " AND user_two = " + two.getId() + ") OR (user_one = " + two.getId() + " AND user_two = " + one.getId() + ")");
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -112,6 +134,11 @@ public class FriendTable extends Database {
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE user_one = " + id + " OR user_two = " + id);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

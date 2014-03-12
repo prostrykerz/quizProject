@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+
 public class AnnouncementTable extends Database{
 	private static String tableName = "Announcements";
 	
@@ -20,6 +22,11 @@ public class AnnouncementTable extends Database{
 			stmt.executeUpdate(query);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -47,6 +54,11 @@ public class AnnouncementTable extends Database{
 			con.close();
 			stmt.close();
 			pstmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 			return count;
 		}
 		catch (SQLException e) {
@@ -67,6 +79,11 @@ public class AnnouncementTable extends Database{
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
 			stmt.close();
 			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
