@@ -7,6 +7,9 @@
 <title>Create a quiz</title>
 <link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<style>
+
+</style>
 </head>
 <body>
 <jsp:include page="header.jsp">
@@ -15,6 +18,35 @@
 <h1> Create a quiz! </h1>
 
 	Quiz Title: <input id="quiz_title" type="quizTitle" name="qTitle">
+	<br>
+	Quiz Description: <input id="quiz_description" type="quizDesc" name="quizDesc">
+	<br>
+	<div id="configure">
+	<h4> Configure your quiz. </h4>
+	How would you like your questions displayed? 
+	<select id="onePage" name="mydropdown">
+		<option value="single">All on one page</option>
+		<option value="multi"> One per page</option>
+	</select>
+	<br>
+	In what order would you like your questions displayed? 
+	<select id="order" name="mydropdown">
+		<option value="normal">As inputed</option>	
+		<option value="random"> Randomly</option>
+	</select>
+	<br>
+	Enable immediate feedback for this quiz? 
+	<select id="feedback" name="mydropdown">
+		<option value="yes">Yes</option>	
+		<option value="no"> No</option>
+	</select>
+	<br>
+	Enable practice mode for this quiz? 
+	<select id="practice" name="mydropdown">
+		<option value="yes">Yes</option>	
+		<option value="no"> No</option>
+	</select>
+	</div>
 	<h4> Add questions to create a quiz. </h4>
 	<div id="entry">
 	Choose question type:
@@ -30,12 +62,6 @@
 		<button id="addQ" type="button">Add Question</button> <br>
 		</div>
 		<br>
-		How would you like your questions displayed? 
-		<select id="onePage" name="mydropdown">
-			<option value="single">All on one page</option>
-			<option value="multi"> One per page</option>
-		</select>
-		<br><br>
 		<button id="addButton" type="button">Create Quiz</button>
 				
 <script type="text/javascript">
@@ -194,7 +220,10 @@
 			data.questions = questions;
 			data.title = $('#quiz_title').val();
 			data.description = "update me. In quizcreation.jsp";
+			data.feedback = $('#feedback').val();
 			data.onePage = $('#onePage').val();
+			data.order = $('#order').val();
+			data.practice = $('#practice').val();
 			return data;
 		}
 		

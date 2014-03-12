@@ -106,7 +106,16 @@ public class QuizModelTable extends Database {
 			if (q_type.equals("singleresponsetextquestion")){
 				String questionText = (String)table[1].get(i);
 				ArrayList<String> correctAnswers = new ArrayList<String>();
-				correctAnswers.add((String)table[4].get(i));
+				int q_id = (Integer)table[0].get(i);
+				while (i<table[0].size()){
+					int compare_id = (Integer)table[0].get(i);
+					if (q_id!=compare_id){
+						break;
+					}
+					correctAnswers.add((String)table[4].get(i));
+					i++;
+				}
+				i--;
 				int position = (Integer)table[6].get(i);
 				qArr.add(new SingleResponseTextQuestion(questionText, correctAnswers, position));
 			}
@@ -114,14 +123,32 @@ public class QuizModelTable extends Database {
 				String questionText = (String)table[1].get(i);
 				String q_url = (String)table[2].get(i);
 				ArrayList<String> correctAnswers = new ArrayList<String>();
-				correctAnswers.add((String)table[4].get(i));
+				int q_id = (Integer)table[0].get(i);
+				while (i<table[0].size()){
+					int compare_id = (Integer)table[0].get(i);
+					if (q_id!=compare_id){
+						break;
+					}
+					correctAnswers.add((String)table[4].get(i));
+					i++;
+				}
+				i--;
 				int position = (Integer)table[6].get(i);
 				qArr.add(new SingleResponsePicQuestion(questionText, q_url, correctAnswers, position));
 			}
 			else if (q_type.equals("fillblankquestion")){
 				String questionText = (String)table[1].get(i);
 				ArrayList<String> correctAnswers = new ArrayList<String>();
-				correctAnswers.add((String)table[4].get(i));
+				int q_id = (Integer)table[0].get(i);
+				while (i<table[0].size()){
+					int compare_id = (Integer)table[0].get(i);
+					if (q_id!=compare_id){
+						break;
+					}
+					correctAnswers.add((String)table[4].get(i));
+					i++;
+				}
+				i--;
 				int position = (Integer)table[6].get(i);
 				qArr.add(new FillBlankQuestion(questionText, correctAnswers, position));
 			}

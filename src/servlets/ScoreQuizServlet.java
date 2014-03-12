@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -77,17 +78,12 @@ public class ScoreQuizServlet extends HttpServlet {
 		JSONArray type = inner.getJSONArray("type");
 		
 		ArrayList<Integer> scoreArr = new ArrayList<Integer>();
+		int totalScore = 0;
 		
 		for (int i=0; i<correctAnswers.length(); i++){
 			JSONArray answerKeyArr = correctAnswers.getJSONArray(i);
 			JSONArray attemptedKeyArr = attemptedAnswers.getJSONArray(i);
-			for (int j=0; j<answerKeyArr.length(); j++){
-				if(j>=attemptedKeyArr.length()){
-					scoreArr.add(0);
-					break;
-				}
-				
-			}
+			
 			if(type.getString(i).equals("1")||type.getString(i).equals("2")||type.getString(i).equals("7")) {
 				boolean correct = false;
 				for (int j=0; j<answerKeyArr.length(); j++){
@@ -98,20 +94,43 @@ public class ScoreQuizServlet extends HttpServlet {
 				}
 				if (correct) scoreArr.add(1);
 				else scoreArr.add(0);
+				totalScore++;
 			}
-			else if(type.getString(i).equals("3") || type.getString(i).equals("4") || type.getString(i).equals("5") || type.getString(i).equals("6")) {
-				boolean correct = false;
+			else if(type.getString(i).equals("3") || type.getString(i).equals("4")){
+				
+				boolean correct = true;
 				int score = 0;
 				for (int j=0; j<answerKeyArr.length(); j++){
-					if (!answerKeyArr.getString(j).equals(attemptedKeyArr.getString(j))) continue;
-					score++;
+					if (answerKeyArr.getBoolean(j)!=attemptedKeyArr.getBoolean(j)){
+						correct = false;
+						break;
+					}	
+				}
+				if (correct) score=1;
+				scoreArr.add(score);
+				totalScore++;
+			}
+			else if(type.getString(i).equals("5") || type.getString(i).equals("6")){
+				
+				int score = 0;
+				for (int j=0; j<answerKeyArr.length(); j++){
+					if (answerKeyArr.getBoolean(j)) totalScore++;
+					if (answerKeyArr.getBoolean(j)!=attemptedKeyArr.getBoolean(j)) continue;
+					if (answerKeyArr.getBoolean(j)) score++;
 				}
 				scoreArr.add(score);
 			}
+
+			System.out.println(scoreArr);
 		}
 		
 		
 		String title = inner.getString("title");
+		int time = inner.getInt("time");
+		int score = 0;
+		for (int i=0; i<scoreArr.size(); i++){
+			score+=scoreArr.get(i);
+		}
 //		String description = inner.getString("description");
 //		boolean isRandom = false;
 //		boolean isOnePage = true;
@@ -121,7 +140,18 @@ public class ScoreQuizServlet extends HttpServlet {
 //		String creator = user.getUsername();
 //		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 //		user.addQuiz(quiz);
-		response.getWriter().write("{\"msg\": \"Success\"}");
+//		response.getWriter().write("{\"msg\": \"Success\"}");
+		
+		JSONObject result = new JSONObject();
+		
+		result.put("title", title);
+		result.put("score", score);
+		result.put("totalScore", totalScore);
+		result.put("time", time);
+		
+		response.getWriter().write(result.toString());
+//		RequestDispatcher rd = request.getRequestDispatcher("scoreSummary.jsp");
+//		rd.forward(request, response);
 	}
 
 }
