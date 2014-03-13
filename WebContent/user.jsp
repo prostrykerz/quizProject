@@ -5,6 +5,8 @@
 <%@ page import="users.AccountManager" %>
 <%@ page import="java.util.*" %>
 <%@ page import="models.Quiz" %>
+<%@ page import="models.QuizHistory" %>
+<%@ page import="databases.QuizHistoryTable" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
@@ -15,6 +17,7 @@
 	for(User u: manager.getUsers()) {
 		if(u.getUsername().equals(username)) user = u;
 	}
+	ArrayList<QuizHistory> attempts = QuizHistoryTable.getUserTakenQuizzes(user);
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -79,6 +82,12 @@
 		ArrayList<String> achievements = user.getAchievements();
 		for(String s : achievements) {
 			out.println(s + "<br />");
+		}
+	%>
+	<h2>Attempts</h2>
+	<%
+		for(QuizHistory qh : attempts) {
+			out.println(qh.getQuizId() + "<br />");
 		}
 	%>
 	<script>

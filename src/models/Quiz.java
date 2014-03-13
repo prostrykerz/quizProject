@@ -18,6 +18,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import databases.FillBlankTable;
 import databases.MultiChoicePicTable;
 import databases.MultiChoiceTextTable;
+import databases.QuizHistoryTable;
 import databases.QuizModelTable;
 import databases.QuizTable;
 import databases.SingleResponsePicTable;
@@ -190,5 +191,20 @@ public class Quiz {
 
 	public int getId() {return (Integer) infoMap.get("quiz_id");}
 	public String getTitle() {return (String) infoMap.get("title");}
+	
+	//returns user id of highest scorer
+	public int getHighestScorer() {
+		int id = (Integer) infoMap.get("quiz_id");
+		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts(id);
+		int highest = 0;
+		int user_id = 0;
+		for(QuizHistory qh : attempts) {
+			if(qh.getScore() > highest) {
+				highest = qh.getScore();
+				user_id = qh.getUserId();
+			}
+		}
+		return user_id;
+	}
 	
 }

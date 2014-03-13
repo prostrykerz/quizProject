@@ -25,6 +25,8 @@ import models.SingleResponseTextQuestion;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import databases.QuizHistoryTable;
+
 import users.AccountManager;
 import users.User;
 
@@ -59,6 +61,7 @@ public class ScoreQuizServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
 		User user = (User) session.getAttribute("user");
+		
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		if(user == null) {
@@ -73,7 +76,7 @@ public class ScoreQuizServlet extends HttpServlet {
 		JSONArray correctAnswers = inner.getJSONArray("correctAnswers");
 		JSONArray attemptedAnswers = inner.getJSONArray("attemptedAnswers");
 		JSONArray type = inner.getJSONArray("type");
-		
+		Quiz q = new Quiz(inner.getInt("quiz_id"));
 		ArrayList<Integer> scoreArr = new ArrayList<Integer>();
 		int totalScore = 0;
 		
@@ -129,17 +132,9 @@ public class ScoreQuizServlet extends HttpServlet {
 			score+=scoreArr.get(i);
 		}
 		//Change 1 to the quiz object
-		QuizHistory.save(user, 1, score, time);
-//		String description = inner.getString("description");
-//		boolean isRandom = false;
-//		boolean isOnePage = true;
-//		boolean hasImmediateFeedback = false;
-//		boolean practiceMode = false;
-//		//make user
-//		String creator = user.getUsername();
-//		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
-//		user.addQuiz(quiz);
-//		response.getWriter().write("{\"msg\": \"Success\"}");
+		QuizHistory.save(user, q.getId(), score, time);
+		if(QuizHistoryTable.getUserTakenQuizzes(user).size() == 10) user.awardAchievement(3);
+		if(q.getHighestScorer() == user.getId()) user.awardAchievement(4);
 		
 		JSONObject result = new JSONObject();
 		

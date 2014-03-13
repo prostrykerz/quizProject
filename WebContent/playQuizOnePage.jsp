@@ -196,7 +196,7 @@ var startTime;
 			data.type = type;
 			data.time = time;
 			data.title = "<%=infoMap.get("title") %>";
-
+			<% if(q != null) out.println("data.quiz_id = " + id + ";");%>
 			return data;
 		}
 		function getType(index) {
