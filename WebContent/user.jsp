@@ -57,6 +57,7 @@
 	%>
 	<br />
 	Welcome to <%= user.getUsername() %>'s page
+	<a href="history.jsp"><button type="button">Quiz History</button></a>
 	<h2>My Friends</h2>
 	<%
 		for(int id : user.getFriends()) {
