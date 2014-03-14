@@ -1,5 +1,8 @@
 package databases;
 
+import globals.Global;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +20,8 @@ public class MessageTable extends Database{
 	private static String tableName = "Messages";
 	
 	public static void createTable() {
+
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
@@ -42,6 +47,8 @@ public class MessageTable extends Database{
 	}
 	
 	public static Message save(User sender, User receiver, String message) {
+
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
@@ -75,6 +82,8 @@ public class MessageTable extends Database{
 	
 	public static ArrayList<Message> getMessages(int id) {
 		ArrayList<Message> messages = new ArrayList<Message>();
+
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
@@ -89,6 +98,7 @@ public class MessageTable extends Database{
 					messages.add(message);
 				}
 			}
+			rs.close();
 			stmt.close();
 			con.close();
 			try {
@@ -107,6 +117,8 @@ public class MessageTable extends Database{
 	}
 	
 	private static Message lastMessage() {
+
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
@@ -115,6 +127,8 @@ public class MessageTable extends Database{
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			rs.last();
 			Message message = new Message(rs.getInt("id"),UserTable.getUser(rs.getInt("sender")), UserTable.getUser(rs.getInt("receiver")), rs.getString("message"));
+			rs.close();
+			stmt.close();
 			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
@@ -133,12 +147,14 @@ public class MessageTable extends Database{
 	}
 	
 	public static void deleteMessage(int id) {
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
+			stmt.close();
 			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
@@ -155,12 +171,14 @@ public class MessageTable extends Database{
 	}
 	
 	public static void deleteUserMessages(int id) {
+		Connection con = Global.database.getConnection();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE sender = " + id + " OR receiver = " + id);
+			stmt.close();
 			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();

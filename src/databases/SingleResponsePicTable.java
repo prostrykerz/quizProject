@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,9 +26,8 @@ public class SingleResponsePicTable extends Database {
 			if (i==0 || i==1 || i==4 || i==6) table[i] = new ArrayList<Integer>();
 			else table[i] = new ArrayList<String>();
 		}
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
@@ -51,7 +52,8 @@ public class SingleResponsePicTable extends Database {
 				table[7].add(quiz_id);
 
 			}
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -61,15 +63,13 @@ public class SingleResponsePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public void add(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, position, quiz_id);
@@ -85,7 +85,8 @@ public class SingleResponsePicTable extends Database {
 			table[5].add(a_text);
 			table[6].add(position);
 			table[7].add(quiz_id);
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -95,21 +96,18 @@ public class SingleResponsePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public static void addToDatabase(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, position, quiz_id);
 			stmt.executeUpdate(query);
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -119,10 +117,7 @@ public class SingleResponsePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 		
 	private static String buildAddQuery(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Integer position, Integer quiz_id){
@@ -133,13 +128,12 @@ public class SingleResponsePicTable extends Database {
 	}
 
 	public static void deleteQuestion(int quiz_id) {
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -149,8 +143,6 @@ public class SingleResponsePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 }

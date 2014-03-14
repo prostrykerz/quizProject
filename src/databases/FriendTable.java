@@ -1,5 +1,8 @@
 package databases;
 
+import globals.Global;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,16 +21,15 @@ public class FriendTable extends Database {
 	private static String tableName = "Friends";
 	
 	public static void createTable() {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(user_one INT, user_two INT);";
 			stmt.executeUpdate(query);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -37,15 +39,12 @@ public class FriendTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static void save(User one, User two) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = "INSERT INTO " + tableName + " (user_one, user_two) VALUES (?,?)";
@@ -55,7 +54,6 @@ public class FriendTable extends Database {
 			pstmt.execute();
 			stmt.close();
 			pstmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -65,16 +63,13 @@ public class FriendTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static ArrayList<Integer> getFriends(int id) {
 		ArrayList<Integer> friends = new ArrayList<Integer>();
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
@@ -84,8 +79,8 @@ public class FriendTable extends Database {
 				if(id_one == id) friends.add(id_two);
 				else if(id_two == id) friends.add(id_one);
 			}
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -96,21 +91,17 @@ public class FriendTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 	
 	public static void removeFriendship(User one, User two) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE (user_one = " + one.getId() + " AND user_two = " + two.getId() + ") OR (user_one = " + two.getId() + " AND user_two = " + one.getId() + ")");
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -118,22 +109,18 @@ public class FriendTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static void deleteUserFriends(int id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE user_one = " + id + " OR user_two = " + id);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -141,9 +128,6 @@ public class FriendTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

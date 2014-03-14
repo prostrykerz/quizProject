@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,9 +27,8 @@ public class FillBlankTable extends Database {
 			if (i==0 || i==1 || i==3 || i==5) table[i] = new ArrayList<Integer>();
 			else table[i] = new ArrayList<String>();
 		}
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
@@ -49,8 +50,8 @@ public class FillBlankTable extends Database {
 				table[5].add(position);
 				table[6].add(quiz_id);
 			}
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -60,15 +61,12 @@ public class FillBlankTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void add(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, a_id, a_text, position, quiz_id);
@@ -83,8 +81,8 @@ public class FillBlankTable extends Database {
 			table[4].add(a_text);
 			table[5].add(position);
 			table[6].add(quiz_id);
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -92,24 +90,19 @@ public class FillBlankTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static void addToDatabase(Integer q_id, String q_text, Integer a_id, String a_text, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, a_id, a_text, position, quiz_id);
 			stmt.executeUpdate(query);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -117,10 +110,6 @@ public class FillBlankTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -133,14 +122,13 @@ public class FillBlankTable extends Database {
 	}
 	
 	public static void deleteQuestion(int quiz_id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -148,9 +136,6 @@ public class FillBlankTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

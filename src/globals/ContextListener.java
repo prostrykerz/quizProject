@@ -14,6 +14,7 @@ import admin.Announcement;
 
 import databases.AchievementTable;
 import databases.AnnouncementTable;
+import databases.Database;
 import databases.DatabaseUtils;
 import databases.FriendTable;
 import databases.MessageTable;
@@ -38,7 +39,9 @@ public class ContextListener implements ServletContextListener {
      */
     public void contextInitialized(ServletContextEvent event) {
     	ServletContext context = event.getServletContext();
-    	
+    	new Global();
+    	if (Global.database.connectionClosed()) System.out.println("ok it's fine");
+    	else System.out.println("fuck our lives.");
     	createTables();
     	
     	manager = new AccountManager();
@@ -51,6 +54,7 @@ public class ContextListener implements ServletContextListener {
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent arg0) {
+    	Global.database.closeConnection();
     	try {
             AbandonedConnectionCleanupThread.shutdown();
         } catch (InterruptedException e) {

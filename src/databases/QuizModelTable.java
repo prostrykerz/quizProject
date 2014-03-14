@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -34,9 +36,8 @@ public class QuizModelTable extends Database {
 			else if (i==0 || i==3 || i==6) table[i] = new ArrayList<Integer>();
 			else table[i] = new ArrayList<String>();
 		}
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = createGetQuizQuery();
@@ -59,7 +60,9 @@ public class QuizModelTable extends Database {
 				table[6].add(position);
 				table[7].add(q_type);
 			}
-			con.close();
+			rs.close();
+			stmt.close();
+			
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -67,9 +70,6 @@ public class QuizModelTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -106,6 +106,7 @@ public class QuizModelTable extends Database {
 	}
 	
 	public ArrayList<Question> getQuestions(){
+		
 		ArrayList<Question> qArr = new ArrayList<Question>();
 		for (int i=0; i<table[0].size(); i++){
 //			if (prevQID == (Integer)table[0].get(i)) continue;
@@ -201,10 +202,9 @@ public class QuizModelTable extends Database {
 	}
 	
 	public HashMap<String, Object> getQuizInfo(){
+		Connection con = Global.database.getConnection();
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = createGetQuizInfoQuery();
@@ -232,7 +232,8 @@ public class QuizModelTable extends Database {
 				info.put("time", time);
 				info.put("creator", creator);
 			}
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -243,9 +244,7 @@ public class QuizModelTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 	

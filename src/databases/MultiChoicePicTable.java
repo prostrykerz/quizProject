@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,9 +27,8 @@ public class MultiChoicePicTable extends Database {
 			else if(i==6) table[i] = new ArrayList<Boolean>();
 			else table[i] = new ArrayList<String>();
 		}
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
@@ -54,7 +55,8 @@ public class MultiChoicePicTable extends Database {
 				table[8].add(quiz_id);
 
 			}
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -64,15 +66,12 @@ public class MultiChoicePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void add(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Boolean a_correct, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, a_correct, position, quiz_id);
@@ -89,8 +88,8 @@ public class MultiChoicePicTable extends Database {
 			table[6].add(a_correct);
 			table[7].add(position);
 			table[8].add(quiz_id);
-			
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -98,23 +97,19 @@ public class MultiChoicePicTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static void addToDatabase(Integer q_id, String q_text, String q_url, Integer a_id, String a_text, Boolean a_correct, Integer position, Integer quiz_id){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(q_id, q_text, q_url, a_id, a_text, a_correct, position, quiz_id);
 			stmt.executeUpdate(query);
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -124,10 +119,6 @@ public class MultiChoicePicTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	
@@ -139,13 +130,12 @@ public class MultiChoicePicTable extends Database {
 	}
 	
 	public static void deleteQuestion(int quiz_id) {
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE q_id = " + quiz_id);
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -153,9 +143,6 @@ public class MultiChoicePicTable extends Database {
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

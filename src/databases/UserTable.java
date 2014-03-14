@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,16 +37,15 @@ public class UserTable extends Database {
 	//4 = admin
 	
 	public static void createTable() {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);			
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, username CHAR(64), salt BLOB, hash BLOB, admin BOOLEAN, PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -54,18 +55,15 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static User save(String username, String user_password, boolean admin){
+
+		Connection con = Global.database.getConnection();
 		try {
 			byte[] salt = createSalt();
 			byte[] hash = createHash(salt, user_password);
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = "INSERT INTO " + tableName + " (username, salt, hash, admin) VALUES (?,?,?,?)";
@@ -78,7 +76,6 @@ public class UserTable extends Database {
 			User user = lastUser();
 			stmt.close();
 			pstmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -87,9 +84,6 @@ public class UserTable extends Database {
 			return user;
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -119,10 +113,10 @@ public class UserTable extends Database {
 	
 	public static HashSet<User> getUsers() {
 //		return new HashSet<User>();
+
+		Connection con = Global.database.getConnection();
 		try {
 			HashSet<User> users = new HashSet<User>();
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
@@ -130,8 +124,8 @@ public class UserTable extends Database {
 				User user = rsToUser(rs);
 				users.add(user);
 			}
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -143,16 +137,13 @@ public class UserTable extends Database {
 			e.printStackTrace();
 			return new HashSet<User>();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+		
 	}
 	
 	public static User getUser(int id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
@@ -163,8 +154,8 @@ public class UserTable extends Database {
 					break;
 				}
 			}
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -175,23 +166,21 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 	
 	private static User lastUser() {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			rs.last();
 			User user = rsToUser(rs);
+			rs.close();
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -202,9 +191,7 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 	
@@ -235,14 +222,13 @@ public class UserTable extends Database {
 	}
 	
 	public static void deleteUser(int id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -252,20 +238,17 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public static void makeAdmin(int id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("UPDATE " + tableName + " SET admin = 1 WHERE id = " + id);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -275,8 +258,6 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 }

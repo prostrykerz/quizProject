@@ -1,5 +1,7 @@
 package databases;
 
+import globals.Global;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -30,9 +32,8 @@ public class QuizTable extends Database {
 			else if (i>=3 && i<=6) table[i] = new ArrayList<Boolean>();
 			else table[i] = new ArrayList<String>();
 		}
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			
@@ -59,7 +60,8 @@ public class QuizTable extends Database {
 				table[8].add(time);
 				table[9].add(creator);
 			}
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -69,15 +71,13 @@ public class QuizTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	public static Integer addToDatabase(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator);
@@ -85,7 +85,8 @@ public class QuizTable extends Database {
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
 			if (rs.next())	i = rs.getInt("last_insert_id()");
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -96,9 +97,7 @@ public class QuizTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 	
@@ -110,13 +109,13 @@ public class QuizTable extends Database {
 	}
 	
 	public static void deleteQuiz(int id) {
+
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE p_id = " + id);
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -126,19 +125,16 @@ public class QuizTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public static void deleteUserQuizzes(String username) {
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE creator = \"" + username + "\"");
-			con.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -148,16 +144,13 @@ public class QuizTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public static ArrayList<Quiz> getQuizzes(String username) {
+		Connection con = Global.database.getConnection();
 		try {
 			ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
@@ -168,7 +161,8 @@ public class QuizTable extends Database {
 					quizzes.add(quiz);
 				}
 			}
-			con.close();
+			rs.close();
+			stmt.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -179,9 +173,7 @@ public class QuizTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 }
