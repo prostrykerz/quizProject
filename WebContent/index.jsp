@@ -5,6 +5,7 @@
 <%@ page import="users.AccountManager" %>
 <%@ page import="admin.Announcement" %>
 <%@ page import="models.Quiz" %>
+<%@ page import="javax.servlet.http.Cookie" %>
 <%@ page import="databases.QuizTable" %>
 <%@ page import="java.util.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -14,6 +15,25 @@
 	//if(user == null) response.sendRedirect("login.jsp");
 	ArrayList<Announcement> announcements = (ArrayList<Announcement>) application.getAttribute("announcements");
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
+	HashMap<String, Integer> cookieMap = (HashMap<String, Integer>) application.getAttribute("cookieMap");
+	Cookie rCookie = null;
+	Cookie tCookie = null;
+	if(request != null) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for(Cookie c : request.getCookies()) {
+				if(c.getName().equals("remember_me")) rCookie = c;
+				if(c.getName().equals("token"))tCookie = c;
+			}
+			if(rCookie != null) {
+				if(cookieMap.containsKey(tCookie.getValue())) {
+					session.setAttribute("user", manager.getUserById(cookieMap.get(tCookie.getValue())));
+					user = (User) session.getAttribute("user");
+				}
+			}
+		}
+	}
+	
 %>
 
 
