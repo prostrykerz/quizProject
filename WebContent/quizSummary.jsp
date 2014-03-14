@@ -48,7 +48,7 @@
 		<a href="challenge.jsp?id=<%=id%>"><button type="button">Challenge Friend</button></a>
 		<%
 			if(user.equals(owner)) {
-				out.println("<a href=\"edit_quiz.jsp?id=" + id + "\"><button type=\"button\">Edit Quiz</button></a>");
+				out.println("<a href=\"quizEdit.jsp?id=" + id + "\"><button type=\"button\">Edit Quiz</button></a>");
 			}
 		%>
 		<br />
