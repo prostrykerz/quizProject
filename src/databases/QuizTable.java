@@ -246,4 +246,22 @@ public class QuizTable extends Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void clearTimesTaken(int qid) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("UPDATE "+ tableName + " SET timesTaken = 0 WHERE p_id = " + qid);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

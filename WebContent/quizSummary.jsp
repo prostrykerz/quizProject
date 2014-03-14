@@ -48,7 +48,7 @@
 		<a href="challenge.jsp?id=<%=id%>"><button type="button">Challenge Friend</button></a>
 		<br />
 		<br />
-		<% if(attempts.size() > 0) { %>
+		<% if(topAttempts.size() > 0) { %>
 		<div>
 			<h3>
 			<div style="margin: 0 auto;">

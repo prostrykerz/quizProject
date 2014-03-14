@@ -221,6 +221,7 @@ public class Quiz {
 	}
 	
 	public double getAverageScore() {
+		if((Integer) infoMap.get("timesTaken") == 0) return 0;
 		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
 		int sum = 0;
 		for(QuizHistory qh : attempts) sum += qh.getScore();
@@ -228,6 +229,7 @@ public class Quiz {
 	}
 	
 	public double getAverageDuration() {
+		if((Integer) infoMap.get("timesTaken") == 0) return 0;
 		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
 		int sum = 0;
 		for(QuizHistory qh : attempts) sum += qh.getTime();

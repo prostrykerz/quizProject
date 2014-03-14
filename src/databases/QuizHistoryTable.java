@@ -185,10 +185,8 @@ public class QuizHistoryTable extends Database{
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			System.out.println("SELECT * FROM "+ tableName + " WHERE user_id = " + u.getId() + " AND quiz_id = " + qid);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName + " WHERE user_id = " + u.getId() + " AND quiz_id = " + qid);
 			while(rs.next()) {
-				System.out.println("doisodf");
 				QuizHistory qh = new QuizHistory(u.getId(), qid, rs.getInt("score"), rs.getInt("time"), rs.getTimestamp("at"));
 				qhs.add(qh);
 			}
@@ -244,5 +242,24 @@ public class QuizHistoryTable extends Database{
 			attempts.add(allRecentAttempts.get(i));
 		}
 		return attempts;
+	}
+	
+	public static void clearHistory(int qid) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE quiz_id = " + qid);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	        QuizTable.clearTimesTaken(qid);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
