@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.table.AbstractTableModel;
@@ -221,6 +222,7 @@ public class QuizModelTable extends Database {
 				Integer time = rs.getInt("time");
 				String creator = rs.getString("creator");
 				Integer timesTaken = rs.getInt("timesTaken");
+				Date createdAt = rs.getTimestamp("createdAt");
 				
 				info.put("quiz_id", p_id);
 				info.put("title", name);
@@ -233,6 +235,7 @@ public class QuizModelTable extends Database {
 				info.put("time", time);
 				info.put("creator", creator);
 				info.put("timesTaken", timesTaken);
+				info.put("createdAt", createdAt);
 			}
 			rs.close();
 			stmt.close();

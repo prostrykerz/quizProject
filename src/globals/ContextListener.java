@@ -14,6 +14,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 import users.AccountManager;
+import users.FriendUpdate;
 import users.User;
 import admin.Announcement;
 
@@ -47,7 +48,7 @@ public class ContextListener implements ServletContextListener {
     	ServletContext context = event.getServletContext();
     	new Global();
     	createTables();
-    	
+
     	manager = new AccountManager();
     	cookieMap = new HashMap<String, Integer>();
     	for(User u : manager.getUsersIterable()) {
@@ -77,6 +78,7 @@ public class ContextListener implements ServletContextListener {
 //    	DatabaseUtils.dropTable("Friends");
 //    	DatabaseUtils.dropTable("Messages");
 //    	DatabaseUtils.dropTable("Announcements");
+//    	DatabaseUtils.dropTable("Achievements");
     	
     	//KEep
     	UserTable.createTable();

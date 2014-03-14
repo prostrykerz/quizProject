@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +37,37 @@ public class Achievement {
 		achievements = Collections.unmodifiableMap(temp);
 	}
 	
+	boolean awarded;
+	Date when;
+	int uid, code;
+	public Achievement(int uid, int code, boolean awarded, Date when) {
+		this.uid = uid;
+		this.code = code;
+		this.awarded = awarded;
+		this.when = when;
+	}
+	
+	public int getUserId() {
+		return uid;
+	}
+	
+	public void awardAchievement() {
+		awarded = true;
+	}
+	public boolean getStatus() {
+		return awarded;
+	}
+	public Date getWhen() {
+		return when;
+	}
+	
+	public int getCode() {
+		return code;
+	}
+	
 	public static String getText(int code) {return achievements.get(code);}
 	public static String getIndex(int code) {
-		if(code == 0) return "Amateur Author";
-		else if(code == 1) return "Prolific Author";
-		else if(code == 2) return "Prodigious Author";
-		else if(code == 3) return "Quiz Machine";
-		else if(code == 4) return "I am the Greatest";
-		else if(code == 5) return "Practice Makes Perfect";
+		if(achievements.containsKey(code)) return achievements.get(code);
 		return "err";
 	}
 }

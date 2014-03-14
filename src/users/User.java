@@ -3,6 +3,8 @@ package users;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -12,6 +14,7 @@ import databases.FriendTable;
 import databases.MessageTable;
 import databases.MultiChoicePicTable;
 import databases.MultiChoiceTextTable;
+import databases.QuizHistoryTable;
 import databases.QuizTable;
 import databases.SingleResponsePicTable;
 import databases.SingleResponseTextTable;
@@ -20,6 +23,7 @@ import databases.UserTable;
 import messages.Message;
 import models.Achievement;
 import models.Quiz;
+import models.QuizHistory;
 
 public class User {
 	private int id;
@@ -29,10 +33,10 @@ public class User {
 	private ArrayList<Integer> friends;
 	private ArrayList<Message> friendRequests;
 	private ArrayList<Quiz> quizzes;
-	boolean[] achievements;
+	Achievement[] achievements;
 	private boolean admin;
 	
-	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends, boolean[] achievements) {
+	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends, Achievement[] achievements) {
 		this.id = id;
 		this.username = username;
 		this.admin = isAdmin;
@@ -166,8 +170,30 @@ public class User {
 	}
 	
 	public void awardAchievement(int code) {
-		achievements[code] = true;
+		achievements[code].awardAchievement();
 		AchievementTable.awardAchievement(id, Achievement.getIndex(code));
+	}
+	
+	public ArrayList<FriendUpdate> getRecentUpdates(int limit) {
+		ArrayList<FriendUpdate> updates = new ArrayList<FriendUpdate>();
+		ArrayList<User> friends = getFriendsAsUsers();
+		for(User fr : friends) {
+			ArrayList<Quiz> quizzes = fr.getQuizzes();
+			ArrayList<QuizHistory> qhs = QuizHistoryTable.getUserTakenQuizzes(fr);
+			Achievement[] achievements = fr.getAchievements();
+			for(Quiz q : quizzes) updates.add(new FriendUpdate(q,2));
+			for(QuizHistory qh : qhs) updates.add(new FriendUpdate(qh,1));
+			for(int i = 0; i < achievements.length; i++) updates.add(new FriendUpdate(achievements[i],3));
+		}
+		Collections.sort(updates, new Comparator<FriendUpdate>() {
+			@Override
+			public int compare(FriendUpdate a, FriendUpdate b) {
+				return (int)(a.getTime() - b.getTime());
+			}
+		});
+		ArrayList<FriendUpdate> sortedUpdates = new ArrayList<FriendUpdate>();
+		for(int i = 0; i < limit; i++) sortedUpdates.add(updates.get(i));
+		return sortedUpdates;
 	}
 	
 	//Getters
@@ -180,13 +206,7 @@ public class User {
 	public ArrayList<Integer> getFriends() {return friends;}
 	public ArrayList<Message> getFriendRequests() {return friendRequests;}
 	public ArrayList<Quiz> getQuizzes() {return quizzes;}
-	public ArrayList<String> getAchievements() {
-		ArrayList<String> text = new ArrayList<String>();
-		for(int i = 0; i < achievements.length; i++) {
-			if(achievements[i]) text.add(Achievement.getText(i));
-		}
-		return text;
-	}
+	public Achievement[] getAchievements() {return achievements;}
 	
 	//Misc
 	public boolean equals(User other) {

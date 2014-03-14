@@ -12,6 +12,7 @@
 <%@ page import="databases.QuizHistoryTable" %>
 <%@ page import="databases.AchievementTable" %>
 <%@ page import="java.util.*" %>
+<%@ page import="users.FriendUpdate" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
@@ -93,6 +94,23 @@
 				out.println("</table>");
 			}
 			out.println("<br />");
+			
+			ArrayList<FriendUpdate> updates = user.getRecentUpdates(5);
+			if(updates.size() > 0) {
+				out.println("<table class='performance_table'>");
+				out.println("<tr><td>Type<1/td><td>Updates</td></tr>");
+				for(int i = 0; i < 3; i++) {
+					if(i == updates.size()) break;
+					out.println("<tr>");
+					out.println("<td width='20%'>" + updates.get(i).getType() + "</td>");
+					out.println("<td width='80%'>" + updates.get(i).getText() + "</td>");
+					out.println("</tr>");
+				}
+				out.println("</table>");
+			}
+			out.println("<br />");
+			
+			
 			out.println("<div id=\"content\">");
 			out.println("<table class='performance_table'><tr><td>");
 			// Popular Quizzes

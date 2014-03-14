@@ -2,6 +2,7 @@ package models;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -54,6 +55,7 @@ public class Quiz {
 		this.infoMap.put("time", 0);
 		this.infoMap.put("creator", creator);
 		this.infoMap.put("timesTaken", 0);
+		this.infoMap.put("createdAt", new Date());
 		
 		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator);
 		this.infoMap.put("quiz_id", this.quizID);
@@ -241,4 +243,7 @@ public class Quiz {
 		return ((double) one - two) / (one) * 100;
 	}
 	
+	public Date getCreatedAt() {
+		return (Date) infoMap.get("createdAt");
+	}
 }

@@ -23,6 +23,7 @@ import javax.swing.table.AbstractTableModel;
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 import messages.Message;
+import models.Achievement;
 import models.Quiz;
 
 import users.User;
@@ -228,7 +229,7 @@ public class UserTable extends Database {
 			ArrayList<Integer> friends = FriendTable.getFriends(id);
 			ArrayList<Message> messages = MessageTable.getMessages(id);
 			ArrayList<Quiz> quizzes = QuizTable.getQuizzes(username);
-			boolean[] achievements = AchievementTable.getAchievements(id);
+			Achievement[] achievements = AchievementTable.getAchievements(id);
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
