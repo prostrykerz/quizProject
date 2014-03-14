@@ -220,4 +220,18 @@ public class Quiz {
 		return UserTable.getUser((String)this.infoMap.get("creator"));
 	}
 	
+	public double getAverageScore() {
+		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
+		int sum = 0;
+		for(QuizHistory qh : attempts) sum += qh.getScore();
+		return (double) sum / (Integer) infoMap.get("timesTaken");
+	}
+	
+	public double getAverageDuration() {
+		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
+		int sum = 0;
+		for(QuizHistory qh : attempts) sum += qh.getTime();
+		return (double) sum / (Integer) infoMap.get("timesTaken");
+	}
+	
 }

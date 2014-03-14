@@ -134,9 +134,10 @@ button {
 	width: 80%;
 	border: 2px solid #FFB6C1;
 	padding: 5px;
+	position: relative;
 }
 
-#past_performance_table {
+.performance_table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	background-color: transparent;
@@ -144,10 +145,19 @@ button {
 	border: 1px solid #ddd;
 }
 
-	#past_performance_table td {
+	.performance_table td {
 		padding: 8px;
 		border: 1px solid #ddd;
 	}
 		
+#quiz_statistics {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 300px;
+	border-left: 2px solid #FFB6C1;
+	border-bottom: 2px solid #FFB6C1;
+	padding: 8px;
+}
 		
 		

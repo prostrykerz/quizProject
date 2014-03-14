@@ -48,7 +48,7 @@ public class DeleteQuizServlet extends HttpServlet {
 		int id = Integer.parseInt(idString);
 		System.out.println(id);
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
-		HashSet<User> users = manager.getUsers();
+		HashSet<User> users = manager.getUsersIterable();
 		for(User u : users) {
 			if(u.ownsQuiz(id)) {
 				u.deleteQuiz(id);
