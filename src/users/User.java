@@ -72,6 +72,14 @@ public class User {
 		admin = true;
 	}
 	
+	public ArrayList<User> getFriendsAsUsers() {
+		ArrayList<User> frs = new ArrayList<User>();
+		for(int i = 0; i < friends.size(); i++) {
+			frs.add(UserTable.getUser(friends.get(i)));
+		}
+		return frs;
+	}
+	
 	public boolean ownsQuiz(int id) {
 		for(Quiz q : quizzes) {
 			if(q.getId() == id) return true;

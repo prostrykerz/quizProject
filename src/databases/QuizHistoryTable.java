@@ -262,4 +262,27 @@ public class QuizHistoryTable extends Database{
 			e.printStackTrace();
 		}
 	}
+	
+	public static int getNumAttempts() {
+		Connection con = Global.database.getConnection();
+		int count = 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + tableName);
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 }

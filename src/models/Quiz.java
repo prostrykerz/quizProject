@@ -236,4 +236,9 @@ public class Quiz {
 		return (double) sum / (Integer) infoMap.get("timesTaken");
 	}
 	
+	public static double getPercentDifferent(int one, int two) {
+		if(one == 0) return 0;
+		return ((double) one - two) / (one) * 100;
+	}
+	
 }

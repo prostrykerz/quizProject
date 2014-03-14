@@ -263,7 +263,6 @@ public class UserTable extends Database {
 	}
 	
 	public static void makeAdmin(int id) {
-
 		Connection con = Global.database.getConnection();
 		try {
 			Statement stmt = con.createStatement();
@@ -279,6 +278,28 @@ public class UserTable extends Database {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public static int getNumUsers() {
+		Connection con = Global.database.getConnection();
+		int count = 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + tableName);
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }
