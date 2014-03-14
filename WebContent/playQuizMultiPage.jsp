@@ -48,7 +48,7 @@
 	</jsp:include>
 	
 	<h1><%=infoMap.get("title") %></h1>
-	<h3 id=immediateScore style="visibility:hidden">Current Score: 0/0</h3>
+	<h3 id=immediateScore style="display:none">Current Score: 0/0</h3>
 	<div id="question_box"">
 	</div>
 <script>
@@ -69,7 +69,7 @@ var startTime;
 			if(index == 0) prevdisabled = "disabled";
 			if(<%=(Boolean)infoMap.get("immediateFeedback")%>){
 				prevdisabled = "disabled";
-				$("#immediateScore").css("visibility", "visible");
+				$("#immediateScore").css("display", "inherit");
 				if (index!=0){
 					var prevType = getType(index-1);
 					if(prevType=="1" || prevType=="2" || prevType=="7") {
