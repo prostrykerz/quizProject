@@ -146,7 +146,7 @@ public class ScoreQuizServlet extends HttpServlet {
 		if(q.getHighestScorer() == user.getId()) user.awardAchievement(4);
 		
 		JSONObject result = new JSONObject();
-		
+		result.put("quiz_id", q.getId());
 		result.put("title", title);
 		result.put("score", score);
 		result.put("totalScore", totalScore);

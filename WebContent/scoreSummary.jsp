@@ -3,8 +3,14 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.json.*" %>
 <%@ page import="models.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="models.Quiz" %>
+<%@ page import="users.User" %>
+<%@ page import="databases.QuizHistoryTable" %>
+<%@ page import="users.AccountManager" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Quiz Score</title><link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
@@ -14,8 +20,39 @@
 	<jsp:include page="header.jsp">
 		    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 		</jsp:include>
-	<% 
-	JSONObject data = new JSONObject(request.getParameter("data"));%>
+	<%
+	JSONObject data = new JSONObject(request.getParameter("data"));	
+	User user = (User) session.getAttribute("user");
+	ArrayList<QuizHistory> attempts = QuizHistoryTable.getUserAttemptsOnQuiz(user, (Integer) data.get("quiz_id"));
+	Collections.sort(attempts, new Comparator<QuizHistory>() {
+		public int compare(QuizHistory q1, QuizHistory q2) {
+			// TODO Auto-generated method stub
+			long diff = q2.getCreatedAt().getTime() - q1.getCreatedAt().getTime();
+			return (int) diff;
+		}
+	});
+	ArrayList<QuizHistory> topAttempts = QuizHistoryTable.getTopPerformers((Integer) data.get("quiz_id"), 10);
+
+	QuizHistory curQH = new QuizHistory(user.getId(), (int)(Integer) data.get("quiz_id"), (int)(Integer) data.get("score"), (int)(Integer) data.get("time"), new Date());
+	topAttempts.add(0, curQH);
+	ArrayList<User> friends = user.getFriendsAsUsers();
+	ArrayList<QuizHistory> friendAttempts = new ArrayList<QuizHistory>();
+	for(User u : friends) {
+		ArrayList<QuizHistory> userAttempts = QuizHistoryTable.getUserAttemptsOnQuiz(u,(int)(Integer) data.get("quiz_id"));
+		friendAttempts.addAll(userAttempts);
+	}
+	Collections.sort(friendAttempts, new Comparator<QuizHistory>() {
+		@Override
+		public int compare(QuizHistory q1, QuizHistory q2) {
+			// TODO Auto-generated method stub
+			int diff = q2.getScore() - q1.getScore();
+			if(diff == 0) return q1.getTime() - q2.getTime();
+			return diff;
+		}
+	});
+	friendAttempts.add(0, curQH);
+	AccountManager manager = (AccountManager) application.getAttribute("manager");
+	%>
 
 	<h1>Quiz Summary for <%=data.get("title").toString() %> </h1>
 	<h3>Score: <%=data.get("score").toString()%>/<%=data.get("totalScore").toString()%></h3>
@@ -35,6 +72,90 @@
 	<a href="quizList.jsp"><button>Play More Quizzes!</button></a>
 	<h2>Results</h2>
 	<div id="container"></div>
+	
+	<div>
+		<h3>
+		Your Past Performances
+		<table class="performance_table">
+			<tr>
+				<td>Attempt #</td>
+				<td>Score</td>
+				<td>Score Difference</td>
+				<td>Duration</td>
+				<td>Duration Difference</td>
+			</tr>
+			<%
+				for(int i = 0; i < attempts.size(); i++) {
+					String username = manager.getUserById(attempts.get(i).getUserId()).getUsername();
+					out.println("<tr>");
+					if(i == 0) out.println("<td>" + "This Attempt" + "</td>");
+					else out.println("<td>" + i + "</td>");
+					out.println("<td>" + attempts.get(i).getScore() + "</td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((int)(Integer)data.get("score"), attempts.get(i).getScore())) + "%</td>");
+					out.println("<td>" + attempts.get(i).getTime() + " seconds </td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((Integer)data.get("time"), attempts.get(i).getTime())) + "%</td>");
+					out.println("</tr>");
+				}
+			%>
+		</table>
+		</h3>
+	</div>
+	
+	<div>
+		<h3>
+		You Compared to Top Performers
+		<table class="performance_table">
+			<tr>
+				<td>Username</td>
+				<td>Score</td>
+				<td>Score Difference</td>
+				<td>Duration</td>
+				<td>Duration Difference</td>
+			</tr>
+			<%
+				for(int i = 0; i < topAttempts.size(); i++) {
+					String username = manager.getUserById(topAttempts.get(i).getUserId()).getUsername();
+					out.println("<tr>");
+					if(i == 0) out.println("<td>" + "YOU" + "</td>");
+					else out.println("<td><a href='user.jsp?username=" + username + "'>" + username + "</a></td>");
+					out.println("<td>" + topAttempts.get(i).getScore() + "</td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((int)(Integer)data.get("score"), topAttempts.get(i).getScore())) + "%</td>");
+					out.println("<td>" + topAttempts.get(i).getTime() + " seconds </td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((Integer)data.get("time"), topAttempts.get(i).getTime())) + "%</td>");
+					out.println("</tr>");
+				}
+			%>
+		</table>
+		</h3>
+	</div>
+	
+	<div>
+		<h3>
+		You Compared to Your Friends
+		<table class="performance_table">
+			<tr>
+				<td>Username</td>
+				<td>Score</td>
+				<td>Score Difference</td>
+				<td>Duration</td>
+				<td>Duration Difference</td>
+			</tr>
+			<%
+				for(int i = 0; i < friendAttempts.size(); i++) {
+					String username = manager.getUserById(friendAttempts.get(i).getUserId()).getUsername();
+					out.println("<tr>");
+					if(i == 0) out.println("<td>" + "YOU" + "</td>");
+					else out.println("<td><a href='user.jsp?username=" + username + "'>" + username + "</a></td>");
+					out.println("<td>" + friendAttempts.get(i).getScore() + "</td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((int)(Integer)data.get("score"), friendAttempts.get(i).getScore())) + "%</td>");
+					out.println("<td>" + friendAttempts.get(i).getTime() + " seconds </td>");
+					out.println("<td>" + String.format("%.1f",Quiz.getPercentDifferent((Integer)data.get("time"), friendAttempts.get(i).getTime())) + "%</td>");
+					out.println("</tr>");
+				}
+			%>
+		</table>
+		</h3>
+	</div>
 	
 	<script>
 var startTime;
@@ -164,6 +285,8 @@ var startTime;
 			else return -1;
 		}
 	});
+	
+	
 
 </script>
 </body>

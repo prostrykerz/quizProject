@@ -32,7 +32,7 @@
 				}
 			%>
 		</select>
-		<button type="submit">Remove User</button>
+		<button type="submit">Promote User To Admin</button>
 	</form>
 </body>
 </html>
