@@ -35,8 +35,19 @@
 		HashMap<String, Object> infoMap = q.getInfoMap();
 		if (infoMap==null) System.out.println("infoMap is null");
 		//System.out.println(qArrJson.toString());
+		
+		if ((Boolean)infoMap.get("random")){
+			for (int i=0; i<qArrJson.length(); i++){
+				int j = (int)Math.floor(Math.random()*(i+1));
+				JSONObject temp = qArrJson.getJSONObject(i);
+				qArrJson.put(i,qArrJson.getJSONObject(j));
+				qArrJson.put(j,temp);
+			}
+		}
+		
 	%>
 	<h1><%=infoMap.get("title") %></h1>
+	<h3 id=immediateScore style="visibility:hidden">Current Score: 0/0</h3>
 	<div id="question_box"">
 	</div>
 <script>
@@ -48,12 +59,80 @@ var startTime;
 		var answerArr = new Array(questionArr.length);
 		console.log(questionArr);
 		showQuestion(0);
-		
+		var currScore = 0;
+		var totalScore = 0;
 		function showQuestion(index) {
 			
 			var prevdisabled = "";
 			var nextdisabled = "";
 			if(index == 0) prevdisabled = "disabled";
+			if(<%=(Boolean)infoMap.get("immediateFeedback")%>){
+				prevdisabled = "disabled";
+				$("#immediateScore").css("visibility", "visible");
+				if (index!=0){
+					var prevType = getType(index-1);
+					if(prevType=="1" || prevType=="2" || prevType=="7") {
+						var correct = false;
+						var answerKeyArr = questionArr[index-1]["correctAnswers"];
+						for (var j=0; j<answerKeyArr.length; j++){
+							if (answerKeyArr[j]==(answerArr[index-1])){
+								correct = true;
+								break;
+							}
+						}
+						if (correct) currScore++;
+						totalScore++;
+					}
+					else if(prevType=="3" || prevType=="4"){
+						
+						var correct = true;
+						var ans = new Array();
+						for (var k=0; k<questionArr[index-1]["possibleAnswers"].length; k++){
+							var isTrue = false;
+							for (var g=0; g<questionArr[index-1]["correctAnswers"].length; g++){
+								if (questionArr[index-1]["possibleAnswers"][k]==questionArr[index-1]["correctAnswers"][g]){
+									isTrue=true;
+									break;
+								}
+							}
+							if (isTrue) ans.push(true);
+							else ans.push(false);
+						}
+						
+						for (var j=0; j<ans.length; j++){
+							if (ans[j]!=answerArr[index-1][j]){
+								correct = false;
+								break;
+							}	
+						}
+						if (correct) currScore++;
+						totalScore++;
+					}
+					else if(prevType=="5" || prevType=="6"){
+						
+						var correct = true;
+						var ans = new Array();
+						for (var k=0; k<questionArr[index-1]["possibleAnswers"].length; k++){
+							var isTrue = false;
+							for (var g=0; g<questionArr[index-1]["correctAnswers"].length; g++){
+								if (questionArr[index-1]["possibleAnswers"][k]==questionArr[index-1]["correctAnswers"][g]){
+									isTrue=true;
+									break;
+								}
+							}
+							if (isTrue) ans.push(true);
+							else ans.push(false);
+						}
+						
+						for (var j=0; j<ans.length; j++){
+							totalScore++;
+							if (ans[j]!=answerArr[index-1][j]) continue;
+							currScore++;
+						}
+					}
+					$("#immediateScore").text("Current Score: "+currScore+"/"+totalScore);
+				}
+			}
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
 			
@@ -145,8 +224,8 @@ var startTime;
 					console.log(responseJson);
 					var response = $.parseJSON(responseJson);
 					console.log(response);
-					if(responseJson.error) {
-						alert(responseJson.error);
+					if(response.error) {
+						alert(response.error);
 					}
 					//else alert(response.msg);
 					else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
@@ -199,8 +278,7 @@ var startTime;
 				
 				var attemptedAns = new Array();
 				for (var j=0; j<answerArr[i].length; j++){
-					if (type[i]=="1" || type[i]=="2" || type[i]=="7") attemptedAns.push(answerArr[i][j]);
-					else attemptedAns.push(answerArr[i][j]);
+					attemptedAns.push(answerArr[i][j]);
 				}
 				attemptedAnswers.push(attemptedAns);
 			}

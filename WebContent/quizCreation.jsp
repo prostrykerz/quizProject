@@ -36,15 +36,15 @@
 	</select>
 	<br>
 	Enable immediate feedback for this quiz? 
-	<select id="feedback" name="mydropdown">
-		<option value="yes">Yes</option>	
+	<select id="feedback" name="mydropdown">	
 		<option value="no"> No</option>
+		<option value="yes">Yes</option>
 	</select>
 	<br>
 	Enable practice mode for this quiz? 
 	<select id="practice" name="mydropdown">
-		<option value="yes">Yes</option>	
 		<option value="no"> No</option>
+		<option value="yes">Yes</option>	
 	</select>
 	</div>
 	<h4> Add questions to create a quiz. </h4>

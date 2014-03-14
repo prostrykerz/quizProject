@@ -27,14 +27,6 @@ public class Database extends AbstractTableModel {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
-			if (con!=null) System.out.println("hi1");
-			if (con==null) System.out.println("bye1");
-			con.isClosed();
-			if (con.isClosed()){
-				System.out.println("fuck");
-			}
-			if (!con.isClosed()) System.out.println("no fucks 1");
-			
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -51,7 +43,6 @@ public class Database extends AbstractTableModel {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("fucking shit");
 			return true;
 		}
 	}

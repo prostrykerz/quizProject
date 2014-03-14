@@ -35,8 +35,17 @@
 		HashMap<String, Object> infoMap = q.getInfoMap();
 		if (infoMap==null) System.out.println("infoMap is null");
 		//System.out.println(qArrJson.toString());
+		
+		if ((Boolean)infoMap.get("random")){
+			for (int i=0; i<qArrJson.length(); i++){
+				int j = (int)Math.floor(Math.random()*(i+1));
+				JSONObject temp = qArrJson.getJSONObject(i);
+				qArrJson.put(i,qArrJson.getJSONObject(j));
+				qArrJson.put(j,temp);
+			}
+		}
 	%>
-	<h1>Quiz: <%=infoMap.get("title") %></h1>
+	<h1><%=infoMap.get("title") %></h1>
 	<div id="container"">
 	</div>
 <script>
@@ -63,8 +72,8 @@ var startTime;
 				console.log(responseJson);
 				var response = $.parseJSON(responseJson);
 				console.log(response);
-				if(responseJson.error) {
-					alert(responseJson.error);
+				if(response.error) {
+					alert(response.error);
 				}
 				//else alert(response.msg);
 				else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];

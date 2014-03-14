@@ -14,7 +14,7 @@
 		    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 		</jsp:include>
 
-	<h1>Quiz: <%=request.getParameter("title") %> </h1>
+	<h1>Quiz Summary for <%=request.getParameter("title") %> </h1>
 	<h3>Score: <%=request.getParameter("score")%>/<%=request.getParameter("totalScore")%></h3>
 	<%
 	String timeStr = request.getParameter("time");

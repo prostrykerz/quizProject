@@ -114,9 +114,9 @@ public class ScoreQuizServlet extends HttpServlet {
 				
 				int score = 0;
 				for (int j=0; j<answerKeyArr.length(); j++){
-					if (answerKeyArr.getBoolean(j)) totalScore++;
+					totalScore++;
 					if (answerKeyArr.getBoolean(j)!=attemptedKeyArr.getBoolean(j)) continue;
-					if (answerKeyArr.getBoolean(j)) score++;
+					score++;
 				}
 				scoreArr.add(score);
 			}

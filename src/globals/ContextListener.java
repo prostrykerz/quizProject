@@ -40,8 +40,6 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
     	ServletContext context = event.getServletContext();
     	new Global();
-    	if (Global.database.connectionClosed()) System.out.println("ok it's fine");
-    	else System.out.println("fuck our lives.");
     	createTables();
     	
     	manager = new AccountManager();
