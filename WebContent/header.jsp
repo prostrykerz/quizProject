@@ -14,11 +14,9 @@
 		}
 		%>
 		<% if(user != null) {
-			out.println("<li><a href=\"quizList.jsp\" class=\"navbar_link\">Quiz List</a></li>");
+			out.println("<li><a href=\"Quizzes.jsp\" class=\"navbar_link\">Quizzes</a></li>");
 			out.println("<li class='divider'></li>");
 			out.println("<li><a href=\"find_users.jsp\" class=\"navbar_link\">Find Users</a></li>");
-			out.println("<li class='divider'></li>");
-			out.println("<li><a href=\"quizCreation.jsp\" class=\"navbar_link\">Create Quiz</a></li>");
 			out.println("<li class='divider'></li>");
 			if(user.isAdmin()) {
 				out.println("<li><a href='admin_dashboard.jsp' class='navbar_link'>Admin</a></li>");

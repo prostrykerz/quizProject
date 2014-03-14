@@ -29,7 +29,7 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="index.jsp"></jsp:param> 
 	</jsp:include>
-<<<<<<< HEAD
+
 	<% if(user == null) {%>
 		<div id="welcome"> 
 			<img src="images/Lightbulb.gif" alt="Lightbulb" width="200" height="200">
