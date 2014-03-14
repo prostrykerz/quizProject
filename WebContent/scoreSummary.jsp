@@ -227,7 +227,7 @@ var startTime;
 							html += "<li class='answer' style='border:2px solid green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
 						}
 						else if ((ans[j]==true) && ans[j]!=answerArr[index][j]){
-							html += "<li class='answer' style='border:2px solid green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							html += "<li class='answer' style='border:2px dotted green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
 						}
 						else if ((answerArr[index][j]==true) && ans[j]!=answerArr[index][j]){
 							html += "<li class='answer' style='border:2px solid red;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
@@ -243,7 +243,10 @@ var startTime;
 						if ((ans[j]==true) && ans[j]==answerArr[index][j]){
 							html += "<li class='answer' style='border:2px solid green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
 						}
-						else if (ans[j]!=answerArr[index][j]){
+						else if ((ans[j]==true) && ans[j]!=answerArr[index][j]){
+							html += "<li class='answer' style='border:2px dotted green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+						}
+						else if ((answerArr[index][j]==true) && ans[j]!=answerArr[index][j]){
 							html += "<li class='answer' style='border:2px solid red;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
 						}
 						else{
@@ -251,8 +254,6 @@ var startTime;
 						}
 					}
 				}
-				
-				
 				
 				html+="</ul>"
 			}

@@ -134,7 +134,9 @@ var startTime;
 					$("#immediateScore").text("Current Score: "+currScore+"/"+totalScore);
 				}
 			}
-			if(index == questionArr.length-1) nextdisabled = "disabled";
+			if(!<%=(Boolean)infoMap.get("immediateFeedback")%>){	
+				if(index == questionArr.length-1) nextdisabled = "disabled";
+			}
 			var html = "";
 			
 			var qText = questionArr[index]["questionText"];
@@ -191,9 +193,13 @@ var startTime;
 			
 			
 			html += "<br/>";
-			html += "<button id=\"prev_btn\" type=\"button\" " + prevdisabled + ">Prev</button>";
+			if(!<%=(Boolean)infoMap.get("immediateFeedback")%>){
+				html += "<button id=\"prev_btn\" type=\"button\" " + prevdisabled + ">Prev</button>";
+			}
 			html += "<button id=\"next_btn\" type=\"button\" " + nextdisabled + ">Next</button>";
-			html += "<button id=\"submit_btn\" type=\"button\" style='visibility: hidden'>Submit</button>";
+			if(!<%=(Boolean)infoMap.get("immediateFeedback")%>){
+				html += "<button id=\"submit_btn\" type=\"button\" style='visibility: hidden'>Submit</button>";
+			}
 			$("#question_box").html("");
 			$("#question_box").html(html);
 			
@@ -207,31 +213,158 @@ var startTime;
 			if(index == questionArr.length-1){
 				$("#submit_btn").css("visibility","visible");
 			}
-			$("#next_btn").click(function() {
-				addData();
-				showQuestion(index+1);
-			});
-			$("#prev_btn").click(function() {
-				addData();
-				$("#submit_btn").css("visibility","hidden");
-				showQuestion(index-1);
-			});
-			$("#submit_btn").click(function() {
-				var endTime = (new Date).getTime();
-				var time = (endTime-startTime)/1000;
-				addData();
-				var data = formatData(time);
-				$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
-					console.log(responseJson);
-					var response = $.parseJSON(responseJson);
-					console.log(response);
-					if(response.error) {
-						alert(response.error);
+			
+			if(<%=(Boolean)infoMap.get("immediateFeedback")%>){
+				$("#next_btn").click(function() {
+					addData();
+					$("#question-"+index).html("");
+					createQuestion(index);
+					if (index == questionArr.length-1){
+						$("#next_btn").click(function() {
+							var endTime = (new Date).getTime();
+							var time = (endTime-startTime)/1000;
+							var data = formatData(time);
+							$.post("ScoreQuizServlet",{data: JSON.stringify(data), question_data: JSON.stringify(<%=qArrJson.toString()%>)}, function(responseJson) {
+								console.log(responseJson);
+								var response = $.parseJSON(responseJson);
+								console.log(response);
+								if(response.error) {
+									alert(response.error);
+								}
+								//else alert(response.msg);
+								document.location="scoreSummary.jsp?data="+responseJson;
+								//else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
+							});
+						});
 					}
-					//else alert(response.msg);
-					else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
+					else{
+						$("#next_btn").click(function(){
+							showQuestion(index+1);
+						});
+					}
 				});
-			});
+			}
+			else{
+				$("#next_btn").click(function() {
+					addData();
+					showQuestion(index+1);
+				});
+				$("#prev_btn").click(function() {
+					addData();
+					$("#submit_btn").css("visibility","hidden");
+					showQuestion(index-1);
+				});
+				$("#submit_btn").click(function() {
+					var endTime = (new Date).getTime();
+					var time = (endTime-startTime)/1000;
+					addData();
+					var data = formatData(time);
+					$.post("ScoreQuizServlet",{data: JSON.stringify(data), question_data: JSON.stringify(<%=qArrJson.toString()%>)}, function(responseJson) {
+						console.log(responseJson);
+						var response = $.parseJSON(responseJson);
+						console.log(response);
+						if(response.error) {
+							alert(response.error);
+						}
+						//else alert(response.msg);
+						document.location="scoreSummary.jsp?data="+responseJson;
+						//else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
+					});
+				});
+			}
+			
+			function createQuestion(index) {
+
+				var html = "";
+				html += "<h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
+				//html += "<br />";
+				
+				var correct = false;
+				var simple = false;
+				var type = getType(index);
+				if(type=="1" || type=="2" || type=="7") {
+					simple =true;
+					if (type=="2") html += "<img src='"+questionArr[index]["pictureURL"] +"' alt='Smiley face' style='max-height:500px; max-width:500px'><br/>";
+					html += "<h3 class='attemtedAnswer' style='display:inline;'>Your Input: "+answerArr[index]+"</h3><br/>";
+					var answerKeyArr = questionArr[index]["correctAnswers"];
+					html += "<h3 class='answer' style='display:inline;'>Possible Answers: ";
+					for (var j=0; j<answerKeyArr.length; j++){
+						if (answerKeyArr[j]==(answerArr[index])){
+							correct = true;
+						}
+						if (j==answerKeyArr.length-1) html+= answerKeyArr[j];
+						else html+= answerKeyArr[j]+", ";
+					}
+					html += "</h3><br/>";
+					 
+					
+				}
+				else if(type=="3" || type=="4"||type=="5" || type=="6"){
+					if (type=="4" || type=="6") html += "<img src='"+questionArr[index]["pictureURL"] +"' alt='Smiley face' style='max-height:500px; max-width:500px'><br/>";
+					
+					html += "<ul>";
+					var correct = true;
+					var ans = new Array();
+					for (var k=0; k<questionArr[index]["possibleAnswers"].length; k++){
+						var isTrue = false;
+						for (var g=0; g<questionArr[index]["correctAnswers"].length; g++){
+							if (questionArr[index]["possibleAnswers"][k]==questionArr[index]["correctAnswers"][g]){
+								isTrue=true;
+								break;
+							}
+						}
+						if (isTrue) ans.push(true);
+						else ans.push(false);
+						
+					}
+					console.log(ans);
+					console.log(questionArr[index]);
+					if (type=="3" || type=="4"){
+						for (var j=0; j<ans.length; j++){
+							if ((ans[j]==true) && ans[j]==answerArr[index][j]){
+								html += "<li class='answer' style='border:2px solid green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else if ((ans[j]==true) && ans[j]!=answerArr[index][j]){
+								html += "<li class='answer' style='border:2px dotted green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else if ((answerArr[index][j]==true) && ans[j]!=answerArr[index][j]){
+								html += "<li class='answer' style='border:2px solid red;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else{
+								html += "<li class='answer'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li><br/>";
+							}
+							
+						}
+					}
+					else{
+						for (var j=0; j<ans.length; j++){
+							if ((ans[j]==true) && ans[j]==answerArr[index][j]){
+								html += "<li class='answer' style='border:2px solid green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else if ((ans[j]==true) && ans[j]!=answerArr[index][j]){
+								html += "<li class='answer' style='border:2px dotted green;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else if ((answerArr[index][j]==true) && ans[j]!=answerArr[index][j]){
+								html += "<li class='answer' style='border:2px solid red;'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li>";
+							}
+							else{
+								html += "<li class='answer'>Answer: "+ questionArr[index]["possibleAnswers"][j]+"</li><br/>";
+							}
+						}
+					}
+					
+					html+="</ul>"
+				}
+
+				html += "<button id=\"next_btn\" type=\"button\" " + nextdisabled + ">Next</button>";
+				
+				html += "<br/>";
+				$("#question-"+index).append(html);
+				if (correct && simple) $("#question-"+index+" .attemtedAnswer").css("border","2px green solid");
+				if (!correct && simple) $("#question-"+index+" .attemtedAnswer").css("border","2px red solid");
+				
+			}
+			
 			function addData(){
 				if ($("input").attr("type")!="checkbox" && $("input").attr("type")!="radio"){
 					var ans = new Array();

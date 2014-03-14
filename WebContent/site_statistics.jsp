@@ -18,7 +18,7 @@
 	<div style="margin: 0 auto; width: 60%">
 		<h1>Site Statistics</h1>
 		<h3>Total Users: <%= UserTable.getNumUsers() %></h3>
-		<h3>Total Quizes: <%= QuizTable.getNumQuizzes() %></h3>
+		<h3>Total Quizzes: <%= QuizTable.getNumQuizzes() %></h3>
 		<h3>Total Quiz Attempts: <%= QuizHistoryTable.getNumAttempts() %></h3>
 	</div>
 </body>
