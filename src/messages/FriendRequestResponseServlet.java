@@ -74,10 +74,7 @@ public class FriendRequestResponseServlet extends HttpServlet {
 	private String validations(User user, String requesterusername, AccountManager manager) {
 		if(user == null) return "Please Login";
 		if(!manager.userExists(requesterusername)) return "No user found by name of: " + requesterusername;
-		User requester = null;
-		for(User u : manager.getUsers()) {
-			if(u.getUsername().equals(requesterusername)) requester = u;
-		}
+		User requester = manager.getUserByUsername(requesterusername);
 		boolean requestExists = false;
 		for(Message fr : user.getFriendRequests()) {
 			if(fr.getSender() == requester.getId()) requestExists = true;

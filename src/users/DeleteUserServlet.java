@@ -43,16 +43,10 @@ public class DeleteUserServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = getServletContext();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
-		HashSet<User> users = manager.getUsers();
 		String username = request.getParameter("username");
-		Iterator<User> it = users.iterator();
-		while(it.hasNext() && !username.equals("")) {
-			User u = it.next();
-			if(u.getUsername().equals(username)) {
-				u.delete();
-				it.remove();
-				break;
-			}
+		User user = manager.getUserByUsername(username);
+		if(user != null) {
+			manager.removeUser(user);
 		}
 		RequestDispatcher dispatch = request.getRequestDispatcher("admin_dashboard.jsp");
 		dispatch.forward(request, response);

@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import users.User;
+
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
@@ -23,6 +25,7 @@ import databases.QuizModelTable;
 import databases.QuizTable;
 import databases.SingleResponsePicTable;
 import databases.SingleResponseTextTable;
+import databases.UserTable;
 
 
 public class Quiz {
@@ -211,6 +214,26 @@ public class Quiz {
 	
 	public void incrementTimesTaken() {
 		QuizTable.incrementTimesTaken(quizID);
+	}
+	
+	public User getOwner() {
+		return UserTable.getUser((String)this.infoMap.get("creator"));
+	}
+	
+	public double getAverageScore() {
+		if((Integer) infoMap.get("timesTaken") == 0) return 0;
+		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
+		int sum = 0;
+		for(QuizHistory qh : attempts) sum += qh.getScore();
+		return (double) sum / (Integer) infoMap.get("timesTaken");
+	}
+	
+	public double getAverageDuration() {
+		if((Integer) infoMap.get("timesTaken") == 0) return 0;
+		ArrayList<QuizHistory> attempts = QuizHistoryTable.getQuizAttempts((Integer) infoMap.get("quiz_id"));
+		int sum = 0;
+		for(QuizHistory qh : attempts) sum += qh.getTime();
+		return (double) sum / (Integer) infoMap.get("timesTaken");
 	}
 	
 }

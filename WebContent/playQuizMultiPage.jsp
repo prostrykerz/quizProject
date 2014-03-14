@@ -49,7 +49,6 @@
 	<h1><%=infoMap.get("title") %></h1>
 	<h3 id=immediateScore style="visibility:hidden">Current Score: 0/0</h3>
 	<div id="question_box"">
-		WILL BE REPLACED BY JAVASCRIPT
 	</div>
 <script>
 var startTime;
@@ -136,9 +135,13 @@ var startTime;
 			}
 			if(index == questionArr.length-1) nextdisabled = "disabled";
 			var html = "";
-
-			html += "<h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
-			//html += "<br />";
+			
+			var qText = questionArr[index]["questionText"];
+			if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>") {
+				qText = questionArr[index]["questionText"];
+				qText = qText.replace("**", "______");
+			}
+			html += "<div id='question-"+index+"'><h3>Question "+(index+1)+": " + qText +"</h3>";
 			
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
 				html += "<h3 style='display:inline;'>Answer: </h3>";

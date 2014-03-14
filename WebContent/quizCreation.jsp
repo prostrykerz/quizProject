@@ -87,12 +87,14 @@
 			newQ += "</select>";
 			newQ += "<button id=\"addQ\" type=\"button\">Add Question</button> <br> </div>";
 		
-			if (dropVal === "5") {
-				$(divID).append("Indicate a blank with 'X'. <br>");
-			}
 			
-			var qText = "Question " + counter + " Text: <input class=\"question_text\" type=\"questionText\" name=\"qText\" />\<br>";
+			
+			var qText = "Question " + counter + " Text: <textarea class=\"question_text\" type=\"questionText\" name=\"qText\" />\<br>";
 			$("#addButton").before("<div class=\"question type-" + dropVal + "\" id=\"question-" + counter + "\">");
+			
+			if (dropVal === "7") {
+				$(divID).append("Indicate a blank with: ** <br>");
+			}
 			
 			$(divID).append(qText);
 			if (dropVal === "2" || dropVal === "4" || dropVal === "6") {
@@ -177,7 +179,7 @@
 				if(response.error) {
 					alert(response.error);
 				}
-				else alert(response.msg);
+				window.location.href = "quizSummary.jsp?id=" + response.id;
 			});
 		});
 		
@@ -219,7 +221,7 @@
 			data = {};
 			data.questions = questions;
 			data.title = $('#quiz_title').val();
-			data.description = $('#quiz_description').val();
+			data.description = $("#quiz_description").val();
 			data.feedback = $('#feedback').val();
 			data.onePage = $('#onePage').val();
 			data.order = $('#order').val();

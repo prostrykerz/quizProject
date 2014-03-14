@@ -2,38 +2,34 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="users.User" %>
 <%@ page import="users.AccountManager" %>
+<%@ page import="models.Quiz" %>
+<%@ page import="databases.QuizTable" %>
 <%@ page import="java.util.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<%
-	AccountManager manager = (AccountManager) application.getAttribute("manager");
-	User curuser = (User) session.getAttribute("user");
-	String id = request.getParameter("id");
-%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Challenge Quiz</title>
+<title>Clear Quiz History</title>
 <link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp">
-	    <jsp:param value="active" name=""></jsp:param> 
+	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="ChallengeServlet" method="post">
-		<input type="hidden" name="qid" value="<%=id%>">
-		<select name="uid">
+	<form action="ClearQuizHistoryServlet" method="post">
+		<select name="id">
 			<%
-				for(int uid : curuser.getFriends()) {
-					out.println("<option value=\"" + uid + "\">");
-					User u = manager.getUserById(uid);
-					if(u != null) out.println(u.getUsername());
+				QuizTable qt = new QuizTable();
+				ArrayList[] table = qt.getTable();
+				for (int i=0; i<table[0].size(); i++){
+					out.println("<option value=\"" + table[0].get(i) + "\">");
+					out.println(table[1].get(i));
 					out.println("</option>");
 				}
 			%>
 		</select>
-		<button type="submit">Challenge Friend</button>
+		<button type="submit">Clear Quiz History</button>
 	</form>
-	
 </body>
 </html>

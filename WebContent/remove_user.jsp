@@ -7,7 +7,7 @@
 <html>
 <%
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
-	HashSet<User> users = manager.getUsers();
+	HashSet<User> users = manager.getUsersIterable();
 	User user = (User) session.getAttribute("user");
 %>
 <head>

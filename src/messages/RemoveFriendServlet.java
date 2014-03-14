@@ -66,15 +66,13 @@ public class RemoveFriendServlet extends HttpServlet {
 		if(!manager.userExists(username)) return "No user found by name of: " + username;
 		boolean friendExists = false;
 		for(Integer id : user.getFriends()) {
-			for(User u : manager.getUsers()) {
-				if(u.getId() == id) {
-					if(u.getUsername().equals(username)) {
-						friendExists = true;
-						break;
-					}
+			User u = manager.getUserById(id);
+			if(u != null) {
+				if(u.getUsername().equals(username)) {
+					friendExists = true;
+					break;
 				}
 			}
-			if(friendExists) break;
 		}
 		if(!friendExists)return "Not friends";
 		return "";

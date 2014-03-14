@@ -14,6 +14,7 @@
 	</jsp:include>
 	<h2><a href="create_announcement.jsp">Create Announcement</a></h2>
 	<h2><a href="delete_announcement.jsp">Delete Announcement</a></h2>
+	<h2><a href="clear_quiz_history.jsp">Clear Quiz History</a></h2>
 	<h2><a href="remove_user.jsp">Remove User</a></h2>
 	<h2><a href="remove_quiz.jsp">Remove Quiz</a></h2>
 	<h2><a href="promote_user.jsp">Promote User to Admin</a></h2>

@@ -53,13 +53,11 @@ public class ChallengeServlet extends HttpServlet {
 		int uid = Integer.parseInt(uidS);
 		int qid = Integer.parseInt(qidS);
 		Quiz quiz = new Quiz(qid);
-		for(User u : manager.getUsers()) {
-			if(u.getId() == uid) {
-				String text = constructChallenge(user, u, quiz);
-				Message msg = MessageTable.save(user, u, text);
-				u.addMessage(msg);
-				break;
-			}
+		User u = manager.getUserById(uid);
+		if(u != null) {
+			String text = constructChallenge(user, u, quiz);
+			Message msg = MessageTable.save(user, u, text);
+			u.addMessage(msg);
 		}
 		
 		RequestDispatcher dispatch = request.getRequestDispatcher("quizSummary.jsp?id=" + qid);
