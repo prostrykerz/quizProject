@@ -38,8 +38,12 @@
 	</div>
 	<div id="content">
 		<div id="popular_quizzes">
+			<h2>Popular Quizzes</h2>
 			<%
-				//ArrayList<Quiz> topTenQuizzes = QuizTable.getTopTenQuizzes();
+				ArrayList<Quiz> topTenQuizzes = QuizTable.getTopQuizzes(10);
+				for(int i = 0; i < topTenQuizzes.size(); i++) {
+					out.println(i + ". <a href='quizSummary.jsp?id=" + topTenQuizzes.get(i).getId() +"'>" + topTenQuizzes.get(i) + "</a>");
+				}
 			%>
 		</div>
 	</div>

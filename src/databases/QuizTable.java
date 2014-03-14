@@ -185,26 +185,47 @@ public class QuizTable extends Database {
 		return null;
 	}
 	
-	
-	
-	public static Quiz[] getTopQuizzes(int numberofQuizzes) {
-//		ArrayList<QuizHistory> quizAttempts = QuizHistoryTable.getAllQuizAttempts();
-//		HashMap<Integer, MutableInt> counts = new HashMap<Quiz,MutableInt>();
-//		for(QuizHistory qh : quizAttempts) {
-//			MutableInt count = counts.get(qh.getQuizId());
-//			if(count == null) counts.put(qh.getQuizId(), new MutableInt());
-//			else count.increment();
-//		}
-//		Collections.
-//		
-//		return quizzes;
+	public static ArrayList<Quiz> getAllQuizzes() {
+		Connection con = Global.database.getConnection();
+		try {
+			ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			while(rs.next()) {
+				Quiz quiz = new Quiz(rs.getInt("p_id"));
+				quizzes.add(quiz);
+			}
+			rs.close();
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+			return quizzes;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 	
-	static class MutableInt {
-		int value = 1;
-		public void increment() {++value;}
-		public int get() {return value;}
+	public static ArrayList<Quiz> getTopQuizzes(int numberOfQuizzes) {
+		ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
+		if(numberOfQuizzes <= 0) return quizzes;
+		ArrayList<Quiz> allquizzes = QuizTable.getAllQuizzes();
+		Collections.sort(allquizzes, new Comparator<Quiz>() {
+			@Override
+			public int compare(Quiz q1, Quiz q2) {
+				// TODO Auto-generated method stub
+				return q1.getTimesTaken() - q2.getTimesTaken();
+			}
+		});
+		for(int i = 0; i < numberOfQuizzes; i++) {
+			quizzes.add(allquizzes.get(i));
+		}
+		return quizzes;
 	}
-	
 }
