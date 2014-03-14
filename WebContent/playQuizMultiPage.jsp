@@ -135,7 +135,7 @@ var startTime;
 			});
 			$("#submit_btn").click(function() {
 				var endTime = (new Date).getTime();
-				var time = endTime-startTime;
+				var time = (endTime-startTime)/1000;
 				addData();
 				var data = formatData(time);
 				$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {

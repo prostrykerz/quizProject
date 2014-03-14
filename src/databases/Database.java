@@ -19,8 +19,54 @@ public class Database extends AbstractTableModel {
 	protected static String database = MyDBInfo.MYSQL_DATABASE_NAME;
 	protected static ArrayList[] table;
 	protected static int NUM_COLS;
-	protected static Connection con;
+	public Connection con;
 	protected String tableName;
+	
+	
+	public void openConnection(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			if (con!=null) System.out.println("hi1");
+			if (con==null) System.out.println("bye1");
+			con.isClosed();
+			if (con.isClosed()){
+				System.out.println("fuck");
+			}
+			if (!con.isClosed()) System.out.println("no fucks 1");
+			
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public boolean connectionClosed(){
+		try {
+			return con.isClosed();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("fucking shit");
+			return true;
+		}
+	}
+	
+	public void closeConnection(){
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Connection getConnection(){
+		return con;
+	}
 	
 	@Override
 	public int getRowCount() {

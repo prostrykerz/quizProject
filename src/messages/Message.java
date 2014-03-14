@@ -3,12 +3,11 @@ package messages;
 import users.User;
 
 public class Message {
-	private int id;
-	private User sender, receiver;
+	private int id, sender, receiver;
 	private boolean read = false;
 	private String message;
 	
-	public Message(int id, User sender, User receiver, String message) {
+	public Message(int id, int sender, int receiver, String message) {
 		this.id = id;
 		this.sender = sender;
 		this.receiver = receiver;
@@ -23,10 +22,10 @@ public class Message {
 		return id;
 	}
 	
-	public User getSender() {
+	public int getSender() {
 		return sender;
 	}
-	public User getReceiver() {
+	public int getReceiver() {
 		return receiver;
 	}
 	

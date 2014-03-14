@@ -12,18 +12,25 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="create_account.jsp"></jsp:param> 
 	</jsp:include>
-	<%
-		String error = (String) request.getAttribute("error");
-		if(error != null) {
-			out.println("<div>" + error +  "</div>");
-		}
-	%>
-	<form action="CreateAccountServlet" method="post">
-		User Name: <input type="text" name="username" />
-		<br />
-		Password: <input type="password" name="password" />
-		<br />
-		<button type="submit">Create Account</button>
-	</form>
+	
+	<div id="login_box">
+		<h2>Create Account</h2>
+		<hr />
+		<form action="CreateAccountServlet" method="post">
+		<%
+			String error = (String) request.getAttribute("error");
+			if(error != null) {
+				out.println("<div><h2>" + error +  "<h2></div>");
+				out.println("<br />");
+			}
+		%>
+			<label>User Name:</label> <input type="text" name="username" />
+			<br />
+			<br />
+			<label>Password:</label> <input type="password" name="password" />
+			<br />
+			<button type="submit">Create Account</button>
+		</form>
+	</div>
 </body>
 </html>

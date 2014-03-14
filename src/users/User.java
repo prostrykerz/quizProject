@@ -62,7 +62,7 @@ public class User {
 	
 	public boolean hasFriendRequestFrom(User u) {
 		for(Message fr : friendRequests) {
-			if(fr.getSender().equals(u)) return true;
+			if(fr.getSender() == u.getId()) return true;
 		}
 		return false;
 	}
@@ -100,7 +100,7 @@ public class User {
 	public void deleteFriendRequest(User requester) {
 		Message msg = null;
 		for(Message m : friendRequests) {
-			if(m.getSender().equals(requester)) {
+			if(m.getSender() == requester.getId()) {
 				msg = m;
 				break;
 			}

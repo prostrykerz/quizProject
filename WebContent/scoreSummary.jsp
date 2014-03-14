@@ -20,12 +20,15 @@
 	String timeStr = request.getParameter("time");
 	int time =0;
 	if (timeStr!=null){
-		time = (Integer.parseInt(timeStr)/1000);
+		time = (Integer.parseInt(timeStr));
 	}
 	int minutes = time/60;
 	int seconds = time%60;
+	String secondsString = String.valueOf(seconds);
+	if(seconds <= 9) secondsString = "0" + seconds;
+	
 	%>
-	<h3>Time: <%=minutes%>:<%=seconds%></h3>
+	<h3>Time: <%=minutes%>:<%=secondsString%></h3>
 	<a href="quizList.jsp"><button>Play More Quizzes!</button></a>
 	
 </body>

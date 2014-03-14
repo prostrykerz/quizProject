@@ -1,5 +1,8 @@
 package databases;
 
+import globals.Global;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,16 +15,19 @@ public class AnnouncementTable extends Database{
 	private static String tableName = "Announcements";
 	
 	public static void createTable() {
+		Connection con = Global.database.getConnection();
+		if (con!=null) System.out.println("bye");
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			if (con.isClosed()){
+				System.out.println("fuck");
+			}
+			if (!con.isClosed()) System.out.println("no fucks");
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);			
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
 			query += "(id INT NOT NULL AUTO_INCREMENT, text VARCHAR(255),  PRIMARY KEY (id));";
 			stmt.executeUpdate(query);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -31,15 +37,11 @@ public class AnnouncementTable extends Database{
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static int save(String text) {
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			String query = "INSERT INTO " + tableName + " (text) VALUES (?)";
@@ -51,7 +53,7 @@ public class AnnouncementTable extends Database{
 			while(rs.next()) {
 				count = rs.getInt(1);
 			}
-			con.close();
+			rs.close();
 			stmt.close();
 			pstmt.close();
 			try {
@@ -64,21 +66,16 @@ public class AnnouncementTable extends Database{
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		return 0;
 	}
 	
 	public static void delete(int id) {
+		Connection con = Global.database.getConnection();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			stmt.executeUpdate("DELETE FROM " + tableName + " WHERE id = " + id);
 			stmt.close();
-			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
@@ -86,9 +83,6 @@ public class AnnouncementTable extends Database{
 	        }
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

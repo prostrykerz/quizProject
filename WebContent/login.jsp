@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title><link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
+<title>Login Page</title><link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
@@ -17,12 +17,18 @@
 			out.println("<div>" + error +  "</div>");
 		}
 	%>
-	<form action="LoginServlet" method="post">
-		User Name: <input type="text" name="username" />
-		<br />
-		Password: <input type="password" name="password" />
-		<br />
-		<button type="submit">Login</button>
-	</form>
+	<div id="login_box">
+		<h2>Login</h2>
+		<hr />
+		<form action="LoginServlet" method="post">
+			<label>User Name:</label> <input type="text" name="username" />
+			<br />
+			<br />
+			<label>Password:</label> <input type="password" name="password" />
+			<br />
+			<button type="submit">Login</button>
+		</form>
+	</div>
+	
 </body>
 </html>
