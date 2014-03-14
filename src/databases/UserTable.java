@@ -118,9 +118,8 @@ public class UserTable extends Database {
 	}
 	
 	public static HashSet<User> getUsers() {
-//		return new HashSet<User>();
+		HashSet<User> users = new HashSet<User>();
 		try {
-			HashSet<User> users = new HashSet<User>();
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
 			Statement stmt = con.createStatement();
@@ -146,7 +145,7 @@ public class UserTable extends Database {
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return users;
 	}
 	
 	public static User getUser(int id) {

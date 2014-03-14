@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import messages.Message;
+import models.Quiz;
 import models.QuizHistory;
 import users.User;
 
@@ -114,6 +115,35 @@ public class QuizHistoryTable extends Database{
 				qhs.add(qh);
 			}
 			stmt.close();
+			con.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return qhs;
+	}
+	
+	public static ArrayList<QuizHistory> getAllQuizAttempts() {
+		ArrayList<QuizHistory> qhs = new ArrayList<QuizHistory>();
+		try {
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection( "jdbc:mysql://" + server, account ,password);
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			while(rs.next()) {
+				QuizHistory qh = new QuizHistory(rs.getInt("user_id"), rs.getInt("quiz_id"), rs.getInt("score"), rs.getInt("time"));
+				qhs.add(qh);
+			}
 			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();

@@ -30,7 +30,6 @@
 			out.println("<li class='divider'></li>");
 			out.println("<li><a href=\"logout.jsp\" class=\"navbar_link\">Sign Out</a></li>");
 		}
-			else out.println("Status: Not logged in");
 		%>
 	</ul>
 </div>

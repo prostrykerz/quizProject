@@ -85,7 +85,7 @@ public class MessageTable extends Database{
 				int receiver = rs.getInt("receiver");
 				if(receiver == id) {
 					String text = rs.getString("message");
-					Message message = new Message(rs.getInt("id"),UserTable.getUser(rs.getInt("sender")), UserTable.getUser(receiver), text);
+					Message message = new Message(rs.getInt("id"),rs.getInt("sender"), id, text);
 					messages.add(message);
 				}
 			}
@@ -114,7 +114,7 @@ public class MessageTable extends Database{
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			rs.last();
-			Message message = new Message(rs.getInt("id"),UserTable.getUser(rs.getInt("sender")), UserTable.getUser(rs.getInt("receiver")), rs.getString("message"));
+			Message message = new Message(rs.getInt("id"),rs.getInt("sender"), rs.getInt("receiver"), rs.getString("message"));
 			con.close();
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
