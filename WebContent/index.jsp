@@ -31,7 +31,7 @@
 	</jsp:include>
 	<% if(user == null) {%>
 		<div id="welcome"> 
-			<img src="images/Lightbulb.gif" alt="Lightbulb" width="200" height="200">
+			<img src="/quizProject/css/images/Lightbulb.gif" alt="Lightbulb" width="200" height="200">
 			<p id="welcomeButtons">
 				<a href="/quizProject/login.jsp">
     				<button>Sign In</button>
@@ -59,7 +59,7 @@
 				ArrayList<Quiz> topTenQuizzes = QuizTable.getTopQuizzes(10);
 				for(int i = 0; i < topTenQuizzes.size(); i++) {
 					out.println(i + 1);
-					out.println(". <a href='quizSummary.jsp?id=" + topTenQuizzes.get(i).getId() +"'>" + topTenQuizzes.get(i).getTitle() + "</a><br />");
+					out.println(". <a href='quizSummary.jsp?id=" + topTenQuizzes.get(i).getId() +"'>" + topTenQuizzes.get(i).getTitle() + "</a> with " + topTenQuizzes.get(i).getTimesTaken() + " attempts<br />");
 				}
 			%>
 		</div>
