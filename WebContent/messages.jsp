@@ -33,15 +33,11 @@
 					ArrayList<Message> messages = user.getMessages();
 					for(int i = 0; i < messages.size(); i++) friendRequests.add(messages.get(i));
 					for(int i = 0; i < friendRequests.size(); i++) {
-						for(User u : users) {
-							if(u.getId() == friendRequests.get(i).getSender()) {
-								out.println("<tr>");
-								out.println("<td>" + u.getUsername() + "</td>");
-								out.println("<td>" + friendRequests.get(i).getMessage() + "</td>");
-								out.println("</tr>");
-							}
-						}
-						
+						User u = manager.getUserById(friendRequests.get(i).getSender());
+						out.println("<tr>");
+						out.println("<td>" + u.getUsername() + "</td>");
+						out.println("<td>" + friendRequests.get(i).getMessage() + "</td>");
+						out.println("</tr>");
 					}
 				}
 			%>

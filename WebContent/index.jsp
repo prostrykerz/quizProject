@@ -68,21 +68,34 @@
 	<% if(user != null) {
 		
 			// Announcements
-		
-			out.println("<div>");
-			out.println("<div id=\"announcements\">");
-			out.println("<h2> Announcements </h2>");
-			
-			out.println("<ul>");
-			for(Announcement a : announcements) {
-				out.println("<li>" + a.getText() + "</li>");
+			if(announcements.size() > 0) {
+				out.println("<div id=\"announcements\">");
+				out.println("<h2> Announcements </h2>");
+				for(Announcement a : announcements) {
+					out.println("<h2 style='margin: 10px; border: 2px solid #FFB6C1'>" + a.getText() + "</h2>");
+				}
+				out.println("</div>");
 			}
-			out.println("</ul>");
-			out.println("</div>");
-		
+			ArrayList<Message> messages = user.getFriendRequests();
+			ArrayList<Message> otherMessages = user.getMessages();
+			for(int i = 0; i < otherMessages.size(); i++) messages.add(otherMessages.get(i));
+			if(messages.size() > 0) {
+				out.println("<table class='performance_table'>");
+				out.println("<tr><td>From:</td><td>Message</td></tr>");
+				for(int i = 0; i < 3; i++) {
+					if(i == messages.size()) break;
+					User u = manager.getUserById(messages.get(i).getSender());
+					out.println("<tr>");
+					out.println("<td width='20%'>" + u.getUsername() + "</td>");
+					out.println("<td width='80%'>" + messages.get(i).getMessage() + "</td>");
+					out.println("</tr>");
+				}
+				out.println("</table>");
+			}
+			out.println("<br />");
+			out.println("<div id=\"content\">");
+			out.println("<table class='performance_table'><tr><td>");
 			// Popular Quizzes
-			
-			out.println("</div><div id=\"content\">");
 			out.println("<div id=\"popular_quizzes\">");
 			out.println("<h2>Popular Quizzes</h2>");
 			
@@ -91,9 +104,10 @@
 				out.println(i + 1);
 				out.println(". <a href='quizSummary.jsp?id=" + topTenQuizzes.get(i).getId() +"'>" + topTenQuizzes.get(i).getTitle() + "</a> with " + topTenQuizzes.get(i).getTimesTaken() + " attempts<br />");
 			}
-					
-			// Recently Created Quizzes
+			out.println("</div></td>");
 			
+			// Recently Created Quizzes
+			out.println("<td>");
 			out.println("<div id=\"recentCreatedQuizzes\">");
 			out.println("<h2> Recently Created Quizzes </h2>");
 			
@@ -105,12 +119,13 @@
 					out.println("<li><a href='quizSummary.jsp?id=" + recentQuiz.getId() +"'>" +recentQuiz.getTitle() + "</a></li>");
 				}
 			}
-			out.println("</ul></div>");
+			out.println("</ul></div></td>");
 			
 			// User's Recently Created Quizzes
 			
 			ArrayList<Quiz> userRecentQuizzes = user.getQuizzes();
 			if (userRecentQuizzes.size() > 0) {
+				out.println("<td>");
 				out.println("<div id=\"recentCreatedQuizzes\">");
 				out.println("<h2>" + user.getUsername() + "'s Recently Created Quizzes </h2>");
 				out.println("<ul>");
@@ -120,16 +135,15 @@
 						out.println("<li><a href='quizSummary.jsp?id=" + recentQuiz.getId() +"'>" +recentQuiz.getTitle() + "</a></li>");
 					}
 				}
-				out.println("</ul></div>");
+				out.println("</ul></div></td>");
 			}
 				
 			// User's Recently Taken Quizzes
-			
-			out.println("<div id=\"recentCreatedQuizzes\">");
-			out.println("<h2>" + user.getUsername() + "'s Recently Taken Quizzes </h2>");
-			
 			ArrayList<QuizHistory> recentTakenQuizzes = QuizHistoryTable.getUserTakenQuizzes(user);
 			if (recentTakenQuizzes.size() > 0) {
+				out.println("<td>");
+				out.println("<div id=\"recentCreatedQuizzes\">");
+				out.println("<h2>" + user.getUsername() + "'s Recently Taken Quizzes </h2>");
 				out.println("<ul>");
 				for (int i = 0; i < 5; i++) {
 					if ((recentTakenQuizzes.size() - 1) -i >= 0) {
@@ -137,14 +151,15 @@
 						out.println("<li><a href='quizSummary.jsp?id=" + recentQuiz.getQuizId() +"'>" +recentQuiz.getQuiz().getTitle()  + "</a></li>");
 					}
 				}
-				out.println("</ul></div>");
+				out.println("</ul></div></td>");
 			} else out.println("You haven't taken any quizzes yet!");
 			
 			// User's Achievments
 			
 			boolean[] achievments = AchievementTable.getAchievements(user.getId());
 			if (achievments.length > 0) {
-				out.println("<div id=\"recentCreatedQuizzes\">");
+				out.println("<td>");
+				out.println("<div id=\"userAchievements\">");
 				out.println("<h2>" + user.getUsername() + "'s Achievements </h2>");
 				out.println("<ul>");
 				for (int i = 0; i < achievments.length; i++) {
@@ -152,9 +167,9 @@
 						out.println("<li>"+Achievement.getText(i)+"</li>");
 					}
 				}
-				out.println("</ul></div>");
+				out.println("</ul></div></td>");
 			}
-			
+			out.println("</tr></table>");
 			out.println("</div></div>");
 		}
 		%>
