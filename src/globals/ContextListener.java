@@ -76,4 +76,8 @@ public class ContextListener implements ServletContextListener {
     	AnnouncementTable.createTable();
     	AchievementTable.createTable();
     }
+    
+    private void killProcesses() {
+    	
+    }
 }

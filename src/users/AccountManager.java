@@ -10,6 +10,7 @@ import messages.Message;
 public class AccountManager {
 	HashSet<User> users;
 	public AccountManager() {
+//		users = new HashSet<User>();
 		users = UserTable.getUsers();
 		if(users == null || users.size() == 0) initializeStarterUsers();
 	}

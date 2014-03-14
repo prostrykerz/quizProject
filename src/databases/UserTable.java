@@ -112,11 +112,9 @@ public class UserTable extends Database {
 	}
 	
 	public static HashSet<User> getUsers() {
-//		return new HashSet<User>();
-
 		Connection con = Global.database.getConnection();
+		HashSet<User> users = new HashSet<User>();
 		try {
-			HashSet<User> users = new HashSet<User>();
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
@@ -131,13 +129,11 @@ public class UserTable extends Database {
 	        } catch (InterruptedException e) {
 	            e.printStackTrace();
 	        }
-			return users;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			return new HashSet<User>();
 		}
-		
+		return users;
 	}
 	
 	public static User getUser(int id) {

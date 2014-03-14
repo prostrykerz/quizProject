@@ -8,6 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -15,6 +23,7 @@ import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 import messages.Message;
 import models.Quiz;
+import models.QuizHistory;
 
 import users.User;
 
@@ -22,13 +31,13 @@ import databases.MyDBInfo;
 
 public class QuizTable extends Database {
 
-	private static int NUM_COLS = 10;
+	private static int NUM_COLS = 11;
 	private static String tableName = "quizzes";
 	
 	public QuizTable(){
 		table = new ArrayList[NUM_COLS];
 		for(int i=0; i<NUM_COLS; i++){
-			if (i==0 || i==7 || i==8) table[i] = new ArrayList<Integer>();
+			if (i==0 || i==7 || i==8 || i==10) table[i] = new ArrayList<Integer>();
 			else if (i>=3 && i<=6) table[i] = new ArrayList<Boolean>();
 			else table[i] = new ArrayList<String>();
 		}
@@ -49,6 +58,7 @@ public class QuizTable extends Database {
 				Integer score = rs.getInt("score");
 				Integer time = rs.getInt("time");
 				String creator = rs.getString("creator");
+				Integer timesTaken = rs.getInt("timesTaken");
 				table[0].add(p_id);
 				table[1].add(name);
 				table[2].add(description);
@@ -59,6 +69,7 @@ public class QuizTable extends Database {
 				table[7].add(score);
 				table[8].add(time);
 				table[9].add(creator);
+				table[10].add(timesTaken);
 			}
 			rs.close();
 			stmt.close();
@@ -80,7 +91,7 @@ public class QuizTable extends Database {
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator);
+			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, 0);
 			stmt.executeUpdate(query);
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
@@ -101,10 +112,10 @@ public class QuizTable extends Database {
 		return null;
 	}
 	
-	private static String buildAddQuery(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
+	private static String buildAddQuery(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator, Integer timesTaken){
 		String query = " INSERT INTO "+tableName;
-		query += " (name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator)";
-		query += " VALUES(\""+name+"\",\""+description+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\");";
+		query += " (name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, timesTaken)";
+		query += " VALUES(\""+name+"\",\""+description+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\","+timesTaken+");";
 		return query;
 	}
 	
@@ -153,13 +164,10 @@ public class QuizTable extends Database {
 			ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName + " WHERE creator = '" + username + "'");
 			while(rs.next()) {
-				String creator = rs.getString("creator");
-				if(username.equals(creator)) {
-					Quiz quiz = new Quiz(rs.getInt("p_id"));
-					quizzes.add(quiz);
-				}
+				Quiz quiz = new Quiz(rs.getInt("p_id"));
+				quizzes.add(quiz);
 			}
 			rs.close();
 			stmt.close();
@@ -176,4 +184,27 @@ public class QuizTable extends Database {
 		
 		return null;
 	}
+	
+	
+	
+	public static Quiz[] getTopQuizzes(int numberofQuizzes) {
+//		ArrayList<QuizHistory> quizAttempts = QuizHistoryTable.getAllQuizAttempts();
+//		HashMap<Integer, MutableInt> counts = new HashMap<Quiz,MutableInt>();
+//		for(QuizHistory qh : quizAttempts) {
+//			MutableInt count = counts.get(qh.getQuizId());
+//			if(count == null) counts.put(qh.getQuizId(), new MutableInt());
+//			else count.increment();
+//		}
+//		Collections.
+//		
+//		return quizzes;
+		return null;
+	}
+	
+	static class MutableInt {
+		int value = 1;
+		public void increment() {++value;}
+		public int get() {return value;}
+	}
+	
 }

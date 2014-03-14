@@ -43,9 +43,9 @@
 			}
 			else {
 				for(Message fr : user.getFriendRequests()) {
-					if(fr.getSender().getUsername().equals(curuser.getUsername())) {
-						out.println("<button type=\"button\"Friend Request Sent<button>");
-					}
+					//if(fr.getSender().getUsername().equals(curuser.getUsername())) {
+						//out.println("<button type=\"button\"Friend Request Sent<button>");
+					//}
 				}
 			}
 		}

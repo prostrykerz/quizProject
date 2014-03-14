@@ -2,7 +2,8 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="users.User" %>
 <%@ page import="messages.Message" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="users.AccountManager" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,6 +14,8 @@
 </head>
 <%
 	User user = (User) session.getAttribute("user");
+	AccountManager manager = (AccountManager) application.getAttribute("manager");
+	HashSet<User> users = manager.getUsers();
 %>
 <body>
 	<jsp:include page="header.jsp">
@@ -30,10 +33,15 @@
 					ArrayList<Message> messages = user.getMessages();
 					for(int i = 0; i < messages.size(); i++) friendRequests.add(messages.get(i));
 					for(int i = 0; i < friendRequests.size(); i++) {
-						out.println("<tr>");
-						out.println("<td>" + friendRequests.get(i).getSender().getUsername() + "</td>");
-						out.println("<td>" + friendRequests.get(i).getMessage() + "</td>");
-						out.println("</tr>");
+						for(User u : users) {
+							if(u.getId() == friendRequests.get(i).getSender()) {
+								out.println("<tr>");
+								out.println("<td>" + u.getUsername() + "</td>");
+								out.println("<td>" + friendRequests.get(i).getMessage() + "</td>");
+								out.println("</tr>");
+							}
+						}
+						
 					}
 				}
 			%>
