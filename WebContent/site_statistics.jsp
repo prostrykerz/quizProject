@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="databases.UserTable" %>
+<%@ page import="databases.QuizTable" %>
+<%@ page import="databases.QuizHistoryTable" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Admin Dashboard</title>
+<title>Site Statistics</title>
 <link rel="stylesheet" href="/quizProject/css/style.css" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
@@ -12,12 +15,11 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<h2><a href="create_announcement.jsp">Create Announcement</a></h2>
-	<h2><a href="delete_announcement.jsp">Delete Announcement</a></h2>
-	<h2><a href="clear_quiz_history.jsp">Clear Quiz History</a></h2>
-	<h2><a href="remove_user.jsp">Remove User</a></h2>
-	<h2><a href="remove_quiz.jsp">Remove Quiz</a></h2>
-	<h2><a href="promote_user.jsp">Promote User to Admin</a></h2>
-	<h2><a href="site_statistics.jsp">Site Statistics</a></h2>
+	<div style="margin: 0 auto; width: 60%">
+		<h1>Site Statistics</h1>
+		<h3>Total Users: <%= UserTable.getNumUsers() %></h3>
+		<h3>Total Quizzes: <%= QuizTable.getNumQuizzes() %></h3>
+		<h3>Total Quiz Attempts: <%= QuizHistoryTable.getNumAttempts() %></h3>
+	</div>
 </body>
 </html>

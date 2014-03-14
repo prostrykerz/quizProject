@@ -26,6 +26,8 @@
 			<br />
 			<label>Password:</label> <input type="password" name="password" />
 			<br />
+			Remember Me?: <input type="checkbox" name="remember">
+			<br />
 			<button type="submit">Login</button>
 		</form>
 	</div>

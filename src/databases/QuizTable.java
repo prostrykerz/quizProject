@@ -246,4 +246,45 @@ public class QuizTable extends Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void clearTimesTaken(int qid) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("UPDATE "+ tableName + " SET timesTaken = 0 WHERE p_id = " + qid);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static int getNumQuizzes() {
+		Connection con = Global.database.getConnection();
+		int count = 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + tableName);
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 }
