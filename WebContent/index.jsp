@@ -29,6 +29,7 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="index.jsp"></jsp:param> 
 	</jsp:include>
+<<<<<<< HEAD
 	<% if(user == null) {%>
 		<div id="welcome"> 
 			<img src="images/Lightbulb.gif" alt="Lightbulb" width="200" height="200">
@@ -42,6 +43,7 @@
 			</p>
 		</div>
 	<% } %>
+
 	<% if(user != null) {
 			out.println("<div style=\"margin: 0 auto; width: 90%;\">");
 			for(Announcement a : announcements) {
@@ -53,9 +55,13 @@
 	</div>
 	<div id="content">
 		<div id="popular_quizzes">
+			<h2>Popular Quizzes</h2>
 			<%
-				System.out.println("sdfjnsdf");
-				//ArrayList<Quiz> topTenQuizzes = QuizTable.getTopTenQuizzes();
+				ArrayList<Quiz> topTenQuizzes = QuizTable.getTopQuizzes(10);
+				for(int i = 0; i < topTenQuizzes.size(); i++) {
+					out.println(i + 1);
+					out.println(". <a href='quizSummary.jsp?id=" + topTenQuizzes.get(i).getId() +"'>" + topTenQuizzes.get(i).getTitle() + "</a><br />");
+				}
 			%>
 		</div>
 	</div>

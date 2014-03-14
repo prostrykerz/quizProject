@@ -50,6 +50,7 @@ public class Quiz {
 		this.infoMap.put("score", 0);
 		this.infoMap.put("time", 0);
 		this.infoMap.put("creator", creator);
+		this.infoMap.put("timesTaken", 0);
 		
 		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator);
 		this.infoMap.put("quiz_id", this.quizID);
@@ -191,6 +192,7 @@ public class Quiz {
 
 	public int getId() {return (Integer) infoMap.get("quiz_id");}
 	public String getTitle() {return (String) infoMap.get("title");}
+	public int getTimesTaken() {return (Integer) infoMap.get("timesTaken");}
 	
 	//returns user id of highest scorer
 	public int getHighestScorer() {
@@ -205,6 +207,10 @@ public class Quiz {
 			}
 		}
 		return user_id;
+	}
+	
+	public void incrementTimesTaken() {
+		QuizTable.incrementTimesTaken(quizID);
 	}
 	
 }

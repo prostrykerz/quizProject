@@ -220,6 +220,7 @@ public class QuizModelTable extends Database {
 				Integer score = rs.getInt("score");
 				Integer time = rs.getInt("time");
 				String creator = rs.getString("creator");
+				Integer timesTaken = rs.getInt("timesTaken");
 				
 				info.put("quiz_id", p_id);
 				info.put("title", name);
@@ -231,6 +232,7 @@ public class QuizModelTable extends Database {
 				info.put("score", score);
 				info.put("time", time);
 				info.put("creator", creator);
+				info.put("timesTaken", timesTaken);
 			}
 			rs.close();
 			stmt.close();
