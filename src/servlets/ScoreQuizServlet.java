@@ -73,6 +73,15 @@ public class ScoreQuizServlet extends HttpServlet {
 		JSONObject outer = new JSONObject(json);
 		JSONObject inner = outer.getJSONObject("data");
 		
+		String json1 = "{\"question_data\":" + request.getParameter("question_data") + "}";
+		System.out.println(json1);
+		JSONObject outer1 = new JSONObject(json1);
+//		JSONObject inner1 = outer1.getJSONObject("question_data");
+		JSONArray inner1 = outer1.getJSONArray("question_data");
+		
+		
+		
+		
 		JSONArray correctAnswers = inner.getJSONArray("correctAnswers");
 		JSONArray attemptedAnswers = inner.getJSONArray("attemptedAnswers");
 		JSONArray type = inner.getJSONArray("type");
@@ -142,6 +151,8 @@ public class ScoreQuizServlet extends HttpServlet {
 		result.put("score", score);
 		result.put("totalScore", totalScore);
 		result.put("time", time);
+		result.put("attemptedAnswers", attemptedAnswers);
+		result.put("quiz_data", inner1);
 		
 		response.getWriter().write(result.toString());
 //		RequestDispatcher rd = request.getRequestDispatcher("scoreSummary.jsp");

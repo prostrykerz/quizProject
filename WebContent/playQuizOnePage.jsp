@@ -55,7 +55,7 @@ var startTime;
 		startTime = (new Date).getTime();
 		var questionArr = <%= qArrJson%>;
 		var answerArr = new Array(questionArr.length);
-
+		console.log(questionArr);
 		for (var i=0; i<questionArr.length; i++){
 			createQuestion(i);
 		}
@@ -68,7 +68,7 @@ var startTime;
 			for(var i = 0; i < questionArr.length; i++) addData(i);
 			var data = formatData(time);
 			console.log(data);
-			$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
+			$.post("ScoreQuizServlet",{data: JSON.stringify(data), question_data: JSON.stringify(<%=qArrJson.toString()%>)}, function(responseJson) {
 				console.log(responseJson);
 				var response = $.parseJSON(responseJson);
 				console.log(response);
@@ -76,7 +76,9 @@ var startTime;
 					alert(response.error);
 				}
 				//else alert(response.msg);
-				else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
+				else document.location="scoreSummary.jsp?data="+responseJson;
+
+				//else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
 			});
 		});
 
