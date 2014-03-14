@@ -209,4 +209,8 @@ public class Quiz {
 		return user_id;
 	}
 	
+	public void incrementTimesTaken() {
+		QuizTable.incrementTimesTaken(quizID);
+	}
+	
 }

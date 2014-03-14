@@ -4,10 +4,10 @@
 
 <div id="navbar">
 	<ul>
-		<li><a href="/quizProject/index.jsp" class="navbar_link">Quiztopia</a></li>
+		<li><a href="/quizProject/index.jsp" class="navbar_link">Qurious</a></li>
 		<li class="divider"></li>
 		<% if(user == null) {
-			out.println("<li><a href='/quizProject/login.jsp' class='navbar_link'>LOGIN</a></li>");
+			out.println("<li><a href='/quizProject/login.jsp' class='navbar_link'>Sign In</a></li>");
 			out.println("<li class='divider'></li>");
 			out.println("<li><a href='/quizProject/create_account.jsp' class='navbar_link'>Sign Up</a></li>");
 			out.println("<li class='divider'></li>");

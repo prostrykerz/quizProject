@@ -220,12 +220,30 @@ public class QuizTable extends Database {
 			@Override
 			public int compare(Quiz q1, Quiz q2) {
 				// TODO Auto-generated method stub
-				return q1.getTimesTaken() - q2.getTimesTaken();
+				return q2.getTimesTaken() - q1.getTimesTaken();
 			}
 		});
 		for(int i = 0; i < numberOfQuizzes; i++) {
 			quizzes.add(allquizzes.get(i));
 		}
 		return quizzes;
+	}
+	
+	public static void incrementTimesTaken(int qid) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("UPDATE "+ tableName + " SET timesTaken = timesTaken + 1 WHERE p_id = " + qid);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
