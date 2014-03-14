@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		if(manager.passwordMatches(username, password)) {
-			RequestDispatcher dispatch = request.getRequestDispatcher("user.jsp");
+			RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp");
 			session.setAttribute("user", manager.getUserByUsername(username));
 			dispatch.forward(request, response);
 		}
