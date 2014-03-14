@@ -54,26 +54,6 @@ var startTime;
 			createQuestion(i);
 		}
 
-		$("#container").append( "<button id=\"submit_btn\" type=\"button\" >Submit</button>");
-
-		$("#submit_btn").click(function() {
-			var endTime = (new Date).getTime();
-			var time = (endTime-startTime)/1000;
-			for(var i = 0; i < questionArr.length; i++) addData(i);
-			var data = formatData(time);
-			console.log(data);
-			$.post("ScoreQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
-				console.log(responseJson);
-				var response = $.parseJSON(responseJson);
-				console.log(response);
-				if(response.error) {
-					alert(response.error);
-				}
-				//else alert(response.msg);
-				else document.location="scoreSummary.jsp?title="+response["title"]+"&score="+response["score"]+"&totalScore="+response["totalScore"]+"&time="+response["time"];
-			});
-		});
-
 		function createQuestion(index) {
 
 			var html = "";
