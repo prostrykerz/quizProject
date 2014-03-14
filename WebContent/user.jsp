@@ -13,7 +13,9 @@
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
 	User curuser = (User) session.getAttribute("user");
 	String username = request.getParameter("username");
-	User user = manager.getUserByUsername(username);
+	User user = null;
+	if(username == null) user = curuser;
+	else user = manager.getUserByUsername(username);
 	ArrayList<QuizHistory> attempts = QuizHistoryTable.getUserTakenQuizzes(user);
 %>
 <head>
