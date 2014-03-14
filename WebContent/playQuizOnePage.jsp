@@ -38,7 +38,6 @@
 	%>
 	<h1>Quiz: <%=infoMap.get("title") %></h1>
 	<div id="container"">
-		WILL BE REPLACED BY JAVASCRIPT
 	</div>
 <script>
 var startTime;
@@ -90,8 +89,13 @@ var startTime;
 		function createQuestion(index) {
 
 			var html = "";
-			html += "<div id='question-"+index+"'><h3>Question "+(index+1)+": " + questionArr[index]["questionText"]+"</h3>";
-			//html += "<br />";
+			var qText = questionArr[index]["questionText"];
+			if(questionArr[index]["class"]=="<%=FillBlankQuestion.class.toString()%>") {
+				qText = questionArr[index]["questionText"];
+				qText = qText.replace("**", "______");
+			}
+			html += "<div id='question-"+index+"'><h3>Question "+(index+1)+": " + qText +"</h3>";
+			
 
 			if(questionArr[index]["class"]=="<%=SingleResponseTextQuestion.class.toString()%>"){
 				html += "<h3 style='display:inline;'>Answer: </h3>";
@@ -184,8 +188,7 @@ var startTime;
 
 				var attemptedAns = new Array();
 				for (var j=0; j<answerArr[i].length; j++){
-					if (type[i]=="1" || type[i]=="2" || type[i]=="7") attemptedAns.push(answerArr[i][j]);
-					else attemptedAns.push(answerArr[i][j]);
+					attemptedAns.push(answerArr[i][j]);
 				}
 				attemptedAnswers.push(attemptedAns);
 

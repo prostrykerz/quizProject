@@ -66,10 +66,6 @@ public class QuizServlet extends HttpServlet {
 			response.getWriter().write("{\"error\": \"Not Logged In\"}");
 			return;
 		}
-		Map<String, String[]> parameters = request.getParameterMap();
-		for(String parameter : parameters.keySet()) {
-		    System.out.println(parameter);
-		}
 		String json = "{\"data\":" + request.getParameter("data") + "}";
 		System.out.println(json);
 		JSONObject outer = new JSONObject(json);
@@ -78,6 +74,9 @@ public class QuizServlet extends HttpServlet {
 		ArrayList<Question> questions = new ArrayList<Question>();
 		JSONArray jsonQuestions =inner.getJSONArray("questions");
 		for(int i = 0; i < jsonQuestions.length(); i++) {
+			if(!validate(jsonQuestions.getJSONObject(i))) {
+				response.getWriter().write("{\"error\": \"Fill In The Blank Missing **\"}");
+			}
 			JSONObject question = jsonQuestions.getJSONObject(i);
 			ArrayList<String> answers = new ArrayList<String>();
 			JSONArray jAnswers = question.getJSONArray("correct_answers");
@@ -133,12 +132,20 @@ public class QuizServlet extends HttpServlet {
 		Quiz quiz = new Quiz(questions, title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, creator);
 		user.addQuiz(quiz);
 		awardQuizCreationAchievements(user);
-		response.getWriter().write("{\"msg\": \"Success\"}");
+		response.getWriter().write("{\"msg\": \"Success\", \"id\": \"" + quiz.getId() + "\"}");
 	}
 
 	private void awardQuizCreationAchievements(User user) {
 		if(user.getQuizzes().size() == 1) user.awardAchievement(0);
 		else if(user.getQuizzes().size() == 5) user.awardAchievement(1);
 		else if(user.getQuizzes().size() == 10) user.awardAchievement(2);
+	}
+	
+	private boolean validate(JSONObject question) {
+		if(question.getString("type").equals("7")) {
+			String text = question.getString("text");
+			if(!text.contains("**")) return false;
+		}
+		return true;
 	}
 }
