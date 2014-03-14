@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -111,16 +112,16 @@ public class UserTable extends Database {
 		return null;
 	}
 	
-	public static HashSet<User> getUsers() {
+	public static HashMap<Integer, User> getUsers() {
 		Connection con = Global.database.getConnection();
-		HashSet<User> users = new HashSet<User>();
+		HashMap<Integer, User> users = new HashMap<Integer, User>();
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName);
 			while(rs.next()) {
 				User user = rsToUser(rs);
-				users.add(user);
+				users.put(user.getId(),user);
 			}
 			rs.close();
 			stmt.close();

@@ -40,14 +40,9 @@ public class PromoteUserServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = getServletContext();
 		AccountManager manager = (AccountManager) context.getAttribute("manager");
-		HashSet<User> users = manager.getUsers();
 		String username = request.getParameter("username");
-		Iterator<User> it = users.iterator();
-		for(User u : users) {
-			if(u.getUsername().equals(username)) {
-				u.makeAdmin();
-			}
-		}
+		User user = manager.getUserByUsername(username);
+		if(user != null) user.makeAdmin();
 		RequestDispatcher dispatch = request.getRequestDispatcher("admin_dashboard.jsp");
 		dispatch.forward(request, response);
 	}

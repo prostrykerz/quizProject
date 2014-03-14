@@ -14,8 +14,6 @@
 	//if(user == null) response.sendRedirect("login.jsp");
 	ArrayList<Announcement> announcements = (ArrayList<Announcement>) application.getAttribute("announcements");
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
-	HashSet<User> users = manager.getUsers();
-	
 %>
 
 

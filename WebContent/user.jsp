@@ -13,10 +13,7 @@
 	AccountManager manager = (AccountManager) application.getAttribute("manager");
 	User curuser = (User) session.getAttribute("user");
 	String username = request.getParameter("username");
-	User user = null;
-	for(User u: manager.getUsers()) {
-		if(u.getUsername().equals(username)) user = u;
-	}
+	User user = manager.getUserByUsername(username);
 	ArrayList<QuizHistory> attempts = QuizHistoryTable.getUserTakenQuizzes(user);
 %>
 <head>
@@ -61,11 +58,9 @@
 	<h2>My Friends</h2>
 	<%
 		for(int id : user.getFriends()) {
-			for(User u : manager.getUsers()) {
-				if(u.getId() == id) {
-					out.println(u.getUsername() + " <a class=\"remove_friend_btn\" data-user=\"" + u.getUsername() + "\" href=\"#\">Remove Friend</a><br/>");
-					break;
-				}
+			User u = manager.getUserById(id);
+			if(u != null) {
+				out.println(u.getUsername() + " <a class=\"remove_friend_btn\" data-user=\"" + u.getUsername() + "\" href=\"#\">Remove Friend</a><br/>");
 			}
 		}
 	%>

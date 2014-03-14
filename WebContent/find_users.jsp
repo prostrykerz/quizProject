@@ -23,7 +23,7 @@
 	<input type="search" id="user_search" placeholder="User Search" results/>
 	<br />
 	<%
-		HashSet<User> users = manager.getUsers();
+		HashSet<User> users = manager.getUsersIterable();
 		HashSet<User> filtered_users = new HashSet<User>();
 		if(query != null) {
 			for(User u : users) {

@@ -5,6 +5,7 @@
 <%@ page import="users.User" %>
 <%@ page import="databases.QuizHistoryTable" %>
 <%@ page import="models.QuizHistory" %>
+<%@ page import="users.AccountManager" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <% 	
@@ -16,6 +17,10 @@
 	if (infoMap==null) System.out.println("infoMap is null");
 	User owner = q.getOwner();
 	ArrayList<QuizHistory> attempts = QuizHistoryTable.getUserAttemptsOnQuiz(user, id);
+	ArrayList<QuizHistory> topAttempts = QuizHistoryTable.getTopPerformers(id, 10);
+	ArrayList<QuizHistory> topRecentAttempts = QuizHistoryTable.getTopRecentPerformers(id);
+	ArrayList<QuizHistory> allRecentAttempts = QuizHistoryTable.getRecentQuizAttempts(id);
+	AccountManager manager = (AccountManager) application.getAttribute("manager");
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -44,17 +49,103 @@
 		<br />
 		<br />
 		<% if(attempts.size() > 0) { %>
-		<h3>Past Performances By: 
-		<select id="sort_dropdown">
-			<option>Date Taken</option>
-			<option>Score</option>
-			<option>Duration</option>
-		</select>
-		<div id="past_performance">
-		
+		<div>
+			<h3>
+			<div style="margin: 0 auto;">
+				Your Past Performances By: 
+				<select id="sort_dropdown">
+					<option>Date Taken</option>
+					<option>Score</option>
+					<option>Duration</option>
+				</select>
+			</div>
+			<div class="performance" id="past_performance">
+			
+			</div>
+			</h3>
 		</div>
-		</h3>
+		
+		
+		<div>
+			<h3>
+			All Time Top 10 Performers
+			<table class="performance_table">
+				<tr>
+					<td>Username</td>
+					<td>Score</td>
+					<td>Duration</td>
+				</tr>
+				<%
+					for(int i = 0; i < topAttempts.size(); i++) {
+						String username = manager.getUserById(topAttempts.get(i).getUserId()).getUsername();
+						out.println("<tr>");
+						out.println("<td><a href='user.jsp?username=" + username + "'>" + username + "</a></td>");
+						out.println("<td>" + topAttempts.get(i).getScore() + "</td>");
+						out.println("<td>" + topAttempts.get(i).getTime() + " seconds </td>");
+						out.println("</tr>");
+					}
+				%>
+			</table>
+			</h3>
+		</div>
+		
+		<div>
+			<h3>
+			Recent Top Performers
+			<table class="performance_table">
+				<tr>
+					<td>Username</td>
+					<td>Score</td>
+					<td>Duration</td>
+				</tr>
+				<%
+					for(int i = 0; i < topRecentAttempts.size(); i++) {
+						String username = manager.getUserById(topRecentAttempts.get(i).getUserId()).getUsername();
+						out.println("<tr>");
+						out.println("<td><a href='user.jsp?username=" + username + "'>" + username + "</a></td>");
+						out.println("<td>" + topRecentAttempts.get(i).getScore() + "</td>");
+						out.println("<td>" + topRecentAttempts.get(i).getTime() + " seconds </td>");
+						out.println("</tr>");
+					}
+				%>
+			</table>
+			</h3>
+		</div>
+		
+		<div>
+			<h3>
+			All Recent Attempts
+			<table class="performance_table">
+				<tr>
+					<td>Username</td>
+					<td>Score</td>
+					<td>Duration</td>
+				</tr>
+				<%
+					for(int i = 0; i < allRecentAttempts.size(); i++) {
+						String username = manager.getUserById(allRecentAttempts.get(i).getUserId()).getUsername();
+						out.println("<tr>");
+						out.println("<td><a href='user.jsp?username=" + username + "'>" + username + "</a></td>");
+						out.println("<td>" + allRecentAttempts.get(i).getScore() + "</td>");
+						out.println("<td>" + allRecentAttempts.get(i).getTime() + " seconds </td>");
+						out.println("</tr>");
+					}
+				%>
+			</table>
+			</h3>
+		</div>
+		
 		<% } %>
+		<div id="quiz_statistics">
+			<h2>Quiz Statistics</h2>
+			<hr />
+			Total Attempts: <%=q.getTimesTaken() %>
+			<br />
+			Average Score: <%=String.format("%.3f",q.getAverageScore()) %>
+			<br />
+			Average Duration: <%=String.format("%.3f",q.getAverageDuration()) %> seconds
+			
+		</div>
 	</div>
 	<script>
 	$(document).ready(function() {
@@ -101,14 +192,14 @@
 		function setPastPerformance(attempts) {
 			$('#past_performance').html("");
 			var html = "";
-			html += "<table id='past_performance_table'>";
+			html += "<table id='past_performance_table' class='performance_table'>";
 			html += "<tr><td>Attempt #</td><td>Score</td><td>Duration</td><td>Date</td></tr>";
 			for(var i = 0; i < attempts.length; i++) {
 				html += "<tr>";
 				var count = i+1
 				html += "<td>" + count + "</td>";
 				html += "<td>" + attempts[i].score + "</td>";
-				html += "<td>" + attempts[i].time + "</td>";
+				html += "<td>" + attempts[i].time + " seconds</td>";
 				html += "<td>" + attempts[i].at + "</td>";
 				html += "</tr>";
 			}

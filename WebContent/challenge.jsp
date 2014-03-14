@@ -26,12 +26,8 @@
 			<%
 				for(int uid : curuser.getFriends()) {
 					out.println("<option value=\"" + uid + "\">");
-					for(User u : manager.getUsers()) {
-						if(u.getId() == uid) {
-							out.println(u.getUsername());
-							break;
-						}
-					}
+					User u = manager.getUserById(uid);
+					if(u != null) out.println(u.getUsername());
 					out.println("</option>");
 				}
 			%>
