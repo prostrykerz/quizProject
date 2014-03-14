@@ -20,7 +20,7 @@
 		HashMap<String, Object> infoMap = q.getInfoMap();
 		if (infoMap==null) System.out.println("infoMap is null");
 	%>
-	<h1>Quiz: <%=infoMap.get("title") %> </h1>
+	<h1><%=infoMap.get("title") %> </h1>
 	<h3>Description: <%=infoMap.get("description")%></h3>
 	<h3>Creator: <%=infoMap.get("creator")%></h3>
 	<% 

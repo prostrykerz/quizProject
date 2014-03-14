@@ -16,12 +16,7 @@ public class AnnouncementTable extends Database{
 	
 	public static void createTable() {
 		Connection con = Global.database.getConnection();
-		if (con!=null) System.out.println("bye");
 		try {
-			if (con.isClosed()){
-				System.out.println("fuck");
-			}
-			if (!con.isClosed()) System.out.println("no fucks");
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);			
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;

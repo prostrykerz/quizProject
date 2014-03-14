@@ -201,11 +201,8 @@ public class UserTable extends Database {
 			byte[] hash = hashblob.getBytes(1, (int) hashblob.length());
 			boolean admin = rs.getBoolean("admin");
 			ArrayList<Integer> friends = FriendTable.getFriends(id);
-			System.out.println("1");
 			ArrayList<Message> messages = MessageTable.getMessages(id);
-			System.out.println("2");
 			ArrayList<Quiz> quizzes = QuizTable.getQuizzes(username);
-			System.out.println("3");
 			boolean[] achievements = AchievementTable.getAchievements(id);
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();

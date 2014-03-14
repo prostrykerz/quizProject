@@ -36,15 +36,15 @@
 	</select>
 	<br>
 	Enable immediate feedback for this quiz? 
-	<select id="feedback" name="mydropdown">
-		<option value="yes">Yes</option>	
+	<select id="feedback" name="mydropdown">	
 		<option value="no"> No</option>
+		<option value="yes">Yes</option>
 	</select>
 	<br>
 	Enable practice mode for this quiz? 
 	<select id="practice" name="mydropdown">
-		<option value="yes">Yes</option>	
 		<option value="no"> No</option>
+		<option value="yes">Yes</option>	
 	</select>
 	</div>
 	<h4> Add questions to create a quiz. </h4>
@@ -219,7 +219,7 @@
 			data = {};
 			data.questions = questions;
 			data.title = $('#quiz_title').val();
-			data.description = "update me. In quizcreation.jsp";
+			data.description = $('#quiz_description').val();
 			data.feedback = $('#feedback').val();
 			data.onePage = $('#onePage').val();
 			data.order = $('#order').val();
