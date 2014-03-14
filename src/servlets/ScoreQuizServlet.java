@@ -131,7 +131,7 @@ public class ScoreQuizServlet extends HttpServlet {
 		for (int i=0; i<scoreArr.size(); i++){
 			score+=scoreArr.get(i);
 		}
-		//Change 1 to the quiz object
+		q.incrementTimesTaken();
 		QuizHistory.save(user, q.getId(), score, time);
 		if(QuizHistoryTable.getUserTakenQuizzes(user).size() == 10) user.awardAchievement(3);
 		if(q.getHighestScorer() == user.getId()) user.awardAchievement(4);
