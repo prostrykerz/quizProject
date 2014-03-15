@@ -98,7 +98,7 @@
 			
 			$(divID).append(qText);
 			if (dropVal === "2" || dropVal === "4" || dropVal === "6") {
-				$(divID).append("Picture Title: <input class=\"pictureTitle\" type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
+				$(divID).append("<input style='display:none' class=\"pictureTitle\" type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
 				$(divID).append("Picture URL: <input class=\"pictureURL\" type=\"qPic\" name=\"qPic\"/>\<br>");
 			}
 			

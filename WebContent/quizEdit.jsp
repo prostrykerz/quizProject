@@ -264,7 +264,7 @@
 				optionCount++;
 				optionButtonID = "addOpt"+ counter + "-" + optionCount;
 				$(divID).append("<br>Option "+optionCount+": <input class=\"answer-" + optionCount + " answer\"  type=\"qOppField\" name=\"qOppField\"/>");
-				$(divID).append(" Correct? <input type=\"radio\" class=\"correctBox-"+optionCount+"\"name=\"correctBox-"+(counter-1)+"\">");
+				$(divID).append(" Correct? <input type=\"radio\" class=\"correctBox-"+optionCount+"\"name=\""+$(divID).find("[type=radio]").attr("name")+"\">");
 				$(divID).append("<button id="+optionButtonID+" type=\"button\">Add Option</button>");
 				$(this).remove();
 				console.log(optionButtonID);
@@ -407,7 +407,7 @@
 			
 			$(divID).append(qText);
 			if (dropVal === "2" || dropVal === "4" || dropVal === "6") {
-				$(divID).append("Picture Title: <input class=\"pictureTitle\" type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
+				$(divID).append("<input style='display:none' class=\"pictureTitle\" type=\"qPicTitle\" name=\"qPicTitle\"/>\<br>");
 				$(divID).append("Picture URL: <input class=\"pictureURL\" type=\"qPic\" name=\"qPic\"/>\<br>");
 			}
 			
