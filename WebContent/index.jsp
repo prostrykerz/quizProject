@@ -95,7 +95,7 @@
 			}
 			out.println("<br />");
 			
-			ArrayList<FriendUpdate> updates = user.getRecentUpdates(5);
+			/*ArrayList<FriendUpdate> updates = user.getRecentUpdates(5);
 			if(updates.size() > 0) {
 				out.println("<table class='performance_table'>");
 				out.println("<tr><td>Type<1/td><td>Updates</td></tr>");
@@ -109,6 +109,7 @@
 				out.println("</table>");
 			}
 			out.println("<br />");
+			*/
 			
 			
 			out.println("<div id=\"content\">");
@@ -173,20 +174,20 @@
 			} else out.println("You haven't taken any quizzes yet!");
 			
 			// User's Achievments
-			
-			boolean[] achievments = AchievementTable.getAchievements(user.getId());
+			/*
+			Achievement[] achievments = AchievementTable.getAchievements(user.getId());
 			if (achievments.length > 0) {
 				out.println("<td>");
 				out.println("<div id=\"userAchievements\">");
 				out.println("<h2>" + user.getUsername() + "'s Achievements </h2>");
 				out.println("<ul>");
 				for (int i = 0; i < achievments.length; i++) {
-					if (achievments[i]) {
-						out.println("<li>"+Achievement.getText(i)+"</li>");
+					if (achievments[i].getStatus()) {
+						out.println("<li>"+ achievments[i].getText()+"</li>");
 					}
 				}
 				out.println("</ul></div></td>");
-			}
+			}*/
 			out.println("</tr></table>");
 			out.println("</div></div>");
 		}

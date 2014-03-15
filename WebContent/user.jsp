@@ -7,6 +7,7 @@
 <%@ page import="models.Quiz" %>
 <%@ page import="models.QuizHistory" %>
 <%@ page import="databases.QuizHistoryTable" %>
+<%@ page import="models.Achievement" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
@@ -77,9 +78,9 @@
 	%>
 	<h2>Achievements</h2>
 	<%
-		ArrayList<String> achievements = user.getAchievements();
-		for(String s : achievements) {
-			out.println(s + "<br />");
+		Achievement[] achievements = user.getAchievements();
+		for(int i = 0; i < achievements.length; i++) {
+			out.println(achievements[i].getText(achievements[i].getCode()) + "<br />");
 		}
 	%>
 	<h2>Attempts</h2>

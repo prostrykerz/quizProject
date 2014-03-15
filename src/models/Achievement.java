@@ -65,7 +65,7 @@ public class Achievement {
 		return code;
 	}
 	
-	public static String getText(int code) {return achievements.get(code);}
+	public String getText() {return achievements.get(this.code);}
 	public static String getIndex(int code) {
 		if(achievements.containsKey(code)) return achievements.get(code);
 		return "err";
