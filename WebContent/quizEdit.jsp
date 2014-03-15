@@ -482,7 +482,7 @@
 		$("#addButton").click(function() {
 			var data = formatData();
 			console.log(data);
-			$.post("QuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
+			$.post("UpdateQuizServlet",{data: JSON.stringify(data)}, function(responseJson) {
 				console.log(responseJson);
 				var response = $.parseJSON(responseJson);
 				console.log(response);
@@ -536,6 +536,7 @@
 			data.onePage = $('#onePage').val();
 			data.order = $('#order').val();
 			data.practice = $('#practice').val();
+			data.q_id = <%=id%>;
 			return data;
 		}
 		function getType2(div) {

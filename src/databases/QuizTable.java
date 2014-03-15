@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +43,7 @@ public class QuizTable extends Database {
 			else table[i] = new ArrayList<String>();
 		}
 		Connection con = Global.database.getConnection();
+		
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
@@ -85,13 +87,13 @@ public class QuizTable extends Database {
 		
 	}
 
-	public static Integer addToDatabase(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator){
-
+	public static Integer addToDatabase(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator, Integer timesTaken, Timestamp createdAt){
+		
 		Connection con = Global.database.getConnection();
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, 0);
+			String query = buildAddQuery(name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, timesTaken, createdAt);
 			stmt.executeUpdate(query);
 			ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 			Integer i=0;
@@ -112,10 +114,10 @@ public class QuizTable extends Database {
 		return null;
 	}
 	
-	private static String buildAddQuery(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator, Integer timesTaken){
+	private static String buildAddQuery(String name, String description, Boolean random, Boolean onePage, Boolean immediateFeedback, Boolean practiceMode, Integer score, Integer time, String creator, Integer timesTaken, Timestamp createdAt){
 		String query = " INSERT INTO "+tableName;
-		query += " (name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, timesTaken)";
-		query += " VALUES(\""+name+"\",\""+description+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\","+timesTaken+");";
+		query += " (name, description, random, onePage, immediateFeedback, practiceMode, score, time, creator, timesTaken, createdAt)";
+		query += " VALUES(\""+name+"\",\""+description+"\","+random+","+onePage+","+immediateFeedback+","+practiceMode+","+score+","+time+",\""+creator+"\","+timesTaken+",\""+createdAt+"\");";
 		return query;
 	}
 	

@@ -1,6 +1,7 @@
 package models;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,7 +58,8 @@ public class Quiz {
 		this.infoMap.put("timesTaken", 0);
 		this.infoMap.put("createdAt", new Date());
 		
-		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator);
+		
+		this.quizID = QuizTable.addToDatabase(title, description, isRandom, isOnePage, hasImmediateFeedback, practiceMode, 0, 0, creator, 0, new Timestamp((new Date()).getTime()));
 		this.infoMap.put("quiz_id", this.quizID);
 		this.quizMDB = new QuizModelTable(this.quizID);
 		this.storeQuestions();

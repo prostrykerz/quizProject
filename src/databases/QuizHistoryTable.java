@@ -263,6 +263,24 @@ public class QuizHistoryTable extends Database{
 		}
 	}
 	
+	public static void updateHistory(int oldQid, int newQid) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeUpdate("UPDATE " +tableName+ " SET quiz_id="+newQid+" WHERE quiz_id="+oldQid);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static int getNumAttempts() {
 		Connection con = Global.database.getConnection();
 		int count = 0;
