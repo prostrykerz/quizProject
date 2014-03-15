@@ -204,7 +204,7 @@
 			html += "<tr><td>Attempt #</td><td>Score</td><td>Duration</td><td>Date</td></tr>";
 			for(var i = 0; i < attempts.length; i++) {
 				html += "<tr>";
-				var count = i+1
+				var count = i+1;
 				html += "<td>" + count + "</td>";
 				html += "<td>" + attempts[i].score + "</td>";
 				html += "<td>" + attempts[i].time + " seconds</td>";
