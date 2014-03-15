@@ -189,7 +189,10 @@ public class User {
 			}
 		});
 		ArrayList<FriendUpdate> sortedUpdates = new ArrayList<FriendUpdate>();
-		for(int i = 0; i < limit; i++) sortedUpdates.add(updates.get(i));
+		for(int i = 0; i < limit; i++) {
+			if(i == updates.size()) break;
+			sortedUpdates.add(updates.get(i));
+		}
 		return sortedUpdates;
 	}
 	

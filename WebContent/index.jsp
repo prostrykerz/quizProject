@@ -77,10 +77,27 @@
 				}
 				out.println("</div>");
 			}
+			ArrayList<FriendUpdate> updates = user.getRecentUpdates(5);
+			if(updates.size() > 0) {
+				out.println("<h2>News Feed</h2>");
+				out.println("<table class='performance_table'>");
+				out.println("<tr><td>Type</td><td>Update</td></tr>");
+				for(int i = 0; i < 3; i++) {
+					if(i == updates.size()) break;
+					out.println("<tr>");
+					out.println("<td width='20%'>" + updates.get(i).getType() + "</td>");
+					out.println("<td width='80%'>" + updates.get(i).getText() + "</td>");
+					out.println("</tr>");
+				}
+				out.println("</table>");
+			}
+			out.println("<br />");
+			
 			ArrayList<Message> messages = user.getFriendRequests();
 			ArrayList<Message> otherMessages = user.getMessages();
 			for(int i = 0; i < otherMessages.size(); i++) messages.add(otherMessages.get(i));
 			if(messages.size() > 0) {
+				out.println("<h2>Recent Messages</h2>");
 				out.println("<table class='performance_table'>");
 				out.println("<tr><td>From:</td><td>Message</td></tr>");
 				for(int i = 0; i < 3; i++) {
@@ -95,21 +112,6 @@
 			}
 			out.println("<br />");
 			
-			/*ArrayList<FriendUpdate> updates = user.getRecentUpdates(5);
-			if(updates.size() > 0) {
-				out.println("<table class='performance_table'>");
-				out.println("<tr><td>Type<1/td><td>Updates</td></tr>");
-				for(int i = 0; i < 3; i++) {
-					if(i == updates.size()) break;
-					out.println("<tr>");
-					out.println("<td width='20%'>" + updates.get(i).getType() + "</td>");
-					out.println("<td width='80%'>" + updates.get(i).getText() + "</td>");
-					out.println("</tr>");
-				}
-				out.println("</table>");
-			}
-			out.println("<br />");
-			*/
 			
 			
 			out.println("<div id=\"content\">");
