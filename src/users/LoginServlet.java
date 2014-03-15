@@ -53,15 +53,17 @@ public class LoginServlet extends HttpServlet {
 		User attempted_user = manager.getUserByUsername(username);
 		
 		if(manager.passwordMatches(username, password)) {
-			if(rememberString.equals("on")) {
-				Cookie rememberCookie = new Cookie("remember_me","true");
-				String token = getToken(manager.getUserByUsername(username));
-				Cookie tokenCookie = new Cookie("token",token);
-				rememberCookie.setMaxAge(60*60*24*1);
-				tokenCookie.setMaxAge(60*60*24*1);
-				response.addCookie(rememberCookie);
-				response.addCookie(tokenCookie);
-				cookieMap.put(token, attempted_user.getId());
+			if(rememberString != null) {
+				if(rememberString.equals("on")) {
+					Cookie rememberCookie = new Cookie("remember_me","true");
+					String token = getToken(manager.getUserByUsername(username));
+					Cookie tokenCookie = new Cookie("token",token);
+					rememberCookie.setMaxAge(60*60*24*1);
+					tokenCookie.setMaxAge(60*60*24*1);
+					response.addCookie(rememberCookie);
+					response.addCookie(tokenCookie);
+					cookieMap.put(token, attempted_user.getId());
+				}
 			}
 			session.setAttribute("user", attempted_user);
 			response.sendRedirect("user.jsp");
