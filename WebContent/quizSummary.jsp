@@ -38,7 +38,10 @@
 		<h3>Creator: <a href="user.jsp?username=<%= owner.getUsername() %>"><%=infoMap.get("creator")%></a></h3>
 		<% 
 		if((Boolean)infoMap.get("practiceMode")){
-		%><a href="#"><button>Practice Quiz</button></a><%
+		%><form style="display:inline-block" action="PracticeQuizServlet" method="post">
+			<input type="hidden" name="quiz_id" value="<%=id%>">
+			<button type="submit">Practice Quiz</button>
+		</form><%
 		}
 		%>
 		<form style="display:inline-block" action="PlayQuizServlet" method="post">
