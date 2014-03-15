@@ -174,20 +174,20 @@
 			} else out.println("You haven't taken any quizzes yet!");
 			
 			// User's Achievments
-			/*
-			Achievement[] achievments = AchievementTable.getAchievements(user.getId());
-			if (achievments.length > 0) {
+			
+			ArrayList<Achievement> achievements = AchievementTable.getAchievements(user.getId());
+			if (achievements.size() > 0) {
 				out.println("<td>");
 				out.println("<div id=\"userAchievements\">");
 				out.println("<h2>" + user.getUsername() + "'s Achievements </h2>");
 				out.println("<ul>");
-				for (int i = 0; i < achievments.length; i++) {
-					if (achievments[i].getStatus()) {
-						out.println("<li>"+ achievments[i].getText()+"</li>");
+				for (int i = 0; i < achievements.size(); i++) {
+					if (achievements.get(i).getStatus()) {
+						out.println("<li>"+ achievements.get(i).getText()+"</li>");
 					}
 				}
 				out.println("</ul></div></td>");
-			}*/
+			}
 			out.println("</tr></table>");
 			out.println("</div></div>");
 		}

@@ -56,7 +56,7 @@ public class FriendUpdate {
 		if(type == 3) {
 			Achievement a = (Achievement) event;
 			sb.append(u.getUsername() + " received the ");
-			sb.append(Achievement.getText(a.getCode()));
+			sb.append(a.getText());
 		}
 		return sb.toString();
 	}

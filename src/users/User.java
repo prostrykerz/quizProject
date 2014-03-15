@@ -33,10 +33,9 @@ public class User {
 	private ArrayList<Integer> friends;
 	private ArrayList<Message> friendRequests;
 	private ArrayList<Quiz> quizzes;
-	Achievement[] achievements;
 	private boolean admin;
 	
-	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends, Achievement[] achievements) {
+	public User(int id, String username, byte[] salt, byte[] hash, boolean isAdmin, ArrayList<Message> messages, ArrayList<Quiz> quizzes, ArrayList<Integer> friends) {
 		this.id = id;
 		this.username = username;
 		this.admin = isAdmin;
@@ -46,7 +45,6 @@ public class User {
 		this.friends = friends;
 		this.salt = salt;
 		this.hash = hash;
-		this.achievements = achievements;
 	}
 
 	
@@ -170,7 +168,6 @@ public class User {
 	}
 	
 	public void awardAchievement(int code) {
-		achievements[code].awardAchievement();
 		AchievementTable.awardAchievement(id, Achievement.getIndex(code));
 	}
 	
@@ -180,10 +177,10 @@ public class User {
 		for(User fr : friends) {
 			ArrayList<Quiz> quizzes = fr.getQuizzes();
 			ArrayList<QuizHistory> qhs = QuizHistoryTable.getUserTakenQuizzes(fr);
-			Achievement[] achievements = fr.getAchievements();
+			ArrayList<Achievement>  achievements = fr.getAchievements();
 			for(Quiz q : quizzes) updates.add(new FriendUpdate(q,2));
 			for(QuizHistory qh : qhs) updates.add(new FriendUpdate(qh,1));
-			for(int i = 0; i < achievements.length; i++) updates.add(new FriendUpdate(achievements[i],3));
+			for(int i = 0; i < achievements.size(); i++) updates.add(new FriendUpdate(achievements.get(i),3));
 		}
 		Collections.sort(updates, new Comparator<FriendUpdate>() {
 			@Override
@@ -206,7 +203,7 @@ public class User {
 	public ArrayList<Integer> getFriends() {return friends;}
 	public ArrayList<Message> getFriendRequests() {return friendRequests;}
 	public ArrayList<Quiz> getQuizzes() {return quizzes;}
-	public Achievement[] getAchievements() {return achievements;}
+	public ArrayList<Achievement> getAchievements() {return AchievementTable.getAchievements(id);}
 	
 	//Misc
 	public boolean equals(User other) {
