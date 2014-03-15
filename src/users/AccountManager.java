@@ -3,6 +3,7 @@ package users;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import databases.AchievementTable;
 import databases.FriendTable;
 import databases.UserTable;
 
@@ -18,6 +19,7 @@ public class AccountManager {
 	public void addUser(String username, String password) {
 		User constructed_user = UserTable.save(username, password, false);
 		users.put(constructed_user.getId(),constructed_user);
+		AchievementTable.initialize(constructed_user.getId());
 	}
 	
 	public User getUserById(int id) {

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import databases.AchievementTable;
+
 public class Achievement {
 	private static final Map<Integer, String> achievements;
 	static {
@@ -66,8 +68,20 @@ public class Achievement {
 	}
 	
 	public String getText() {return achievements.get(this.code);}
+	
 	public static String getIndex(int code) {
-		if(achievements.containsKey(code)) return achievements.get(code);
+		if(code == 0) return "one";
+		if(code == 1) return "two";
+		if(code == 2) return "three";
+		if(code == 3) return "four";
+		if(code == 4) return "five";
+		if(code == 5) return "six";
 		return "err";
+	}
+	
+	public static long getTime(int uid, int code) {
+		String index = getIndex(code);
+		Achievement a = AchievementTable.getAchievement(uid, index);
+		return a.getWhen().getTime();
 	}
 }

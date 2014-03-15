@@ -24,7 +24,7 @@ public class AchievementTable extends Database{
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);			
 			String query = "CREATE TABLE IF NOT EXISTS " + tableName;
-			query += "(uid INT NOT NULL AUTO_INCREMENT, user_id INT, one BOOLEAN, one_time TIMESTAMP, two BOOLEAN, two_time TIMESTAMP, three BOOLEAN, three_time TIMESTAMP, four BOOLEAN, four_time TIMESTAMP, five BOOLEAN, five_time TIMESTAMP, six BOOLEAN, six_time TIMESTAMP, PRIMARY KEY (uid));";
+			query += "(uid INT NOT NULL AUTO_INCREMENT, user_id INT, one BOOLEAN DEFAULT 0, one_time TIMESTAMP, two BOOLEAN DEFAULT 0, two_time TIMESTAMP, three BOOLEAN DEFAULT 0, three_time TIMESTAMP, four BOOLEAN DEFAULT 0, four_time TIMESTAMP, five BOOLEAN DEFAULT 0, five_time TIMESTAMP, six BOOLEAN DEFAULT 0, six_time TIMESTAMP, PRIMARY KEY (uid));";
 			stmt.executeUpdate(query);
 			stmt.close();
 			try {
@@ -38,12 +38,47 @@ public class AchievementTable extends Database{
 		}
 	}
 	
-	public static Achievement[] getAchievements(int id) {
+	public static void initialize(int id) {
 		Connection con = Global.database.getConnection();
-		Achievement[] achievements = new Achievement[6];
 		try {
 			Statement stmt = con.createStatement();
-			stmt.executeQuery("USE " + database);			
+			stmt.executeQuery("USE " + database);
+			String query = "INSERT INTO " + tableName + " (user_id,one,two,three,four,five,six, one_time, two_time,three_time,four_time,five_time,six_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(query);
+			pstmt.setInt(1, id);
+			pstmt.setBoolean(2, false);
+			pstmt.setBoolean(3, false);
+			pstmt.setBoolean(4, false);
+			pstmt.setBoolean(5, false);
+			pstmt.setBoolean(6, false);
+			pstmt.setBoolean(7, false);
+			Date now = new Date();
+			Timestamp timestamp = new Timestamp(now.getTime());
+			pstmt.setTimestamp(8, timestamp);
+			pstmt.setTimestamp(9, timestamp);
+			pstmt.setTimestamp(10, timestamp);
+			pstmt.setTimestamp(11, timestamp);
+			pstmt.setTimestamp(12, timestamp);
+			pstmt.setTimestamp(13, timestamp);
+			pstmt.execute();
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<Achievement> getAchievements(int id) {
+		Connection con = Global.database.getConnection();
+		ArrayList<Achievement> achievements = new ArrayList<Achievement>();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
 			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName + " WHERE user_id = " + id);
 			while(rs.next()) {
 				Achievement one = new Achievement(id, 0, rs.getBoolean("one"), rs.getDate("one_time"));
@@ -53,12 +88,12 @@ public class AchievementTable extends Database{
 				Achievement five = new Achievement(id, 4, rs.getBoolean("five"), rs.getDate("five_time"));
 				Achievement six = new Achievement(id, 5, rs.getBoolean("six"), rs.getDate("six_time"));
 				
-				achievements[0] = one;
-				achievements[1] = two;
-				achievements[2] = three;
-				achievements[3] = four;
-				achievements[4] = five;
-				achievements[5] = six;
+				achievements.add(one);
+				achievements.add(two);
+				achievements.add(three);
+				achievements.add(four);
+				achievements.add(five);
+				achievements.add(six);
 			}
 			rs.close();
 			stmt.close();
@@ -74,15 +109,45 @@ public class AchievementTable extends Database{
 		return achievements;
 	}
 	
+	public static Achievement getAchievement(int uid, String index) {
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM "+ tableName + " WHERE user_id = " + uid);
+			while(rs.next()) {
+				int code = -1;
+				if(index.equals("one")) code = 0;
+				else if(index.equals("two")) code =1;
+				else if(index.equals("three")) code =2;
+				else if(index.equals("four")) code =3;
+				else if(index.equals("five")) code =5;
+				else if(index.equals("six")) code = 6;
+				Achievement a = new Achievement(uid, code, rs.getBoolean(index), rs.getDate(index + "_time"));
+				
+				return a;
+			}
+			rs.close();
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void awardAchievement(int uid, String index) {
 		Connection con = Global.database.getConnection();
 		
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeQuery("USE " + database);
-			stmt.executeUpdate("UPDATE " + tableName + " SET " + index + " = 1 WHERE uid = " + uid);
-			stmt.close();
-			String query = "UDPATE " + tableName + " ("+index+", " + index + "_time at) VALUES (?,?)";
+			String query = "UPDATE " + tableName + " SET "+index+" = ?, " + index + "_time = ? WHERE user_id = " + uid;
 			PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(query);
 			pstmt.setBoolean(1, true);
 			java.util.Date date = new Date();

@@ -229,13 +229,12 @@ public class UserTable extends Database {
 			ArrayList<Integer> friends = FriendTable.getFriends(id);
 			ArrayList<Message> messages = MessageTable.getMessages(id);
 			ArrayList<Quiz> quizzes = QuizTable.getQuizzes(username);
-			Achievement[] achievements = AchievementTable.getAchievements(id);
 			try {
 	            AbandonedConnectionCleanupThread.shutdown();
 	        } catch (InterruptedException e) {
 	            e.printStackTrace();
 	        }
-			return new User(id, username, salt, hash, admin, messages, quizzes, friends, achievements);
+			return new User(id, username, salt, hash, admin, messages, quizzes, friends);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
