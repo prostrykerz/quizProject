@@ -132,9 +132,13 @@ public class UpdateQuizServlet extends HttpServlet {
 		user.addQuiz(quiz);
 		awardQuizCreationAchievements(user);
 	
-		int oldQid = inner.getInt("id");
-		user.deleteQuiz(oldQid);
+		int oldQid = inner.getInt("q_id");
+		int oldTime = inner.getInt("oldTime");
+		int oldScore = inner.getInt("oldScore");
+		int oldTimesTaken = inner.getInt("oldTimesTaken");
 		int newQid = quiz.getId();
+		QuizTable.setTimeScoreTimesTaken(newQid, oldTime, oldScore, oldQid);
+		user.deleteQuiz(oldQid);
 		QuizHistoryTable.updateHistory(oldQid,newQid);
 		
 		

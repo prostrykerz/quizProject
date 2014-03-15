@@ -289,4 +289,23 @@ public class QuizTable extends Database {
 		}
 		return count;
 	}
+	
+
+	public static void setTimeScoreTimesTaken(int p_id, int time, int score, int timesTaken){
+		Connection con = Global.database.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeQuery("USE " + database);
+			stmt.executeQuery("UPDATE "+ tableName + " SET time="+time+", score="+score+", timesTaken="+score+" WHERE p_id = " + p_id);
+			stmt.close();
+			try {
+	            AbandonedConnectionCleanupThread.shutdown();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

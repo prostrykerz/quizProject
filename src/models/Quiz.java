@@ -248,4 +248,5 @@ public class Quiz {
 	public Date getCreatedAt() {
 		return (Date) infoMap.get("createdAt");
 	}
+	
 }

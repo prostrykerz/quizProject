@@ -151,7 +151,7 @@ var startTime;
 				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
 			}
 			else if(questionArr[index]["class"]=="<%=SingleResponsePicQuestion.class.toString()%>"){
-				html += "<img src='http://www.geekosystem.com/wp-content/uploads/2013/12/doge.jpg' "+questionArr[index]["pictureURL"] +" alt='Smiley face' style='max-height:500px; max-width:500px'><br/>";
+				html += "<img src='"+questionArr[index]["pictureURL"] +"' alt='Smiley face' style='max-height:500px; max-width:500px'><br/>";
 				html += "<h3 style='display:inline;'>Answer: </h3>";
 				html += "<input type=\"text\" name=\"answer\" data-id=\"" + index + "\" /><br/>";
 			}
@@ -172,7 +172,7 @@ var startTime;
 			}
 			else if(questionArr[index]["class"]=="<%=MultiChoicePicQuestion.class.toString()%>"){
 				var possibleAnswers = questionArr[index]["possibleAnswers"];
-				html += "<img src="+questionArr[index]["pictureURL"] +"alt='Smiley face' height='500' width='500'><br/>";
+				html += "<img src='"+questionArr[index]["pictureURL"] +"' alt='Smiley face' height='500' width='500'><br/>";
 				if (questionArr[index]["correctAnswers"].length==1){
 					for(var i=0; i<possibleAnswers.length; i++){
 						html +="<input type=\"radio\" class=\"answer-"+i+"\" name=\"checkBox"+index +"\">";
