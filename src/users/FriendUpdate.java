@@ -45,18 +45,18 @@ public class FriendUpdate {
 		if(type == 1) {
 			QuizHistory qh = (QuizHistory) event;
 			Quiz q = new Quiz(qh.getQuizId());
-			sb.append(u.getUsername() + " tried ");
+			sb.append("<a href='user.jsp?username=" + u.getUsername() + "'> " + u.getUsername() + "</a> tried ");
 			sb.append("<a href=quizSummary?id='" + qh.getQuizId()+ "'>"  +  q.getTitle() + "</a>");
 		}
 		if(type == 2) {
 			Quiz q = (Quiz) event;
-			sb.append(u.getUsername() + " created ");
+			sb.append("<a href='user.jsp?username=" + u.getUsername() + "'> " + u.getUsername() + "</a> created ");
 			sb.append("<a href=quizSummary?id='" + q.getId()+ "'>"  +  q.getTitle() + "</a>");
 		}
 		if(type == 3) {
 			Achievement a = (Achievement) event;
-			sb.append(u.getUsername() + " received the ");
-			sb.append(a.getText());
+			sb.append("<a href='user.jsp?username=" + u.getUsername() + "'> " + u.getUsername() + "</a> received the ");
+			sb.append(a.getText() + " achievement");
 		}
 		return sb.toString();
 	}

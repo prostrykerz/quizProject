@@ -226,6 +226,7 @@ public class QuizTable extends Database {
 			}
 		});
 		for(int i = 0; i < numberOfQuizzes; i++) {
+			if(i == allquizzes.size()) break;
 			quizzes.add(allquizzes.get(i));
 		}
 		return quizzes;

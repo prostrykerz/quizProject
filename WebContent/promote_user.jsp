@@ -20,19 +20,23 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="PromoteUserServlet" method="post">
-		<select name="username">
-			<%
-				for(User u : users) {
-					if(u.getId() != user.getId() && !u.isAdmin()) {
-						out.println("<option>");
-						out.println(u.getUsername());
-						out.println("</option>");
+	<div class="container" style="margin-top: 10px;">
+		<h1>Promote User To Admin</h1>
+		<form action="PromoteUserServlet" method="post">
+			<select name="username">
+				<%
+					for(User u : users) {
+						if(u.getId() != user.getId() && !u.isAdmin()) {
+							out.println("<option>");
+							out.println(u.getUsername());
+							out.println("</option>");
+						}
 					}
-				}
-			%>
-		</select>
-		<button type="submit">Promote User To Admin</button>
-	</form>
+				%>
+			</select>
+			<button type="submit">Promote User To Admin</button>
+		</form>
+	</div>
+	
 </body>
 </html>

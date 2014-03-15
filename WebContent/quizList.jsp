@@ -14,14 +14,18 @@
 	<jsp:include page="header.jsp">
 		    <jsp:param value="Dynamic Include Examples" name="title"></jsp:param> 
 		</jsp:include>
-	<h1> Choose a Quiz! </h1>
-	<ul>
-		<% 	QuizTable qt = new QuizTable();
-			ArrayList[] table = qt.getTable();
-			for (int i=0; i<table[0].size(); i++){
-				%><li><a href="quizSummary.jsp?id=<%=table[0].get(i)%>"><%=table[1].get(i)%></a></li><%
-			}
-		%>
-	</ul>
+	<div class="container">
+		<h1> Choose a Quiz! </h1>
+		<table class="quiz_list">
+			<% 	QuizTable qt = new QuizTable();
+				ArrayList[] table = qt.getTable();
+				for (int i=0; i<table[0].size(); i++){
+					%><tr><td><a href="quizSummary.jsp?id=<%=table[0].get(i)%>"><%=table[1].get(i)%></a></td></tr><%
+				}
+			%>
+		</table>
+	</div>
+	
+
 </body>
 </html>

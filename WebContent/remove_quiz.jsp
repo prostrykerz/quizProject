@@ -17,7 +17,9 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="DeleteQuizServlet" method="post">
+	<div class="container" style="margin-top: 10px;">
+		<h1>Remove Quiz</h1>
+		<form action="DeleteQuizServlet" method="post">
 		<select name="id">
 			<%
 				QuizTable qt = new QuizTable();
@@ -31,5 +33,7 @@
 		</select>
 		<button type="submit">Remove Quiz</button>
 	</form>
+	</div>
+	
 </body>
 </html>

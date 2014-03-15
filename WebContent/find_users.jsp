@@ -20,7 +20,8 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="find_user.jsp"></jsp:param> 
 	</jsp:include>
-	<input type="search" id="user_search" placeholder="User Search" results/>
+	<div class="container">
+		<h1 style="display: inline-block;">Find Users</h1> <input type="search" id="user_search" placeholder="User Search" results/>
 	<br />
 	<%
 		HashSet<User> users = manager.getUsersIterable();
@@ -35,7 +36,7 @@
 			for(User u : users) filtered_users.add(u);
 		}
 		out.println("<table>");
-		out.println("<tr><td>Users Found" + "</td></tr>");
+		out.println("<tr><td><h3>Users Found:</h3></td></tr>");
 		for(User u: filtered_users) {
 			out.println("<tr>");
 			out.println("<td>");
@@ -45,6 +46,8 @@
 		}
 		out.println("</table>");
 	%>
+	</div>
+	
 	
 	<script>
 	$('#user_search').keypress(function (e) {

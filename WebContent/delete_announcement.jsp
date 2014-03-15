@@ -14,7 +14,10 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="DeleteAnnouncementServlet" method="post">
+	
+	<div class="container" style="margin-top: 10px;">
+		<h1>Delete Announcement</h1>
+		<form action="DeleteAnnouncementServlet" method="post">
 		<select name="announcement">
 			<%
 				ArrayList<Announcement> announcements = (ArrayList<Announcement>) application.getAttribute("announcements");
@@ -27,5 +30,6 @@
 		</select>
 		<button type="submit">Delete Announcement</button>
 	</form>
+	</div>
 </body>
 </html>

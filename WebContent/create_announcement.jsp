@@ -12,9 +12,13 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="AnnouncementServlet" method="post">
-		<input type="text" name="announcement" style="width: 250px;"/>
-		<button type="submit">Create Announcement</button>
-	</form>
+	<div class="container" style="margin-top: 10px;">
+		<h1>Create Announcement</h1>
+		<form action="AnnouncementServlet" method="post">
+			<input type="text" name="announcement" style="width: 250px;"/>
+			<button type="submit">Create Announcement</button>
+		</form>
+	</div>
+	
 </body>
 </html>

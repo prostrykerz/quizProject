@@ -159,5 +159,22 @@ button {
 	border-bottom: 2px solid #FFB6C1;
 	padding: 8px;
 }
-		
-		
+
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	background-color: transparent;
+	width: 80%;
+	border: 1px solid #FFB6C1;
+}
+	 td {
+		padding: 8px;
+		border: 1px solid #ddd;
+	}
+
+	.container {
+		width: 1170px;
+		padding-left: 20px;
+		padding-right: 20px;
+		margin: 0 auto;
+	}

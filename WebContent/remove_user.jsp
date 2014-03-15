@@ -20,7 +20,9 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="admin.jsp"></jsp:param> 
 	</jsp:include>
-	<form action="DeleteUserServlet" method="post">
+	<div class="container" style="margin-top: 10px;">
+		<h1>Remove User</h1>
+		<form action="DeleteUserServlet" method="post">
 		<select name="username">
 			<%
 				for(User u : users) {
@@ -34,5 +36,8 @@
 		</select>
 		<button type="submit">Remove User</button>
 	</form>
+	</div>
+	
+	
 </body>
 </html>

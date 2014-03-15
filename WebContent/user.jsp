@@ -29,6 +29,8 @@
 	<jsp:include page="header.jsp">
 	    <jsp:param value="active" name="user.jsp"></jsp:param> 
 	</jsp:include>
+	<div class="container">
+	<h1><%= user.getUsername() %>'s Page</h1>
 	<%
 		String error = (String) request.getParameter("error");
 		if(error != null) {
@@ -39,59 +41,64 @@
 	<%
 		if(curuser != null && !curuser.equals(user)) {
 			if(!(curuser.getFriends().contains(user))) {
-				out.println("<button id=\"add_friend_btn\" type=\"button\">Add as Friend</button><br />");
+				out.println("<button id=\"add_friend_btn\" type=\"button\">Add as Friend</button>");
 			}
 			else {
 				for(Message fr : user.getFriendRequests()) {
-					//if(fr.getSender().getUsername().equals(curuser.getUsername())) {
-						//out.println("<button type=\"button\"Friend Request Sent<button>");
-					//}
+					if(manager.getUserById(fr.getSender()).equals(curuser.getUsername())) {
+						out.println("<button type=\"button\"Friend Request Sent<button>");
+					}
 				}
 			}
 		}
 	%>
 	<%
 		if(curuser != null && !curuser.equals(user)) {
-			out.println("<a href='message.jsp?user=" + user.getUsername() + "'>Message User</a>");
+			out.println("<a href='message.jsp?user=" + user.getUsername() + "'><button type='button'>Message User</button></a>");
 		}
 	%>
-	<br />
-	Welcome to <%= user.getUsername() %>'s page
 	<a href="history.jsp"><button type="button">Quiz History</button></a>
-	<h2>My Friends</h2>
+	<h2>Friends</h2>
 	<%
-		for(int id : user.getFriends()) {
-			User u = manager.getUserById(id);
-			if(u != null) {
-				out.println(u.getUsername() + " <a class=\"remove_friend_btn\" data-user=\"" + u.getUsername() + "\" href=\"#\">Remove Friend</a><br/>");
+		if(user.getFriends().size() > 0) {
+			out.println("<table>");
+			for(int id : user.getFriends()) {
+				User u = manager.getUserById(id);
+				if(u != null) {
+					out.println("<tr><td>" + u.getUsername() + " <a class=\"remove_friend_btn\" data-user=\"" + u.getUsername() + "\" href=\"#\">Remove Friend</a></td></tr>");
+				}
 			}
+			out.println("</table>");
 		}
 	%>
 	<br />
 	<h2>Quizzes</h2>
 	<%
 		ArrayList<Quiz> quizzes = user.getQuizzes();
-		for(Quiz q : quizzes) {
-			out.println("<a href=\"quizSummary.jsp?id=" + q.getId() + "\">" + q.getTitle() + "</a>");
-			out.println("<br />");
+		if(quizzes.size() > 0) {
+			out.println("<table>");
+			for(Quiz q : quizzes) {
+				out.println("<tr><td><a href=\"quizSummary.jsp?id=" + q.getId() + "\">" + q.getTitle() + "</a></td></tr>");
+			}
+			out.println("</table>");
 		}
+		
 	%>
 	<h2>Achievements</h2>
 	<%
 		ArrayList<Achievement> achievements = AchievementTable.getAchievements(user.getId());
-		System.out.println(achievements);
-		for(int i = 0; i < achievements.size(); i++) {
-			if(achievements.get(i).getStatus()){ 
-				out.println(achievements.get(i).getText() + "<br />");
+		if(achievements.size() > 0) {
+			out.println("<table>");
+			for(int i = 0; i < achievements.size(); i++) {
+				if(achievements.get(i).getStatus()){ 
+					out.println("<tr><td>" + achievements.get(i).getText() + "</td></tr>");
+				}
 			}
+			out.println("</table>");
 		}
+		
 	%>
-	<h2>Attempts</h2>
-	<%
-		for(QuizHistory qh : attempts) {
-			out.println(qh.getQuizId() + "<br />");
-		}
-	%>
+	</div>
 	<script>
 		$(document).ready(function() {
 			$('#add_friend_btn').click(function() {

@@ -3,6 +3,7 @@
 <% User user = (User) session.getAttribute("user"); %>
 
 <div id="navbar">
+<div class="container">
 	<ul>
 		<li><a href="/quizProject/index.jsp" class="navbar_link">Qurious</a></li>
 		<li class="divider"></li>
@@ -30,6 +31,7 @@
 		}
 		%>
 	</ul>
+	</div>
 </div>
 
 <script type="text/javascript">
