@@ -80,7 +80,7 @@
 	<%
 		Achievement[] achievements = user.getAchievements();
 		for(int i = 0; i < achievements.length; i++) {
-			out.println(achievements[i].getText(achievements[i].getCode()) + "<br />");
+			//out.println(achievements[i].getText(achievements[i].getCode()) + "<br />");
 		}
 	%>
 	<h2>Attempts</h2>

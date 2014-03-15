@@ -537,6 +537,9 @@
 			data.order = $('#order').val();
 			data.practice = $('#practice').val();
 			data.q_id = <%=id%>;
+			data.oldScore = <%=infoMap.get("score")%>;
+			data.oldTime = <%=infoMap.get("time")%>;
+			data.oldTimesTaken = <%=infoMap.get("timesTaken")%>;
 			return data;
 		}
 		function getType2(div) {
